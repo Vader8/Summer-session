@@ -129,9 +129,6 @@
         @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
         .animate-bob { animation: bob 2s infinite steps(2, end); }
 
-        @keyframes steam { 0% { transform: translateY(0) scale(1); opacity: 0.5; } 100% { transform: translateY(-20px) scale(1.5); opacity: 0; } }
-        .steam-particle { animation: steam 2s infinite linear; }
-
         @keyframes floatBribe { 0%, 100% { transform: translateY(0) rotate(12deg); } 50% { transform: translateY(-6px) rotate(15deg); } }
         .banknote {
             background-color: #6a9955;
@@ -181,7 +178,7 @@
             position: absolute;
             bottom: 0;
             left: 50%;
-            transform: translate(-50%, 110%);
+            transform: translate(-50%, 150%);
             width: 500px;
             background-color: #fff9c4;
             border: 4px solid #f57f17;
@@ -243,28 +240,28 @@
 
     <!-- Intro Screen -->
     <div id="screen-intro" class="absolute inset-0 z-50 flex items-center justify-center bg-[#111] bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQIW2NkYGD4z8DAwMgAI0AMDA4IAm1+xXgAAAAASUVORK5CYII=')] p-8 text-center">
-        <div class="max-w-4xl w-full bg-[#222] pixel-border p-12 pixel-shadow relative overflow-hidden">
+        <div class="max-w-4xl w-full bg-[#222] pixel-border p-8 md:p-12 pixel-shadow relative overflow-y-auto scroll-custom max-h-[95vh]">
             <div class="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.2)_50%)] bg-[length:100%_4px] pointer-events-none"></div>
             
-            <h1 class="text-8xl font-bold mb-6 text-[#d4af37] crt-text drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]">ЛІТНЯ СЕСІЯ</h1>
-            <div class="text-3xl text-[#888] mb-8 tracking-widest">КАФЕДРА ЦИВІЛЬНОГО ПРАВА</div>
-            <div class="h-2 bg-[#555] w-full mb-10"></div>
+            <h1 class="text-6xl md:text-8xl font-bold mb-4 md:mb-6 text-[#d4af37] crt-text drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]">ЛІТНЯ СЕСІЯ</h1>
+            <div class="text-xl md:text-3xl text-[#888] mb-6 md:mb-8 tracking-widest">КАФЕДРА ЦИВІЛЬНОГО ПРАВА</div>
+            <div class="h-2 bg-[#555] w-full mb-6 md:mb-10"></div>
             
-            <div class="bg-[#111] border-4 border-[#555] p-8 text-left mb-10 pixel-shadow-inset relative z-10">
-                <p class="text-3xl text-[#ffb300] mb-4 font-bold crt-text">> РОЗПОРЯДЖЕННЯ ДЕКАНУ:</p>
-                <p class="text-3xl text-white leading-relaxed break-words">
+            <div class="bg-[#111] border-4 border-[#555] p-6 md:p-8 text-left mb-6 md:mb-10 pixel-shadow-inset relative z-10">
+                <p class="text-2xl md:text-3xl text-[#ffb300] mb-4 font-bold crt-text">> РОЗПОРЯДЖЕННЯ ДЕКАНУ:</p>
+                <p class="text-2xl md:text-3xl text-white leading-relaxed break-words">
                     "Шановні колеги! Після перевірки МОН ми впровадили суворий контроль. Уважно звіряйте заліковки з нашим новим електронним журналом. <span class="text-[#d32f2f] bg-[#333] px-2 py-1 inline-block mt-2">Виявимо махінації — звільнимо миттєво.</span>"
                 </p>
             </div>
 
-            <div class="text-2xl mb-12 text-[#aaa] text-left inline-block space-y-3">
-                <p>● Приймайте іспити. Відповідь має збігатися з Кодексом.</p>
-                <p>● Перевіряйте ID у заліковці та журналі (бувають підробки!).</p>
-                <p>● Якщо пропонують "вирішити питання" — вибір за вами.</p>
-                <p class="text-yellow-600 mt-6 font-bold text-3xl text-center w-full block">УВІМКНІТЬ ЗВУК ДЛЯ КРАЩОГО ДОСВІДУ 🔊</p>
+            <div class="text-xl md:text-2xl mb-8 md:mb-12 text-[#aaa] text-left inline-block space-y-3">
+                <p>● <b>НОВЕ:</b> Книги та печатки тепер фізичні об'єкти на столі.</p>
+                <p>● Клікай на хабарі, щоб забрати їх (камери іноді фіксують!).</p>
+                <p>● Репутація &lt; 30% = КІНЕЦЬ.</p>
+                <p class="text-yellow-600 mt-4 md:mt-6 font-bold text-2xl md:text-3xl text-center w-full block">УВІМКНІТЬ ЗВУК ДЛЯ КРАЩОГО ДОСВІДУ 🔊</p>
             </div>
             
-            <button onclick="startBootSequence()" class="btn-pixel px-12 py-6 text-5xl w-full relative z-10 hover:bg-[#a0a0a0]">
+            <button onclick="startBootSequence()" class="btn-pixel px-8 md:px-12 py-4 md:py-6 text-4xl md:text-5xl w-full relative z-10 hover:bg-[#a0a0a0]">
                 [ РОЗПОЧАТИ ЕКЗАМЕН ]
             </button>
         </div>
@@ -330,7 +327,7 @@
                         </div>
                         
                         <div id="cctv-student" class="w-72 h-72 transform translate-y-2 z-10 hidden animate-bob flex items-end justify-center">
-                            <img id="cctv-student-img" src="" class="w-[150%] h-[150%] pixel-photo object-cover filter drop-shadow-[8px_8px_0_rgba(0,0,0,0.6)] object-bottom" alt="student">
+                            <img id="cctv-student-img" src="" class="w-full h-full pixel-photo object-cover filter drop-shadow-[8px_8px_0_rgba(0,0,0,0.6)] object-bottom" alt="student">
                         </div>
                         
                         <div class="absolute bottom-0 w-full h-12 bg-[#3e2723] border-t-4 border-black z-30 shadow-[0_-5px_10px_rgba(0,0,0,0.5)]"></div>
@@ -350,18 +347,6 @@
             <div class="flex-1 desk-surface relative overflow-hidden flex flex-col justify-center">
                 <div class="absolute inset-0 opacity-20 bg-[repeating-linear-gradient(0deg,transparent,transparent_4px,#000_4px,#000_8px)] mix-blend-multiply"></div>
                 <div class="desk-lamp-light"></div>
-                
-                <!-- Coffee Cup Prop -->
-                <div class="absolute bottom-16 left-16 text-[#888] text-2xl leading-none font-bold opacity-70 pointer-events-none z-10 filter drop-shadow-[8px_8px_0px_rgba(0,0,0,0.8)]">
-                    <div class="text-[#aaa] ml-6 steam-particle relative top-2">~</div>
-                    <div class="text-[#aaa] ml-8 steam-particle relative top-1" style="animation-delay: 0.5s">~</div>
-                    <pre>
-  ____
- |    |__
- |    |  |
- |____|__|
-                    </pre>
-                </div>
 
                 <div id="notification-container" class="absolute top-8 right-8 z-50 flex flex-col gap-4 pointer-events-none"></div>
 
@@ -386,10 +371,10 @@
                                 <h4 class="text-4xl text-black font-bold">ЗАЛІКОВКА</h4>
                                 <span class="text-2xl bg-white border-4 border-black px-3 py-1 font-bold">ДЕННА ФОРМА</span>
                             </div>
-                            <div class="p-8 bg-[#f9f9f9] bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQIW2NkYGD4z8DAwMgAI0AMDA4IAm1+xXgAAAAASUVORK5CYII=')] relative overflow-hidden h-[450px]">
+                            <div class="p-8 pb-12 bg-[#f9f9f9] bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQIW2NkYGD4z8DAwMgAI0AMDA4IAm1+xXgAAAAASUVORK5CYII=')] relative">
                                 <div class="flex gap-6 mb-8 items-center border-b-4 border-black pb-8 relative z-10">
                                     <div class="bg-[#546e7a] pixel-border pixel-shadow-sm w-40 h-40 flex-shrink-0 relative overflow-hidden flex items-end justify-center">
-                                        <img id="gb-photo" src="" class="w-[130%] h-[130%] pixel-photo object-cover transform translate-y-2" alt="student">
+                                        <img id="gb-photo" src="" class="w-full h-full pixel-photo object-cover transform translate-y-1" alt="student">
                                     </div>
                                     <div class="text-3xl space-y-3 text-black font-bold flex-1 min-w-0">
                                         <p class="text-[#555] text-2xl border-b border-dashed border-[#aaa] pb-1">ПІБ СТУДЕНТА:</p>
@@ -515,33 +500,33 @@
 
         <!-- Overlays -->
         <!-- Law Book UI -->
-        <div id="modal-law" class="hidden absolute inset-0 z-50 bg-[rgba(0,0,0,0.85)] flex items-center justify-center p-12">
-            <div class="paper w-full max-w-6xl h-full p-0 flex flex-col relative pixel-shadow modal-animate">
-                <div class="bg-[#7f0000] text-white p-6 border-b-8 border-black flex justify-between items-center text-5xl shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
+        <div id="modal-law" class="hidden absolute inset-0 z-50 bg-[rgba(0,0,0,0.85)] flex items-center justify-center p-6 md:p-12">
+            <div class="paper w-full max-w-6xl max-h-[95vh] h-full p-0 flex flex-col relative pixel-shadow modal-animate">
+                <div class="bg-[#7f0000] text-white p-4 md:p-6 border-b-8 border-black flex justify-between items-center text-3xl md:text-5xl shadow-[0_5px_15px_rgba(0,0,0,0.5)] shrink-0">
                     <span class="font-serif tracking-widest font-bold">ЦИВІЛЬНИЙ КОДЕКС УКРАЇНИ</span>
-                    <button onclick="toggleLawBook()" class="btn-pixel px-6 py-2 bg-red-600 text-4xl">ЗАКРИТИ</button>
+                    <button onclick="toggleLawBook()" class="btn-pixel px-4 md:px-6 py-2 bg-red-600 text-2xl md:text-4xl">ЗАКРИТИ</button>
                 </div>
-                <div class="p-12 h-full border-l-[16px] border-red-900 bg-[#e8e8e8] overflow-y-auto scroll-custom">
-                    <div id="law-content" class="grid grid-cols-2 gap-10 w-full text-4xl text-black break-words"></div>
+                <div class="p-6 md:p-12 h-full border-l-[16px] border-red-900 bg-[#e8e8e8] overflow-y-auto scroll-custom">
+                    <div id="law-content" class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 w-full text-2xl md:text-4xl text-black break-words"></div>
                 </div>
             </div>
         </div>
 
         <!-- Journal UI -->
-        <div id="modal-journal" class="hidden absolute inset-0 z-50 bg-[rgba(0,0,0,0.85)] flex items-center justify-center p-12">
-            <div class="paper paper-grid w-full max-w-6xl h-full p-0 flex flex-col relative pixel-shadow modal-animate">
-                <div class="bg-[#5d4037] text-white p-6 border-b-8 border-black flex justify-between items-center text-5xl shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
+        <div id="modal-journal" class="hidden absolute inset-0 z-50 bg-[rgba(0,0,0,0.85)] flex items-center justify-center p-6 md:p-12">
+            <div class="paper paper-grid w-full max-w-6xl max-h-[95vh] h-full p-0 flex flex-col relative pixel-shadow modal-animate">
+                <div class="bg-[#5d4037] text-white p-4 md:p-6 border-b-8 border-black flex justify-between items-center text-3xl md:text-5xl shadow-[0_5px_15px_rgba(0,0,0,0.5)] shrink-0">
                     <span class="font-bold tracking-widest">ЕЛЕКТРОННА ВІДОМІСТЬ (ЄДЕБО)</span>
-                    <button onclick="toggleJournal()" class="btn-pixel px-6 py-2 bg-red-600 text-4xl">ЗАКРИТИ</button>
+                    <button onclick="toggleJournal()" class="btn-pixel px-4 md:px-6 py-2 bg-red-600 text-2xl md:text-4xl">ЗАКРИТИ</button>
                 </div>
-                <div class="p-12 overflow-y-auto scroll-custom h-full">
-                    <table class="w-full text-left text-4xl text-black border-collapse border-8 border-black bg-white pixel-shadow-sm break-words">
+                <div class="p-6 md:p-12 overflow-y-auto scroll-custom h-full">
+                    <table class="w-full text-left text-2xl md:text-4xl text-black border-collapse border-8 border-black bg-white pixel-shadow-sm break-words">
                         <thead class="bg-[#ccc] border-b-8 border-black">
                             <tr>
-                                <th class="p-5 border-r-4 border-black w-24">#</th>
-                                <th class="p-5 border-r-4 border-black">ПІБ СТУДЕНТА</th>
-                                <th class="p-5 border-r-4 border-black w-40">БІЛЕТ</th>
-                                <th class="p-5 bg-[#ffecb3] w-64">ІДЕНТИФІКАТОР</th>
+                                <th class="p-3 md:p-5 border-r-4 border-black w-16 md:w-24">#</th>
+                                <th class="p-3 md:p-5 border-r-4 border-black">ПІБ СТУДЕНТА</th>
+                                <th class="p-3 md:p-5 border-r-4 border-black w-24 md:w-40">БІЛЕТ</th>
+                                <th class="p-3 md:p-5 bg-[#ffecb3] w-48 md:w-64">ІДЕНТИФІКАТОР</th>
                             </tr>
                         </thead>
                         <tbody id="journal-body"></tbody>
@@ -551,34 +536,34 @@
         </div>
 
         <!-- Final Summary -->
-        <div id="modal-summary" class="hidden absolute inset-0 z-[60] bg-black/95 flex items-center justify-center p-12">
-            <div class="bg-[#111] text-white pixel-border p-16 max-w-5xl w-full text-center relative border-[#fff] shadow-[0_0_50px_rgba(255,255,255,0.1)] modal-animate">
+        <div id="modal-summary" class="hidden absolute inset-0 z-[60] bg-black/95 flex items-center justify-center p-6 md:p-12">
+            <div class="bg-[#111] text-white pixel-border p-8 md:p-16 max-w-5xl w-full text-center relative border-[#fff] shadow-[0_0_50px_rgba(255,255,255,0.1)] modal-animate max-h-[95vh] overflow-y-auto scroll-custom">
                 
-                <h2 class="text-7xl mb-10 text-[#d4af37] crt-text" id="summary-title">СЕСІЮ ЗАВЕРШЕНО</h2>
+                <h2 class="text-5xl md:text-7xl mb-6 md:mb-10 text-[#d4af37] crt-text" id="summary-title">СЕСІЮ ЗАВЕРШЕНО</h2>
                 
-                <div id="summary-reason" class="hidden border-4 border-[#d32f2f] p-8 bg-black text-white text-4xl pixel-shadow-inset mb-10 text-left">
+                <div id="summary-reason" class="hidden border-4 border-[#d32f2f] p-6 md:p-8 bg-black text-white text-2xl md:text-4xl pixel-shadow-inset mb-6 md:mb-10 text-left">
                     <span class="text-[#d32f2f] font-bold">> ВЕРДИКТ РЕКТОРАТУ:</span><br><br>
                     <span id="summary-reason-text" class="leading-relaxed block mt-2">...</span>
                 </div>
 
-                <div class="grid grid-cols-2 gap-12 text-left text-4xl mb-12" id="summary-stats-grid">
-                    <div class="border-4 border-[#555] p-10 bg-black space-y-6 pixel-shadow-inset">
-                        <p class="text-[#aaa] border-b-4 border-[#333] pb-4 font-bold">РЕЗУЛЬТАТИ ЕКЗАМЕНУ:</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 text-left text-2xl md:text-4xl mb-8 md:mb-12" id="summary-stats-grid">
+                    <div class="border-4 border-[#555] p-6 md:p-10 bg-black space-y-4 md:space-y-6 pixel-shadow-inset">
+                        <p class="text-[#aaa] border-b-4 border-[#333] pb-2 md:pb-4 font-bold">РЕЗУЛЬТАТИ ЕКЗАМЕНУ:</p>
                         <p>ОПИТАНО: <span class="text-white bg-[#333] px-3 font-bold" id="sum-total">0</span></p>
                         <p>ЧЕСНИХ ОЦІНОК: <span class="text-[#4caf50] crt-text-green font-bold" id="sum-correct">0</span></p>
                         <p>СУМНІВНИХ РІШЕНЬ: <span class="text-[#d32f2f] font-bold" id="sum-wrong">0</span></p>
                     </div>
-                    <div class="border-4 border-[#555] p-10 bg-black space-y-6 pixel-shadow-inset">
-                        <p class="text-[#aaa] border-b-4 border-[#333] pb-4 font-bold">СТАТУС ВИКЛАДАЧА:</p>
+                    <div class="border-4 border-[#555] p-6 md:p-10 bg-black space-y-4 md:space-y-6 pixel-shadow-inset">
+                        <p class="text-[#aaa] border-b-4 border-[#333] pb-2 md:pb-4 font-bold">СТАТУС ВИКЛАДАЧА:</p>
                         <p>ГАМАНЕЦЬ: <span class="text-[#4caf50] crt-text-green font-bold" id="sum-money">0 ₴</span></p>
                         <p>АВТОРИТЕТ: <span class="text-[#2196f3] crt-text font-bold" id="sum-rep">0%</span></p>
                     </div>
                 </div>
                 
-                <div class="text-[#888] text-4xl mb-6 font-bold" id="summary-rating-label">ПІДСУМКОВА ОЦІНКА:</div>
-                <div id="summary-rating" class="text-8xl mb-12 text-[#d4af37] tracking-widest drop-shadow-[0_0_20px_rgba(212,175,55,1)]">*****</div>
+                <div class="text-[#888] text-2xl md:text-4xl mb-4 md:mb-6 font-bold" id="summary-rating-label">ПІДСУМКОВА ОЦІНКА:</div>
+                <div id="summary-rating" class="text-6xl md:text-8xl mb-8 md:mb-12 text-[#d4af37] tracking-widest drop-shadow-[0_0_20px_rgba(212,175,55,1)]">*****</div>
                 
-                <button onclick="resetGame()" class="btn-pixel px-10 py-8 text-6xl w-full bg-[#1976d2] crt-text font-bold hover:bg-[#2196f3]">
+                <button onclick="resetGame()" class="btn-pixel px-6 md:px-10 py-4 md:py-8 text-4xl md:text-6xl w-full bg-[#1976d2] crt-text font-bold hover:bg-[#2196f3]">
                     [ НАСТУПНИЙ ДЕНЬ ]
                 </button>
             </div>
@@ -1080,7 +1065,7 @@
             btn.onclick = () => selectStudent(idx);
             btn.innerHTML = `
                 <div class="w-16 h-16 bg-[#546e7a] flex-shrink-0 border-4 border-[#333] overflow-hidden flex items-end justify-center">
-                    <img src="${s.photo}" class="pixel-photo w-[150%] h-[150%] object-cover transform translate-y-2">
+                    <img src="${s.photo}" class="pixel-photo w-full h-full object-cover transform translate-y-1">
                 </div>
                 <div class="flex-1 min-w-0">
                     <div class="text-2xl font-bold truncate">${s.name.split(' ')[0]}</div>
@@ -1353,9 +1338,9 @@
         content.innerHTML = '';
         LAWS.forEach(l => {
             content.innerHTML += `
-                <div class="bg-white border-4 border-black p-8 pixel-shadow-sm h-min hover:-translate-y-1 transition-transform break-words">
-                    <h3 class="font-bold text-5xl border-b-4 border-black mb-5 pb-2 text-[#4a148c]">${l.art}</h3>
-                    <p class="text-4xl leading-tight text-[#222]">"${l.text}"</p>
+                <div class="bg-white border-4 border-black p-6 md:p-8 pixel-shadow-sm h-min hover:-translate-y-1 transition-transform break-words">
+                    <h3 class="font-bold text-3xl md:text-5xl border-b-4 border-black mb-3 md:mb-5 pb-2 text-[#4a148c]">${l.art}</h3>
+                    <p class="text-2xl md:text-4xl leading-tight text-[#222]">"${l.text}"</p>
                 </div>
             `;
         });
@@ -1370,10 +1355,10 @@
             
             body.innerHTML += `
                 <tr class="hover:bg-[#ddd] border-b-4 border-gray-300">
-                    <td class="p-5 border-r-4 border-black font-bold text-gray-500">${rowNum++}</td>
-                    <td class="p-5 border-r-4 border-black font-bold break-words">${s.name}</td>
-                    <td class="p-5 border-r-4 border-black text-center text-5xl">${s.ticket}</td>
-                    <td class="p-5 bg-[#fff9c4] font-bold text-gray-700 break-words">${s.journalId}</td>
+                    <td class="p-3 md:p-5 border-r-4 border-black font-bold text-gray-500">${rowNum++}</td>
+                    <td class="p-3 md:p-5 border-r-4 border-black font-bold break-words">${s.name}</td>
+                    <td class="p-3 md:p-5 border-r-4 border-black text-center text-3xl md:text-5xl">${s.ticket}</td>
+                    <td class="p-3 md:p-5 bg-[#fff9c4] font-bold text-gray-700 break-words">${s.journalId}</td>
                 </tr>
             `;
         });
@@ -1411,14 +1396,14 @@
         else if (state.reputation > 30) rating = "**";
 
         document.getElementById('summary-title').innerText = "СЕСІЮ ЗАВЕРШЕНО";
-        document.getElementById('summary-title').className = "text-7xl mb-10 text-[#d4af37] crt-text";
+        document.getElementById('summary-title').className = "text-5xl md:text-7xl mb-6 md:mb-10 text-[#d4af37] crt-text";
         document.getElementById('summary-reason').classList.add('hidden');
         
         populateStats();
         
         document.getElementById('summary-rating-label').classList.remove('hidden');
         document.getElementById('summary-rating').innerText = rating;
-        document.getElementById('summary-rating').className = "text-8xl mb-12 text-[#d4af37] tracking-widest drop-shadow-[0_0_20px_rgba(212,175,55,1)]";
+        document.getElementById('summary-rating').className = "text-6xl md:text-8xl mb-8 md:mb-12 text-[#d4af37] tracking-widest drop-shadow-[0_0_20px_rgba(212,175,55,1)]";
     }
 
     function gameOver(reason) {
@@ -1432,7 +1417,7 @@
         modal.classList.remove('hidden');
         
         document.getElementById('summary-title').innerText = "ЗВІЛЬНЕНО";
-        document.getElementById('summary-title').className = "text-8xl mb-8 text-[#d32f2f] font-bold crt-text drop-shadow-[0_0_20px_rgba(255,0,0,0.8)]";
+        document.getElementById('summary-title').className = "text-6xl md:text-8xl mb-6 md:mb-8 text-[#d32f2f] font-bold crt-text drop-shadow-[0_0_20px_rgba(255,0,0,0.8)]";
         
         const reasonBox = document.getElementById('summary-reason');
         reasonBox.classList.remove('hidden');
@@ -1442,7 +1427,7 @@
         
         document.getElementById('summary-rating-label').classList.add('hidden');
         document.getElementById('summary-rating').innerText = "[ СИСТЕМУ ЗАБЛОКОВАНО ]";
-        document.getElementById('summary-rating').className = "text-6xl mb-12 mt-4 text-[#d32f2f] crt-text";
+        document.getElementById('summary-rating').className = "text-4xl md:text-6xl mb-8 md:mb-12 mt-4 text-[#d32f2f] crt-text";
     }
 
     function resetGame() {
