@@ -60,9 +60,9 @@
         }
 
         @keyframes flicker {
-            0% { opacity: 0.92; } 5% { opacity: 0.85; } 10% { opacity: 0.95; } 100% { opacity: 1; }
+            0% { opacity: 0.98; } 5% { opacity: 0.95; } 10% { opacity: 0.99; } 100% { opacity: 1; }
         }
-        .crt-flicker { animation: flicker 0.12s infinite; }
+        .crt-flicker { animation: flicker 0.25s infinite; }
 
         .crt-text { text-shadow: 2px 0px 0px rgba(255,0,0,0.7), -2px 0px 0px rgba(0,255,255,0.7); }
         .crt-text-green {
@@ -245,29 +245,29 @@
 
     <!-- Intro Screen -->
     <div id="screen-intro" class="absolute inset-0 z-50 flex items-center justify-center bg-[#111] bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQIW2NkYGD4z8DAwMgAI0AMDA4IAm1+xXgAAAAASUVORK5CYII=')] p-8 text-center">
-        <div class="max-w-4xl w-full bg-[#222] pixel-border p-8 md:p-12 pixel-shadow relative overflow-y-auto scroll-custom max-h-[95vh]">
+        <div class="max-w-4xl w-full bg-[#222] pixel-border p-6 md:p-8 pixel-shadow relative overflow-y-auto scroll-custom max-h-[90vh]">
             <div class="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.2)_50%)] bg-[length:100%_4px] pointer-events-none"></div>
             
-            <h1 class="text-6xl md:text-8xl font-bold mb-4 md:mb-6 text-[#d4af37] crt-text drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]">ЛІТНЯ СЕСІЯ</h1>
-            <div class="text-xl md:text-3xl text-[#888] mb-6 md:mb-8 tracking-widest">КАФЕДРА ЦИВІЛЬНОГО ПРАВА</div>
-            <div class="h-2 bg-[#555] w-full mb-6 md:mb-10"></div>
+            <h1 class="text-5xl md:text-7xl font-bold mb-2 md:mb-4 text-[#d4af37] crt-text drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]">ЛІТНЯ СЕСІЯ</h1>
+            <div class="text-lg md:text-2xl text-[#888] mb-4 md:mb-6 tracking-widest">КАФЕДРА ЦИВІЛЬНОГО ПРАВА</div>
+            <div class="h-2 bg-[#555] w-full mb-4 md:mb-6"></div>
             
-            <div class="bg-[#111] border-4 border-[#555] p-6 md:p-8 text-left mb-6 md:mb-10 pixel-shadow-inset relative z-10">
-                <p class="text-2xl md:text-3xl text-[#ffb300] mb-4 font-bold crt-text">> РОЗПОРЯДЖЕННЯ ДЕКАНУ:</p>
-                <p class="text-2xl md:text-3xl text-white leading-relaxed break-words">
+            <div class="bg-[#111] border-4 border-[#555] p-4 md:p-6 text-left mb-4 md:mb-6 pixel-shadow-inset relative z-10">
+                <p class="text-xl md:text-2xl text-[#ffb300] mb-2 font-bold crt-text">> РОЗПОРЯДЖЕННЯ ДЕКАНУ:</p>
+                <p class="text-xl md:text-2xl text-white leading-relaxed break-words">
                     "Шановні колеги! Після перевірки МОН ми впровадили суворий контроль. Уважно звіряйте заліковки з нашим новим електронним журналом. <span class="text-[#d32f2f] bg-[#333] px-2 py-1 inline-block mt-2">Виявимо махінації — звільнимо миттєво.</span>"
                 </p>
             </div>
 
-            <div class="text-xl md:text-2xl mb-8 md:mb-12 text-[#aaa] text-left inline-block space-y-3">
+            <div class="text-lg md:text-xl mb-6 md:mb-8 text-[#aaa] text-left inline-block space-y-2">
                 <p>● <b>НОВЕ:</b> Книги та печатки тепер фізичні об'єкти на столі.</p>
                 <p>● Клікай на хабарі, щоб забрати їх (камери іноді фіксують!).</p>
                 <p>● Репутація &lt; 30% = КІНЕЦЬ.</p>
-                <p class="text-[#4caf50] mt-2">● Іноді на іспит забігає кафедральний кіт. Не ображайте його!</p>
-                <p class="text-yellow-600 mt-4 md:mt-6 font-bold text-2xl md:text-3xl text-center w-full block">УВІМКНІТЬ ЗВУК ДЛЯ КРАЩОГО ДОСВІДУ 🔊</p>
+                <p class="text-[#4caf50] mt-1">● Іноді на іспит забігає кафедральний кіт. Не ображайте його!</p>
+                <p class="text-yellow-600 mt-3 md:mt-4 font-bold text-xl md:text-2xl text-center w-full block">УВІМКНІТЬ ЗВУК ДЛЯ КРАЩОГО ДОСВІДУ 🔊</p>
             </div>
             
-            <button onclick="startBootSequence()" class="btn-pixel px-8 md:px-12 py-4 md:py-6 text-4xl md:text-5xl w-full relative z-10 hover:bg-[#a0a0a0]">
+            <button onclick="startBootSequence()" class="btn-pixel px-6 md:px-10 py-3 md:py-4 text-3xl md:text-4xl w-full relative z-10 hover:bg-[#a0a0a0]">
                 [ РОЗПОЧАТИ ЕКЗАМЕН ]
             </button>
         </div>
@@ -276,7 +276,7 @@
     <!-- Main Game UI -->
     <div id="screen-game" class="hidden flex-1 flex flex-col h-full w-full">
         
-        <!-- Top Hardware Bar (Dark Retro Theme) -->
+        <!-- Top Hardware Bar -->
         <div class="h-28 bg-[#1a1a1a] border-b-8 border-black flex items-center justify-between px-8 z-40 relative shadow-[0_10px_20px_rgba(0,0,0,0.8)] shrink-0">
             <div class="absolute bottom-0 left-0 right-0 h-2 bg-[#0a0a0a]"></div>
             
@@ -360,10 +360,10 @@
                     
                     <!-- Dialogue Terminal -->
                     <div class="w-full max-w-6xl mb-12">
-                        <div class="bg-[#050505] border-8 border-[#222] p-8 text-4xl h-56 pixel-shadow relative overflow-hidden flex flex-col justify-end">
+                        <div class="bg-[#050505] border-8 border-[#222] p-8 text-4xl h-56 pixel-shadow relative overflow-hidden flex flex-col">
                             <div class="absolute top-0 left-0 w-full h-1/2 bg-white opacity-5 pointer-events-none transform -skew-y-2 z-10"></div>
                             <div class="absolute inset-0 bg-[linear-gradient(rgba(0,255,0,0.05)_50%,transparent_50%)] bg-[length:100%_6px] pointer-events-none z-10"></div>
-                            <div id="dialogue-container" class="overflow-y-auto scroll-custom break-words whitespace-pre-wrap pr-4 max-h-full w-full relative z-20">
+                            <div id="dialogue-container" class="overflow-y-auto scroll-custom break-words whitespace-pre-wrap pr-4 h-full w-full relative z-20">
                                 <span id="dialogue-box" class="crt-text-green typing-cursor">> ОЧІКУВАННЯ ВВОДУ...</span>
                             </div>
                         </div>
@@ -509,32 +509,32 @@
         <!-- Overlays -->
         <!-- Law Book UI -->
         <div id="modal-law" class="hidden absolute inset-0 z-50 bg-[rgba(0,0,0,0.85)] flex items-center justify-center p-6 md:p-12">
-            <div class="paper w-full max-w-6xl max-h-[95vh] h-full p-0 flex flex-col relative pixel-shadow modal-animate">
-                <div class="bg-[#7f0000] text-white p-4 md:p-6 border-b-8 border-black flex justify-between items-center text-3xl md:text-5xl shadow-[0_5px_15px_rgba(0,0,0,0.5)] shrink-0">
+            <div class="paper w-full max-w-6xl max-h-[90vh] h-full p-0 flex flex-col relative pixel-shadow modal-animate">
+                <div class="bg-[#7f0000] text-white p-3 md:p-5 border-b-8 border-black flex justify-between items-center text-2xl md:text-4xl shadow-[0_5px_15px_rgba(0,0,0,0.5)] shrink-0">
                     <span class="font-serif tracking-widest font-bold">ЦИВІЛЬНИЙ КОДЕКС УКРАЇНИ</span>
-                    <button onclick="toggleLawBook()" class="btn-pixel px-4 md:px-6 py-2 bg-red-600 text-2xl md:text-4xl">ЗАКРИТИ</button>
+                    <button onclick="toggleLawBook()" class="btn-pixel px-4 md:px-6 py-1 md:py-2 bg-red-600 text-xl md:text-3xl">ЗАКРИТИ</button>
                 </div>
-                <div class="p-6 md:p-12 h-full border-l-[16px] border-red-900 bg-[#e8e8e8] overflow-y-auto scroll-custom">
-                    <div id="law-content" class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 w-full text-2xl md:text-4xl text-black break-words"></div>
+                <div class="p-6 md:p-8 h-full border-l-[16px] border-red-900 bg-[#e8e8e8] overflow-y-auto scroll-custom">
+                    <div id="law-content" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 w-full text-xl md:text-3xl text-black break-words"></div>
                 </div>
             </div>
         </div>
 
         <!-- Journal UI -->
         <div id="modal-journal" class="hidden absolute inset-0 z-50 bg-[rgba(0,0,0,0.85)] flex items-center justify-center p-6 md:p-12">
-            <div class="paper paper-grid w-full max-w-6xl max-h-[95vh] h-full p-0 flex flex-col relative pixel-shadow modal-animate">
-                <div class="bg-[#5d4037] text-white p-4 md:p-6 border-b-8 border-black flex justify-between items-center text-3xl md:text-5xl shadow-[0_5px_15px_rgba(0,0,0,0.5)] shrink-0">
+            <div class="paper paper-grid w-full max-w-6xl max-h-[90vh] h-full p-0 flex flex-col relative pixel-shadow modal-animate">
+                <div class="bg-[#5d4037] text-white p-3 md:p-5 border-b-8 border-black flex justify-between items-center text-2xl md:text-4xl shadow-[0_5px_15px_rgba(0,0,0,0.5)] shrink-0">
                     <span class="font-bold tracking-widest">ЕЛЕКТРОННА ВІДОМІСТЬ (ЄДЕБО)</span>
-                    <button onclick="toggleJournal()" class="btn-pixel px-4 md:px-6 py-2 bg-red-600 text-2xl md:text-4xl">ЗАКРИТИ</button>
+                    <button onclick="toggleJournal()" class="btn-pixel px-4 md:px-6 py-1 md:py-2 bg-red-600 text-xl md:text-3xl">ЗАКРИТИ</button>
                 </div>
-                <div class="p-6 md:p-12 overflow-y-auto scroll-custom h-full">
-                    <table class="w-full text-left text-2xl md:text-4xl text-black border-collapse border-8 border-black bg-white pixel-shadow-sm break-words">
+                <div class="p-6 md:p-8 overflow-y-auto scroll-custom h-full">
+                    <table class="w-full text-left text-xl md:text-3xl text-black border-collapse border-8 border-black bg-white pixel-shadow-sm break-words">
                         <thead class="bg-[#ccc] border-b-8 border-black">
                             <tr>
-                                <th class="p-3 md:p-5 border-r-4 border-black w-16 md:w-24">#</th>
-                                <th class="p-3 md:p-5 border-r-4 border-black">ПІБ СТУДЕНТА</th>
-                                <th class="p-3 md:p-5 border-r-4 border-black w-24 md:w-40">БІЛЕТ</th>
-                                <th class="p-3 md:p-5 bg-[#ffecb3] w-48 md:w-64">ІДЕНТИФІКАТОР</th>
+                                <th class="p-2 md:p-4 border-r-4 border-black w-12 md:w-20">#</th>
+                                <th class="p-2 md:p-4 border-r-4 border-black">ПІБ СТУДЕНТА</th>
+                                <th class="p-2 md:p-4 border-r-4 border-black w-20 md:w-32">БІЛЕТ</th>
+                                <th class="p-2 md:p-4 bg-[#ffecb3] w-40 md:w-56">ІДЕНТИФІКАТОР</th>
                             </tr>
                         </thead>
                         <tbody id="journal-body"></tbody>
@@ -545,33 +545,33 @@
 
         <!-- Final Summary -->
         <div id="modal-summary" class="hidden absolute inset-0 z-[60] bg-black/95 flex items-center justify-center p-6 md:p-12">
-            <div class="bg-[#111] text-white pixel-border p-8 md:p-16 max-w-5xl w-full text-center relative border-[#fff] shadow-[0_0_50px_rgba(255,255,255,0.1)] modal-animate max-h-[95vh] overflow-y-auto scroll-custom">
+            <div class="bg-[#111] text-white pixel-border p-6 md:p-10 max-w-4xl w-full text-center relative border-[#fff] shadow-[0_0_50px_rgba(255,255,255,0.1)] modal-animate max-h-[90vh] overflow-y-auto scroll-custom">
                 
-                <h2 class="text-5xl md:text-7xl mb-6 md:mb-10 text-[#d4af37] crt-text" id="summary-title">СЕСІЮ ЗАВЕРШЕНО</h2>
+                <h2 class="text-4xl md:text-6xl mb-4 md:mb-6 text-[#d4af37] crt-text" id="summary-title">СЕСІЮ ЗАВЕРШЕНО</h2>
                 
-                <div id="summary-reason" class="hidden border-4 border-[#d32f2f] p-6 md:p-8 bg-black text-white text-2xl md:text-4xl pixel-shadow-inset mb-6 md:mb-10 text-left">
+                <div id="summary-reason" class="hidden border-4 border-[#d32f2f] p-4 md:p-6 bg-black text-white text-xl md:text-3xl pixel-shadow-inset mb-4 md:mb-6 text-left">
                     <span class="text-[#d32f2f] font-bold">> ВЕРДИКТ РЕКТОРАТУ:</span><br><br>
-                    <span id="summary-reason-text" class="leading-relaxed block mt-2">...</span>
+                    <span id="summary-reason-text" class="leading-relaxed block mt-1">...</span>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 text-left text-2xl md:text-4xl mb-8 md:mb-12" id="summary-stats-grid">
-                    <div class="border-4 border-[#555] p-6 md:p-10 bg-black space-y-4 md:space-y-6 pixel-shadow-inset">
-                        <p class="text-[#aaa] border-b-4 border-[#333] pb-2 md:pb-4 font-bold">РЕЗУЛЬТАТИ ЕКЗАМЕНУ:</p>
-                        <p>ОПИТАНО: <span class="text-white bg-[#333] px-3 font-bold" id="sum-total">0</span></p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 text-left text-xl md:text-2xl mb-6 md:mb-8" id="summary-stats-grid">
+                    <div class="border-4 border-[#555] p-4 md:p-8 bg-black space-y-3 md:space-y-4 pixel-shadow-inset">
+                        <p class="text-[#aaa] border-b-4 border-[#333] pb-2 font-bold">РЕЗУЛЬТАТИ ЕКЗАМЕНУ:</p>
+                        <p>ОПИТАНО: <span class="text-white bg-[#333] px-2 font-bold" id="sum-total">0</span></p>
                         <p>ЧЕСНИХ ОЦІНОК: <span class="text-[#4caf50] crt-text-green font-bold" id="sum-correct">0</span></p>
                         <p>СУМНІВНИХ РІШЕНЬ: <span class="text-[#d32f2f] font-bold" id="sum-wrong">0</span></p>
                     </div>
-                    <div class="border-4 border-[#555] p-6 md:p-10 bg-black space-y-4 md:space-y-6 pixel-shadow-inset">
-                        <p class="text-[#aaa] border-b-4 border-[#333] pb-2 md:pb-4 font-bold">СТАТУС ВИКЛАДАЧА:</p>
+                    <div class="border-4 border-[#555] p-4 md:p-8 bg-black space-y-3 md:space-y-4 pixel-shadow-inset">
+                        <p class="text-[#aaa] border-b-4 border-[#333] pb-2 font-bold">СТАТУС ВИКЛАДАЧА:</p>
                         <p>ГАМАНЕЦЬ: <span class="text-[#4caf50] crt-text-green font-bold" id="sum-money">0 ₴</span></p>
                         <p>АВТОРИТЕТ: <span class="text-[#2196f3] crt-text font-bold" id="sum-rep">0%</span></p>
                     </div>
                 </div>
                 
-                <div class="text-[#888] text-2xl md:text-4xl mb-4 md:mb-6 font-bold" id="summary-rating-label">ПІДСУМКОВА ОЦІНКА:</div>
-                <div id="summary-rating" class="text-6xl md:text-8xl mb-8 md:mb-12 text-[#d4af37] tracking-widest drop-shadow-[0_0_20px_rgba(212,175,55,1)]">*****</div>
+                <div class="text-[#888] text-xl md:text-3xl mb-2 md:mb-4 font-bold" id="summary-rating-label">ПІДСУМКОВА ОЦІНКА:</div>
+                <div id="summary-rating" class="text-5xl md:text-7xl mb-6 md:mb-8 text-[#d4af37] tracking-widest drop-shadow-[0_0_20px_rgba(212,175,55,1)]">*****</div>
                 
-                <button onclick="resetGame()" class="btn-pixel px-6 md:px-10 py-4 md:py-8 text-4xl md:text-6xl w-full bg-[#1976d2] crt-text font-bold hover:bg-[#2196f3]">
+                <button onclick="resetGame()" class="btn-pixel px-6 md:px-10 py-3 md:py-5 text-3xl md:text-5xl w-full bg-[#1976d2] crt-text font-bold hover:bg-[#2196f3]">
                     [ НАСТУПНИЙ ДЕНЬ ]
                 </button>
             </div>
@@ -581,155 +581,296 @@
 
 <script>
     // --- ПІКСЕЛЬ АРТ ГЕНЕРАТОР ОБЛИЧ (24x24) ---
-    function generatePixelFace() {
-        const designs = [
-            [
-                "        hhhhhhhh        ",
-                "      hhhhhhhhhhhh      ",
-                "     hhhhhhhhhhhhhh     ",
-                "    hhhhsssssssshhhh    ",
-                "    hhhsssssssssshhh    ",
-                "    hhsssssssssssshh    ",
-                "    hhsssssssssssshh    ",
-                "    hhssswwwsswwwsshh   ",
-                "     hssseewsseewssh    ",
-                "     hsssssssssssssh    ",
-                "      ssssssssssss      ",
-                "      sssssmmsssss      ",
-                "      ssssssssssss      ",
-                "       ssssssssss       ",
-                "        ssssssss        ",
-                "       wwwsssswww       ",
-                "      cwwwRwwRwwwc      ",
-                "     cccwRRwwRRwccc     ",
-                "    cccccRRwwRRccccc    ",
-                "   ccccccRRwwRRcccccc   ",
-                "   ccccccRRwwRRcccccc   ",
-                "   ccccccRRwwRRcccccc   ",
-                "  cccccccRRwwRRccccccc  ",
-                "  cccccccRRwwRRccccccc  "
-            ],
-            [
-                "        HHHHHHHH        ",
-                "      HHHHHHHHHHHH      ",
-                "     HHHHHHHHHHHHHH     ",
-                "    HHHssssssssssHHH    ",
-                "    HHssssssssssssHH    ",
-                "    HHssssssssssssHH    ",
-                "    HHssssssssssssHH    ",
-                "    HHssswwwsswwwssHH   ",
-                "    HHssseewsseewssHH   ",
-                "    HHsssssssssssssHH   ",
-                "    HHsssssssssssssHH   ",
-                "    HHsssssmmsssssHHH   ",
-                "    HHHssssssssssHHHH   ",
-                "    HHHHssssssssHHHHH   ",
-                "    HHHHHssssssHHHHHH   ",
-                "    HHHHHssssssHHHHHH   ",
-                "   HHHHHHsCCCCsHHHHHHH  ",
-                "   HHHHHCCCCCCCCHHHHHH  ",
-                "  HHHHHCCCCCCCCCCHHHHH  ",
-                "  HHHHCCCCCCCCCCCCHHHH  ",
-                "  HHHCCCCCCCCCCCCCCHHH  ",
-                "  HHHCCCCCCCCCCCCCCHHH  ",
-                "  HHCCCCCCCCCCCCCCCCCH  ",
-                "  HHCCCCCCCCCCCCCCCCCH  "
-            ],
-            [
-                "        bbbbbbbb        ",
-                "      bbbbbbbbbbbb      ",
-                "     bbbbbbbbbbbbbb     ",
-                "    bbbbbbbbbbbbbbbb    ",
-                "    bbbbssssssssbbbb    ",
-                "    bbbssssssssssbbb    ",
-                "    bbbbbbbbbbbbbbbb    ",
-                "    bggggbbbbbbggggbb   ",
-                "    bgweegbbbbbgweegb   ",
-                "    bggggbbssssbggggb   ",
-                "    bbbbssssssssbbbbb   ",
-                "     ssssssmmssssss     ",
-                "      ssssssssssss      ",
-                "       ssssssssss       ",
-                "        ssssssss        ",
-                "       wwwsssswww       ",
-                "      GwwwGwwGwwwG      ",
-                "     GGGwwGGwwGGGGG     ",
-                "    GGGGGwGGwwGGGGGG    ",
-                "   GGGGGGGGwwGGGGGGGG   ",
-                "   GGGGGGGGwwGGGGGGGG   ",
-                "   GGGGGGGGwwGGGGGGGG   ",
-                "  GGGGGGGGGGGGGGGGGGGG  ",
-                "  GGGGGGGGGGGGGGGGGGGG  "
-            ],
-            [
-                "       h  hhhh  h       ",
-                "      hhh hhhh hhh      ",
-                "     hhhhhhhhhhhhhh     ",
-                "    hhhhhhhhhhhhhhhh    ",
-                "    hhsssssssssssshh    ",
-                "     ssssssssssssss     ",
-                "     ssssssssssssss     ",
-                "     sSswwwsswwwsSs     ",
-                "     sSseewsseewsSs     ",
-                "     ssssssssssssss     ",
-                "      ssssssssssss      ",
-                "      ssssssssssss      ",
-                "      sssssmmsssss      ",
-                "       ssssssssss       ",
-                "        ssSSSSss        ",
-                "       CCCssssCCC       ",
-                "      CCCCwCCwCCCC      ",
-                "     CCCCCwwwwCCCCC     ",
-                "    CCCCCCwwwwCCCCCC    ",
-                "   CCCCCCCwwwwCCCCCCC   ",
-                "   CCCCCCCwwwwCCCCCCC   ",
-                "   CCCCCCCwwwwCCCCCCC   ",
-                "  CCCCCCCCwwwwCCCCCCCC  ",
-                "  CCCCCCCCwwwwCCCCCCCC  "
-            ],
-            [
-                "        bbbbbbbb        ",
-                "       bbbbbbbbbb       ",
-                "      bbbbbbbbbbbb      ",
-                "     bbbbbbbbbbbbbb     ",
-                "     bbssssssssssbb     ",
-                "     bssssssssssssb     ",
-                "     sssswwsssswwss     ",
-                "     sssseesssseess     ",
-                "     ssssssssssssss     ",
-                "     ssssssssssssss     ",
-                "      ssssssssssss      ",
-                "      sssSmmmmSsss      ",
-                "      ssssssssssss      ",
-                "       ssssssssss       ",
-                "        ssssssss        ",
-                "       wwwsssswww       ",
-                "      DwwwTwwTwwwD      ",
-                "     DDDwTTwwTTwDDD     ",
-                "    DDDDDTwwwwTDDDDD    ",
-                "   DDDDDDTwwwwTDDDDDD   ",
-                "   DDDDDDTwwwwTDDDDDD   ",
-                "   DDDDDDTwwwwTDDDDDD   ",
-                "  DDDDDDDTwwwwTDDDDDDD  ",
-                "  DDDDDDDTwwwwTDDDDDDD  "
-            ]
-        ];
+    const PIXEL_DESIGNS = [
+        // 0: Standard Guy
+        [
+            "        hhhhhhhh        ",
+            "      hhhhhhhhhhhh      ",
+            "     hhhhhhhhhhhhhh     ",
+            "    hhhhsssssssshhhh    ",
+            "    hhhsssssssssshhh    ",
+            "    hhsssssssssssshh    ",
+            "    hhsssssssssssshh    ",
+            "    hhssswwwsswwwsshh   ",
+            "     hssseewsseewssh    ",
+            "     hsssssssssssssh    ",
+            "      ssssssssssss      ",
+            "      sssssmmsssss      ",
+            "      ssssssssssss      ",
+            "       ssssssssss       ",
+            "        ssssssss        ",
+            "       wwwsssswww       ",
+            "      cwwwRwwRwwwc      ",
+            "     cccwRRwwRRwccc     ",
+            "    cccccRRwwRRccccc    ",
+            "   ccccccRRwwRRcccccc   ",
+            "   ccccccRRwwRRcccccc   ",
+            "   ccccccRRwwRRcccccc   ",
+            "  cccccccRRwwRRccccccc  ",
+            "  cccccccRRwwRRccccccc  "
+        ],
+        // 1: Girl Long Hair
+        [
+            "        HHHHHHHH        ",
+            "      HHHHHHHHHHHH      ",
+            "     HHHHHHHHHHHHHH     ",
+            "    HHHssssssssssHHH    ",
+            "    HHssssssssssssHH    ",
+            "    HHssssssssssssHH    ",
+            "    HHssssssssssssHH    ",
+            "    HHssswwwsswwwssHH   ",
+            "    HHssseewsseewssHH   ",
+            "    HHsssssssssssssHH   ",
+            "    HHsssssssssssssHH   ",
+            "    HHsssssmmsssssHHH   ",
+            "    HHHssssssssssHHHH   ",
+            "    HHHHssssssssHHHHH   ",
+            "    HHHHHssssssHHHHHH   ",
+            "    HHHHHssssssHHHHHH   ",
+            "   HHHHHHsCCCCsHHHHHHH  ",
+            "   HHHHHCCCCCCCCHHHHHH  ",
+            "  HHHHHCCCCCCCCCCHHHHH  ",
+            "  HHHHCCCCCCCCCCCCHHHH  ",
+            "  HHHCCCCCCCCCCCCCCHHH  ",
+            "  HHHCCCCCCCCCCCCCCHHH  ",
+            "  HHCCCCCCCCCCCCCCCCCH  ",
+            "  HHCCCCCCCCCCCCCCCCCH  "
+        ],
+        // 2: Glasses Nerd
+        [
+            "        bbbbbbbb        ",
+            "      bbbbbbbbbbbb      ",
+            "     bbbbbbbbbbbbbb     ",
+            "    bbbbbbbbbbbbbbbb    ",
+            "    bbbbssssssssbbbb    ",
+            "    bbbssssssssssbbb    ",
+            "    bbbbbbbbbbbbbbbb    ",
+            "    bggggbbbbbbggggbb   ",
+            "    bgweegbbbbbgweegb   ",
+            "    bggggbbssssbggggb   ",
+            "    bbbbssssssssbbbbb   ",
+            "     ssssssmmssssss     ",
+            "      ssssssssssss      ",
+            "       ssssssssss       ",
+            "        ssssssss        ",
+            "       wwwsssswww       ",
+            "      GwwwGwwGwwwG      ",
+            "     GGGwwGGwwGGGGG     ",
+            "    GGGGGwGGwwGGGGGG    ",
+            "   GGGGGGGGwwGGGGGGGG   ",
+            "   GGGGGGGGwwGGGGGGGG   ",
+            "   GGGGGGGGwwGGGGGGGG   ",
+            "  GGGGGGGGGGGGGGGGGGGG  ",
+            "  GGGGGGGGGGGGGGGGGGGG  "
+        ],
+        // 3: Tired Student
+        [
+            "       h  hhhh  h       ",
+            "      hhh hhhh hhh      ",
+            "     hhhhhhhhhhhhhh     ",
+            "    hhhhhhhhhhhhhhhh    ",
+            "    hhsssssssssssshh    ",
+            "     ssssssssssssss     ",
+            "     ssssssssssssss     ",
+            "     sSswwwsswwwsSs     ",
+            "     sSseewsseewsSs     ",
+            "     ssssssssssssss     ",
+            "      ssssssssssss      ",
+            "      ssssssssssss      ",
+            "      sssssmmsssss      ",
+            "       ssssssssss       ",
+            "        ssSSSSss        ",
+            "       CCCssssCCC       ",
+            "      CCCCwCCwCCCC      ",
+            "     CCCCCwwwwCCCCC     ",
+            "    CCCCCCwwwwCCCCCC    ",
+            "   CCCCCCCwwwwCCCCCCC   ",
+            "   CCCCCCCwwwwCCCCCCC   ",
+            "   CCCCCCCwwwwCCCCCCC   ",
+            "  CCCCCCCCwwwwCCCCCCCC  ",
+            "  CCCCCCCCwwwwCCCCCCCC  "
+        ],
+        // 4: Suit Guy
+        [
+            "        bbbbbbbb        ",
+            "       bbbbbbbbbb       ",
+            "      bbbbbbbbbbbb      ",
+            "     bbbbbbbbbbbbbb     ",
+            "     bbssssssssssbb     ",
+            "     bssssssssssssb     ",
+            "     sssswwsssswwss     ",
+            "     sssseesssseess     ",
+            "     ssssssssssssss     ",
+            "     ssssssssssssss     ",
+            "      ssssssssssss      ",
+            "      sssSmmmmSsss      ",
+            "      ssssssssssss      ",
+            "       ssssssssss       ",
+            "        ssssssss        ",
+            "       wwwsssswww       ",
+            "      DwwwTwwTwwwD      ",
+            "     DDDwTTwwTTwDDD     ",
+            "    DDDDDTwwwwTDDDDD    ",
+            "   DDDDDDTwwwwTDDDDDD   ",
+            "   DDDDDDTwwwwTDDDDDD   ",
+            "   DDDDDDTwwwwTDDDDDD   ",
+            "  DDDDDDDTwwwwTDDDDDDD  ",
+            "  DDDDDDDTwwwwTDDDDDDD  "
+        ],
+        // 5: Punk Girl
+        [
+            "        PPPPPPPP        ",
+            "      PPPPPPPPPPPP      ",
+            "     PPPPPPPPPPPPPP     ",
+            "    PPPPssssssssPPPP    ",
+            "    PPPssssssssssPPP    ",
+            "    PPssssssssssssPP    ",
+            "    PPssssssssssssPP    ",
+            "    PPssswwwsswwwsPP    ",
+            "     PssseewsseewsP     ",
+            "     PssssssssssssP     ",
+            "      ssssssssssss      ",
+            "      sssssmmsssss      ",
+            "      ssssssssssss      ",
+            "       ssssssssss       ",
+            "        ssssssss        ",
+            "       bbbssssbbb       ",
+            "      bbbbbbbbbbbb      ",
+            "     bbbbbbbbbbbbbb     ",
+            "    bbbbbbbbbbbbbbbb    ",
+            "   bbbbbbbbbbbbbbbbbb   ",
+            "   bbbbbbbbbbbbbbbbbb   ",
+            "   bbbbbbbbbbbbbbbbbb   ",
+            "  bbbbbbbbbbbbbbbbbbbb  ",
+            "  bbbbbbbbbbbbbbbbbbbb  "
+        ],
+        // 6: Cap Guy
+        [
+            "      RRRRRRRRRRRR      ",
+            "     RRRRRRRRRRRRRR     ",
+            "    RRRRRRRRRRRRRRRRR   ",
+            "    RRRbbbbbbbbbbbb     ",
+            "    bbbbssssssssbbbb    ",
+            "    bbbssssssssssbbb    ",
+            "    bbssssssssssssbb    ",
+            "    bbssswwwsswwwssbb   ",
+            "     bssseewsseewssb    ",
+            "     bsssssssssssssb    ",
+            "      ssssssssssss      ",
+            "      sssssmmsssss      ",
+            "      ssssssssssss      ",
+            "       ssssssssss       ",
+            "        ssssssss        ",
+            "       AAAssssAAA       ",
+            "      AAAAAAAAAAAA      ",
+            "     AAAAAAAAAAAAAA     ",
+            "    AAAAAAAAAAAAAAAA    ",
+            "   AAAAAAAAAAAAAAAAAA   ",
+            "   AAAAAAAAAAAAAAAAAA   ",
+            "   AAAAAAAAAAAAAAAAAA   ",
+            "  AAAAAAAAAAAAAAAAAAAA  ",
+            "  AAAAAAAAAAAAAAAAAAAA  "
+        ],
+        // 7: Mustache Guy
+        [
+            "        bbbbbbbb        ",
+            "      bbbbbbbbbbbb      ",
+            "     bbbbbbbbbbbbbb     ",
+            "    bbbbssssssssbbbb    ",
+            "    bbbssssssssssbbb    ",
+            "    bbssssssssssssbb    ",
+            "    bbssssssssssssbb    ",
+            "    bbssswwwsswwwssbb   ",
+            "     bssseewsseewssb    ",
+            "     bsssssssssssssb    ",
+            "      ssssssssssss      ",
+            "      ssshhhhhhhss      ",
+            "      ssssssssssss      ",
+            "       ssssssssss       ",
+            "        ssssssss        ",
+            "       wwwsssswww       ",
+            "      DwwwDwwDwwwD      ",
+            "     DDDwwDDwwDDwwDDD   ",
+            "    DDDDDwDDwwDDwDDDDD  ",
+            "   DDDDDDDDwwDDDDDDDD   ",
+            "   DDDDDDDDwwDDDDDDDD   ",
+            "   DDDDDDDDwwDDDDDDDD   ",
+            "  DDDDDDDDDDDDDDDDDDDD  ",
+            "  DDDDDDDDDDDDDDDDDDDD  "
+        ],
+        // 8: Sunglasses Guy
+        [
+            "        HHHHHHHH        ",
+            "      HHHHHHHHHHHH      ",
+            "     HHHHHHHHHHHHHH     ",
+            "    HHHHssssssssHHHH    ",
+            "    HHHssssssssssHHH    ",
+            "    HHssseeeeeeeessHH   ",
+            "    HHsseeeeeeeeeessHH  ",
+            "    HHsseeeeeeeeeessHH  ",
+            "     HsssssssssssssH    ",
+            "     HsssssssssssssH    ",
+            "      ssssssssssss      ",
+            "      sssssmmsssss      ",
+            "      ssssssssssss      ",
+            "       ssssssssss       ",
+            "        ssssssss        ",
+            "       wwwsssswww       ",
+            "      TwwwTwwTwwwT      ",
+            "     wwwTwwwwwwwwTwww   ",
+            "    wwwwTwwwwwwwwTwwww  ",
+            "   wwwwwTwwwwwwwwTwwwww ",
+            "   wwwwwTwwwwwwwwTwwwww ",
+            "   wwwwwTwwwwwwwwTwwwww ",
+            "  wwwwwwTwwwwwwwwTwwwwww",
+            "  wwwwwwTwwwwwwwwTwwwwww"
+        ],
+        // 9: Short Hair Girl
+        [
+            "        PPPPPPPP        ",
+            "      PPPPPPPPPPPP      ",
+            "     PPPPPPPPPPPPPP     ",
+            "    PPPPssssssssPPPP    ",
+            "    PPPssssssssssPPP    ",
+            "    PPPssssssssssPPP    ",
+            "    PPPssssssssssPPP    ",
+            "    PPPsswwwsswwwPPP    ",
+            "     PsseewsseewssP     ",
+            "     PssseeeeseeessP    ",
+            "      ssssssssssss      ",
+            "      sssssmmsssss      ",
+            "      ssssssssssss      ",
+            "       ssssssssss       ",
+            "        ssssssss        ",
+            "       CCCssssCCC       ",
+            "      CCCCCCCCCCCC      ",
+            "     CCCCCCCCCCCCCC     ",
+            "    CCCCCCCCCCCCCCCC    ",
+            "   CCCCCCCCCCCCCCCCCC   ",
+            "   CCCCCCCCCCCCCCCCCC   ",
+            "   CCCCCCCCCCCCCCCCCC   ",
+            "  CCCCCCCCCCCCCCCCCCCC  ",
+            "  CCCCCCCCCCCCCCCCCCCC  "
+        ]
+    ];
 
-        const palette = {
-            's': '#e0ac69', 'S': '#c68642', 'w': '#ffffff', 'e': '#111111',
-            'h': '#4a3018', 'H': '#e8c35d', 'b': '#111111', 'c': '#4267b2',
-            'C': '#888888', 'm': '#8a3324', 'R': '#d32f2f', 'G': '#2e7d32',
-            'g': '#88ccff', 'D': '#222222', 'T': '#ffb300', ' ': 'transparent'
-        };
+    const PIXEL_PALETTE = {
+        's': '#e0ac69', 'S': '#c68642', 'w': '#ffffff', 'e': '#111111',
+        'h': '#4a3018', 'H': '#e8c35d', 'b': '#111111', 'c': '#4267b2',
+        'C': '#888888', 'm': '#8a3324', 'R': '#d32f2f', 'G': '#2e7d32',
+        'g': '#88ccff', 'D': '#222222', 'T': '#ffb300', 'P': '#e91e63',
+        'A': '#00bcd4', ' ': 'transparent'
+    };
 
-        const design = designs[Math.floor(Math.random() * designs.length)];
+    function generatePixelFace(index) {
+        const design = PIXEL_DESIGNS[index];
         let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" shape-rendering="crispEdges">`;
         
         for(let y=0; y<24; y++) {
             for(let x=0; x<24; x++) {
                 let char = design[y][x];
                 if(char !== ' ') {
-                    svg += `<rect x="${x}" y="${y}" width="1" height="1" fill="${palette[char]}"/>`;
+                    svg += `<rect x="${x}" y="${y}" width="1" height="1" fill="${PIXEL_PALETTE[char]}"/>`;
                 }
             }
         }
@@ -974,9 +1115,20 @@
     function initStudents() {
         state.students = [];
         const totalStudents = 8;
+        let catGenerated = false;
+
+        // Перемішуємо індекси зовнішностей, щоб вони не повторювались у межах групи
+        let availableFaces = Array.from({length: PIXEL_DESIGNS.length}, (_, i) => i);
+        availableFaces.sort(() => Math.random() - 0.5);
+
         for (let i = 0; i < totalStudents; i++) {
             
-            let isCat = Math.random() < 0.10;
+            // Максимум 1 кіт за сесію
+            let isCat = false;
+            if (!catGenerated && Math.random() < 0.10) {
+                isCat = true;
+                catGenerated = true;
+            }
 
             if (isCat) {
                 state.students.push({
@@ -1014,6 +1166,9 @@
 
                 let documentId = isFraud ? "ID-" + (1000 + Math.floor(Math.random() * 9000)) : idNum;
                 let inJournal = !(isFraud && Math.random() > 0.5);
+                
+                // Беремо унікальне обличчя з пулу
+                let faceIndex = availableFaces.pop();
 
                 state.students.push({
                     id: i,
@@ -1022,7 +1177,7 @@
                     journalId: idNum,
                     inJournal: inJournal,
                     ticket: ticket,
-                    photo: generatePixelFace(), 
+                    photo: generatePixelFace(faceIndex), 
                     answer: answer,
                     correctLaw: randomLaw,
                     isFraud: isFraud,
@@ -1086,12 +1241,12 @@
         renderJournal();
         
         typeDialogue("> СИСТЕМА ГОТОВА. ВИКЛИКАЙТЕ СТУДЕНТА З КОРИДОРУ.");
-        state.clockInterval = setInterval(tickClock, 1000); 
+        state.clockInterval = setInterval(tickClock, 1200); 
     }
 
     function tickClock() {
         if(state.isGameOver) return;
-        state.timeMinutes += 2; 
+        state.timeMinutes += 1; 
         if (state.timeMinutes >= 60) {
             state.timeMinutes = 0;
             state.timeHours++;
@@ -1127,8 +1282,9 @@
                 container.scrollTop = container.scrollHeight;
 
                 i++;
-                let delay = 30 + Math.random() * 20; 
-                if (char === '.' || char === '!' || char === '?') delay += 200;
+                let delay = 40 + Math.random() * 40; 
+                if (char === '.' || char === '!' || char === '?') delay += 300;
+                if (char === ',') delay += 150;
                 typingTimer = setTimeout(typeChar, delay);
             }
         }
@@ -1202,7 +1358,7 @@
             if(state.currentStudentIndex === index) {
                 typeDialogue(dialogue + `> ВІДПОВІДЬ НА БІЛЕТ:\n"${s.answer}"`);
             }
-        }, 2000);
+        }, 3500);
 
         renderClassroom();
     }
@@ -1440,9 +1596,9 @@
         content.innerHTML = '';
         LAWS.forEach(l => {
             content.innerHTML += `
-                <div class="bg-white border-4 border-black p-6 md:p-8 pixel-shadow-sm h-min hover:-translate-y-1 transition-transform break-words">
-                    <h3 class="font-bold text-3xl md:text-5xl border-b-4 border-black mb-3 md:mb-5 pb-2 text-[#4a148c]">${l.art}</h3>
-                    <p class="text-2xl md:text-4xl leading-tight text-[#222]">"${l.text}"</p>
+                <div class="bg-white border-4 border-black p-4 md:p-6 pixel-shadow-sm h-min hover:-translate-y-1 transition-transform break-words">
+                    <h3 class="font-bold text-2xl md:text-4xl border-b-4 border-black mb-2 md:mb-4 pb-1 text-[#4a148c]">${l.art}</h3>
+                    <p class="text-xl md:text-3xl leading-tight text-[#222]">"${l.text}"</p>
                 </div>
             `;
         });
@@ -1457,10 +1613,10 @@
             
             body.innerHTML += `
                 <tr class="hover:bg-[#ddd] border-b-4 border-gray-300">
-                    <td class="p-3 md:p-5 border-r-4 border-black font-bold text-gray-500">${rowNum++}</td>
-                    <td class="p-3 md:p-5 border-r-4 border-black font-bold break-words">${s.name}</td>
-                    <td class="p-3 md:p-5 border-r-4 border-black text-center text-3xl md:text-5xl">${s.ticket}</td>
-                    <td class="p-3 md:p-5 bg-[#fff9c4] font-bold text-gray-700 break-words">${s.journalId}</td>
+                    <td class="p-2 md:p-4 border-r-4 border-black font-bold text-gray-500">${rowNum++}</td>
+                    <td class="p-2 md:p-4 border-r-4 border-black font-bold break-words">${s.name}</td>
+                    <td class="p-2 md:p-4 border-r-4 border-black text-center text-2xl md:text-4xl">${s.ticket}</td>
+                    <td class="p-2 md:p-4 bg-[#fff9c4] font-bold text-gray-700 break-words">${s.journalId}</td>
                 </tr>
             `;
         });
@@ -1498,14 +1654,14 @@
         else if (state.reputation > 30) rating = "**";
 
         document.getElementById('summary-title').innerText = "СЕСІЮ ЗАВЕРШЕНО";
-        document.getElementById('summary-title').className = "text-5xl md:text-7xl mb-6 md:mb-10 text-[#d4af37] crt-text";
+        document.getElementById('summary-title').className = "text-4xl md:text-6xl mb-4 md:mb-6 text-[#d4af37] crt-text";
         document.getElementById('summary-reason').classList.add('hidden');
         
         populateStats();
         
         document.getElementById('summary-rating-label').classList.remove('hidden');
         document.getElementById('summary-rating').innerText = rating;
-        document.getElementById('summary-rating').className = "text-6xl md:text-8xl mb-8 md:mb-12 text-[#d4af37] tracking-widest drop-shadow-[0_0_20px_rgba(212,175,55,1)]";
+        document.getElementById('summary-rating').className = "text-5xl md:text-7xl mb-6 md:mb-8 text-[#d4af37] tracking-widest drop-shadow-[0_0_20px_rgba(212,175,55,1)]";
     }
 
     function gameOver(reason) {
@@ -1519,7 +1675,7 @@
         modal.classList.remove('hidden');
         
         document.getElementById('summary-title').innerText = "ЗВІЛЬНЕНО";
-        document.getElementById('summary-title').className = "text-6xl md:text-8xl mb-6 md:mb-8 text-[#d32f2f] font-bold crt-text drop-shadow-[0_0_20px_rgba(255,0,0,0.8)]";
+        document.getElementById('summary-title').className = "text-5xl md:text-7xl mb-4 md:mb-6 text-[#d32f2f] font-bold crt-text drop-shadow-[0_0_20px_rgba(255,0,0,0.8)]";
         
         const reasonBox = document.getElementById('summary-reason');
         reasonBox.classList.remove('hidden');
@@ -1529,7 +1685,7 @@
         
         document.getElementById('summary-rating-label').classList.add('hidden');
         document.getElementById('summary-rating').innerText = "[ СИСТЕМУ ЗАБЛОКОВАНО ]";
-        document.getElementById('summary-rating').className = "text-4xl md:text-6xl mb-8 md:mb-12 mt-4 text-[#d32f2f] crt-text";
+        document.getElementById('summary-rating').className = "text-3xl md:text-5xl mb-6 md:mb-8 mt-2 text-[#d32f2f] crt-text";
     }
 
     function resetGame() {
