@@ -91,15 +91,12 @@
         }
         .btn-pixel:hover { filter: brightness(1.2); }
         
-        .btn-blue { background-color: #1976d2; }
-
         /* ПАПІР */
         .paper {
             background-color: #d9c8a9;
             background-image: repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.03) 1px, rgba(0,0,0,0.03) 2px);
             color: #111;
             border: 4px solid #000;
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
         
         .paper-grid {
@@ -129,9 +126,6 @@
         @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
         .animate-bob { animation: bob 2s infinite steps(2, end); }
 
-        @keyframes steam { 0% { transform: translateY(0) scale(1); opacity: 0.5; } 100% { transform: translateY(-20px) scale(1.5); opacity: 0; } }
-        .steam-particle { animation: steam 2s infinite linear; }
-
         @keyframes floatBribe { 0%, 100% { transform: translateY(0) rotate(12deg); } 50% { transform: translateY(-6px) rotate(15deg); } }
         .banknote {
             background-color: #6a9955;
@@ -154,22 +148,29 @@
             z-index: 40;
         }
 
+        /* ПРИЦІЛ */
         #stamp-reticle {
             pointer-events: none;
             transform: translate(-50%, -50%);
+            box-sizing: border-box;
         }
         .reticle-pass { border-color: rgba(27, 94, 32, 0.8); background-color: rgba(27, 94, 32, 0.15); }
         .reticle-fail { border-color: rgba(183, 28, 28, 0.8); background-color: rgba(183, 28, 28, 0.15); }
 
+        /* ФІЗИЧНИЙ УДАР ПЕЧАТКОЮ З ВДАВЛЮВАННЯМ */
         .falling-stamp {
-            animation: fallAndBounce 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            animation: pressStamp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
             pointer-events: none;
+            transform-origin: bottom center;
+            z-index: 10000;
         }
-        @keyframes fallAndBounce {
-            0% { transform: translate(-50%, calc(-100% - 600px)); filter: drop-shadow(0 50px 20px rgba(0,0,0,0.3)); }
-            40% { transform: translate(-50%, -100%); filter: drop-shadow(0 0 0 rgba(0,0,0,1)); }
-            50% { transform: translate(-50%, -100%); filter: drop-shadow(0 0 0 rgba(0,0,0,1)); }
-            100% { transform: translate(-50%, calc(-100% - 600px)); filter: drop-shadow(0 50px 20px rgba(0,0,0,0.3)); }
+        @keyframes pressStamp {
+            0% { transform: translate(-50%, calc(-50% - 150px)) scale(1.1); filter: drop-shadow(0 30px 15px rgba(0,0,0,0.4)); opacity: 0; }
+            10% { opacity: 1; }
+            30% { transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0 0 0 rgba(0,0,0,0.8)); } 
+            40% { transform: translate(-50%, -50%) scale(1) scaleY(0.75); filter: drop-shadow(0 0 0 rgba(0,0,0,0.9)); } 
+            50% { transform: translate(-50%, -50%) scale(1) scaleY(1); filter: drop-shadow(0 0 0 rgba(0,0,0,0.8)); } 
+            100% { transform: translate(-50%, calc(-50% - 200px)) scale(1.1); filter: drop-shadow(0 40px 20px rgba(0,0,0,0.2)); opacity: 0; } 
         }
 
         .physical-stamp { transition: transform 0.1s steps(2, end); }
@@ -205,8 +206,6 @@
             color: #4caf50;
         }
         @keyframes blink { 50% { opacity: 0; } }
-        @keyframes blink-red { 50% { opacity: 0; } }
-        .cctv-blink { animation: blink-red 2s step-end infinite; color: #ff0000; }
 
         .pixel-photo { image-rendering: pixelated; image-rendering: -moz-crisp-edges; image-rendering: crisp-edges; }
 
@@ -230,11 +229,11 @@
     <div class="crt-overlay"></div>
 
     <!-- Custom Stamp Reticle -->
-    <div id="stamp-reticle" class="hidden fixed z-[9999] w-[240px] h-[90px] border-[6px] border-dashed flex items-center justify-center">
-        <div class="w-6 h-6 border-t-4 border-l-4 absolute top-2 left-2"></div>
-        <div class="w-6 h-6 border-t-4 border-r-4 absolute top-2 right-2"></div>
-        <div class="w-6 h-6 border-b-4 border-l-4 absolute bottom-2 left-2"></div>
-        <div class="w-6 h-6 border-b-4 border-r-4 absolute bottom-2 right-2"></div>
+    <div id="stamp-reticle" class="hidden fixed z-[9999] w-[200px] h-[90px] border-[4px] border-dashed flex items-center justify-center">
+        <div class="w-4 h-4 border-t-4 border-l-4 absolute top-1 left-1"></div>
+        <div class="w-4 h-4 border-t-4 border-r-4 absolute top-1 right-1"></div>
+        <div class="w-4 h-4 border-b-4 border-l-4 absolute bottom-1 left-1"></div>
+        <div class="w-4 h-4 border-b-4 border-r-4 absolute bottom-1 right-1"></div>
         <div class="w-2 h-2 rounded-full bg-current opacity-50"></div>
     </div>
 
@@ -260,9 +259,9 @@
             </div>
 
             <div class="text-lg md:text-xl mb-6 md:mb-8 text-[#aaa] text-left inline-block space-y-2">
-                <p>● <b>НОВЕ:</b> Книги та печатки тепер фізичні об'єкти на столі.</p>
+                <p>● <b>НОВЕ:</b> Тепер заліковка інтерактивна! Ви можете ставити стільки штампів, скільки захочете.</p>
+                <p>● <b>ВАЖЛИВО:</b> Лише перший штамп фіксує рішення. Щоб прийняти екзамен — перетягніть заліковку до студента!</p>
                 <p>● Клікай на хабарі, щоб забрати їх (камери іноді фіксують!).</p>
-                <p>● Репутація &lt; 30% = КІНЕЦЬ.</p>
                 <p class="text-[#4caf50] mt-1">● Іноді на іспит забігає кафедральний кіт. Не ображайте його!</p>
                 <p class="text-yellow-600 mt-3 md:mt-4 font-bold text-xl md:text-2xl text-center w-full block">УВІМКНІТЬ ЗВУК ДЛЯ КРАЩОГО ДОСВІДУ 🔊</p>
             </div>
@@ -276,16 +275,11 @@
     <!-- Main Game UI -->
     <div id="screen-game" class="hidden flex-1 flex flex-col h-full w-full">
         
-        <!-- Top Hardware Bar -->
+        <!-- Top Hardware Bar (Dark Retro Theme) -->
         <div class="h-28 bg-[#1a1a1a] border-b-8 border-black flex items-center justify-between px-8 z-40 relative shadow-[0_10px_20px_rgba(0,0,0,0.8)] shrink-0">
             <div class="absolute bottom-0 left-0 right-0 h-2 bg-[#0a0a0a]"></div>
-            
-            <div class="absolute top-5 right-10 text-2xl font-bold flex items-center gap-3">
-                <div class="w-5 h-5 rounded-full bg-red-600 cctv-blink pixel-border"></div>
-                <span class="text-[#888] crt-text">РЕКОРДИНГ</span>
-            </div>
 
-            <div class="flex gap-8 items-center text-4xl">
+            <div class="flex gap-8 items-center text-4xl mt-1">
                 <div class="bg-[#050505] text-[#aaa] px-6 py-3 border-4 border-black shadow-[4px_4px_0_rgba(0,0,0,0.5)] flex items-center gap-4">
                     <span class="text-[#888]">ЧАС:</span>
                     <span id="stat-clock" class="text-white crt-text drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]">09:00</span>
@@ -296,7 +290,7 @@
                 </div>
             </div>
 
-            <div class="flex gap-10 items-center mr-48">
+            <div class="flex gap-10 items-center mt-1">
                 <div class="bg-[#050505] text-[#aaa] px-6 py-3 border-4 border-black shadow-[4px_4px_0_rgba(0,0,0,0.5)]">
                     <span class="text-[#888]">ГАМАНЕЦЬ:</span>
                     <span id="stat-money" class="text-[#4caf50] text-4xl font-bold crt-text drop-shadow-[0_0_5px_rgba(76,175,80,0.5)]">0 ₴</span>
@@ -320,10 +314,10 @@
             <div class="w-[380px] bg-[#151515] border-r-8 border-black flex flex-col z-30 shadow-[10px_0_20px_rgba(0,0,0,0.5)] shrink-0">
                 
                 <!-- Direct Student View -->
-                <div class="h-80 border-b-8 border-black bg-[#1b5e20] p-4 flex flex-col relative shrink-0 overflow-hidden shadow-[inset_0_20px_20px_rgba(0,0,0,0.6)]">
+                <div class="h-80 border-b-8 border-black bg-[#1b5e20] p-4 flex flex-col relative shrink-0 overflow-hidden shadow-[inset_0_20px_20px_rgba(0,0,0,0.6)] transition-all" id="cctv-student-container">
                     <div class="absolute inset-0 bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQIW2NkYGD4z8DAwMgAI0AMDA4IAm1+xXgAAAAASUVORK5CYII=')] opacity-20"></div>
                     
-                    <div class="absolute top-5 left-5 flex items-center gap-2 z-20 bg-[#050505]/90 px-3 py-1 border-4 border-black shadow-[4px_4px_0_rgba(0,0,0,0.5)]">
+                    <div class="absolute top-5 left-5 flex items-center gap-2 z-20 bg-[#050505]/90 px-3 py-1 border-4 border-black shadow-[4px_4px_0_rgba(0,0,0,0.5)] transition-colors" id="cctv-zone-label">
                         <span class="text-[#4caf50] text-lg font-bold">МІСЦЕ ДЛЯ ВІДПОВІДІ</span>
                     </div>
                     
@@ -336,7 +330,7 @@
                             <img id="cctv-student-img" src="" class="w-full h-full pixel-photo object-contain filter drop-shadow-[8px_8px_0_rgba(0,0,0,0.6)] object-bottom" alt="student">
                         </div>
                         
-                        <div class="absolute bottom-0 w-full h-12 bg-[#3e2723] border-t-4 border-black z-30 shadow-[0_-5px_10px_rgba(0,0,0,0.5)]"></div>
+                        <div class="absolute bottom-0 w-full h-12 bg-[#3e2723] border-t-4 border-black z-30 shadow-[0_-5px_10px_rgba(0,0,0,0.5)] pointer-events-none"></div>
                     </div>
                 </div>
 
@@ -350,16 +344,53 @@
             </div>
 
             <!-- Right Side: Desk Area -->
-            <div class="flex-1 desk-surface relative overflow-hidden flex flex-col justify-center">
+            <div class="flex-1 desk-surface relative overflow-hidden flex flex-col justify-center items-center">
                 <div class="absolute inset-0 opacity-20 bg-[repeating-linear-gradient(0deg,transparent,transparent_4px,#000_4px,#000_8px)] mix-blend-multiply"></div>
                 <div class="desk-lamp-light"></div>
 
                 <div id="notification-container" class="absolute top-8 right-8 z-50 flex flex-col gap-4 pointer-events-none"></div>
 
-                <div id="interaction-zone" class="relative w-full p-12 flex flex-col items-center justify-center z-20">
+                <!-- Floating Gradebook -->
+                <div id="gradebook" class="hidden absolute paper pixel-shadow w-[500px] p-0 z-40 cursor-grab active:cursor-grabbing left-1/2 top-[150%] transform -translate-x-1/2 -translate-y-1/2">
+                    <div class="p-6 border-b-8 border-black bg-[#c4b598] flex justify-between items-center select-none">
+                        <h4 class="text-4xl text-black font-bold">ЗАЛІКОВКА</h4>
+                        <span class="text-2xl bg-white border-4 border-black px-3 py-1 font-bold">ДЕННА ФОРМА</span>
+                    </div>
+                    <div class="p-8 pb-12 bg-[#f9f9f9] bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQIW2NkYGD4z8DAwMgAI0AMDA4IAm1+xXgAAAAASUVORK5CYII=')] relative min-h-[480px]">
+                        <div class="flex gap-6 mb-8 items-center border-b-4 border-black pb-8 relative z-10 select-none">
+                            <div class="bg-[#546e7a] pixel-border pixel-shadow-sm w-40 h-40 flex-shrink-0 relative overflow-hidden flex items-end justify-center">
+                                <img id="gb-photo" src="" class="w-full h-full pixel-photo object-contain transform translate-y-1 pointer-events-none" alt="student">
+                            </div>
+                            <div class="text-3xl space-y-3 text-black font-bold flex-1 min-w-0">
+                                <p class="text-[#555] text-2xl border-b border-dashed border-[#aaa] pb-1">ІМ'Я:</p>
+                                <p id="gb-name" class="text-4xl uppercase text-[#111] break-words leading-none mt-2">...</p>
+                                <p class="text-[#555] mt-4 flex items-center gap-2">ІДЕНТ. КОД: <span id="gb-id" class="text-white bg-black px-3 py-1 pixel-shadow-sm">...</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="border-4 border-black p-5 text-3xl text-black bg-white pixel-shadow-inset relative z-10 select-none pointer-events-none">
+                            <p class="mb-4 border-b-2 border-dashed border-[#aaa] pb-2 text-[#555]">ДИСЦИПЛІНА: ЦИВ. ПРАВО</p>
+                            <div class="h-40 flex items-center justify-center relative mt-5 border-4 border-dashed border-[#ccc] bg-[#f0f0f0]">
+                                <span class="text-2xl text-[#aaa] absolute uppercase text-center leading-tight">[КЛІКНІТЬ ПЕЧАТКОЮ<br>ДЛЯ ЗАПИСУ ОЦІНКИ]</span>
+                            </div>
+                        </div>
+
+                        <div id="gb-ink-layer" class="absolute inset-0 pointer-events-none overflow-hidden z-20"></div>
+
+                        <div id="bribe-element" onmousedown="takeBribe(event)" class="hidden absolute -bottom-12 -right-12 banknote px-6 py-4 text-4xl z-30 pixel-shadow-sm">
+                            <div class="border-4 border-black border-dashed px-4 py-3 flex flex-col items-center">
+                                <span>₴ <span id="bribe-amount">200</span></span>
+                                <div class="bg-black text-white text-xl px-3 py-1 mt-3 w-full text-center">НЕПОМІТНО ВЗЯТИ</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Static Interaction Zone (Tools and Dialogue) -->
+                <div class="relative w-full max-w-6xl p-12 flex flex-col items-center justify-center z-20 h-full pointer-events-none">
                     
                     <!-- Dialogue Terminal -->
-                    <div class="w-full max-w-6xl mb-12">
+                    <div class="w-full max-w-6xl mb-12 pointer-events-auto">
                         <div class="bg-[#050505] border-8 border-[#222] p-8 text-4xl h-56 pixel-shadow relative overflow-hidden flex flex-col">
                             <div class="absolute top-0 left-0 w-full h-1/2 bg-white opacity-5 pointer-events-none transform -skew-y-2 z-10"></div>
                             <div class="absolute inset-0 bg-[linear-gradient(rgba(0,255,0,0.05)_50%,transparent_50%)] bg-[length:100%_6px] pointer-events-none z-10"></div>
@@ -369,47 +400,9 @@
                         </div>
                     </div>
 
-                    <div class="flex gap-16 items-start w-full justify-center relative">
-                        
-                        <!-- Left: Gradebook (Залікова книжка) -->
-                        <div id="gradebook" class="hidden paper pixel-shadow w-[500px] p-0 relative z-20 transform translate-y-[150%]">
-                            <div class="p-6 border-b-8 border-black bg-[#c4b598] flex justify-between items-center">
-                                <h4 class="text-4xl text-black font-bold">ЗАЛІКОВКА</h4>
-                                <span class="text-2xl bg-white border-4 border-black px-3 py-1 font-bold">ДЕННА ФОРМА</span>
-                            </div>
-                            <div class="p-8 pb-12 bg-[#f9f9f9] bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQIW2NkYGD4z8DAwMgAI0AMDA4IAm1+xXgAAAAASUVORK5CYII=')] relative min-h-[480px]">
-                                <div class="flex gap-6 mb-8 items-center border-b-4 border-black pb-8 relative z-10">
-                                    <div class="bg-[#546e7a] pixel-border pixel-shadow-sm w-40 h-40 flex-shrink-0 relative overflow-hidden flex items-end justify-center">
-                                        <img id="gb-photo" src="" class="w-full h-full pixel-photo object-contain transform translate-y-1" alt="student">
-                                    </div>
-                                    <div class="text-3xl space-y-3 text-black font-bold flex-1 min-w-0">
-                                        <p class="text-[#555] text-2xl border-b border-dashed border-[#aaa] pb-1">ІМ'Я:</p>
-                                        <p id="gb-name" class="text-4xl uppercase text-[#111] break-words leading-none mt-2">...</p>
-                                        <p class="text-[#555] mt-4 flex items-center gap-2">ІДЕНТ. КОД: <span id="gb-id" class="text-white bg-black px-3 py-1 pixel-shadow-sm">...</span></p>
-                                    </div>
-                                </div>
-                                
-                                <div class="border-4 border-black p-5 text-3xl text-black bg-white pixel-shadow-inset relative z-10 group-hover:bg-[#f0f0f0] transition-colors">
-                                    <p class="mb-4 border-b-2 border-dashed border-[#aaa] pb-2 text-[#555]">ДИСЦИПЛІНА: ЦИВ. ПРАВО</p>
-                                    <div class="h-40 flex items-center justify-center relative mt-5 border-4 border-dashed border-[#ccc] bg-[#f0f0f0] group-hover:bg-[#e0e0e0] transition-colors" id="gb-stamp-area-container">
-                                        <span class="text-2xl text-[#aaa] absolute uppercase pointer-events-none text-center leading-tight">[КЛІКНІТЬ БУДЬ-ДЕ НА ПАПЕРІ,<br>ЩОБ ПОСТАВИТИ ПЕЧАТКУ]</span>
-                                        <div id="gb-stamp-area" class="z-10 w-full h-full flex items-center justify-center absolute pointer-events-none"></div>
-                                    </div>
-                                </div>
-
-                                <div id="gb-ink-layer" class="absolute inset-0 pointer-events-none overflow-hidden z-20"></div>
-
-                                <div id="bribe-element" onmousedown="takeBribe(event)" class="hidden absolute -bottom-12 -right-12 banknote px-6 py-4 text-4xl z-30 pixel-shadow-sm">
-                                    <div class="border-4 border-black border-dashed px-4 py-3 flex flex-col items-center">
-                                        <span>₴ <span id="bribe-amount">200</span></span>
-                                        <div class="bg-black text-white text-xl px-3 py-1 mt-3 w-full text-center">НЕПОМІТНО ВЗЯТИ</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                    <div class="flex gap-16 items-start w-full justify-end relative pointer-events-none">
                         <!-- Right: Tools (Books & Stamps) -->
-                        <div class="flex flex-col gap-10 z-20 w-[480px] items-center">
+                        <div class="flex flex-col gap-10 z-20 w-[480px] items-center pointer-events-auto">
                             
                             <!-- Books Row -->
                             <div class="flex gap-8 justify-center w-full">
@@ -447,33 +440,33 @@
                             <div class="p-8 bg-[#222] border-[6px] border-black shadow-[10px_10px_0_rgba(0,0,0,0.8),inset_4px_4px_0_rgba(255,255,255,0.1)] relative border-t-[16px] border-[#444] w-full">
                                 <div class="absolute -top-8 left-8 bg-[#111] text-[#fff] px-5 py-1 text-3xl border-[6px] border-black shadow-[4px_4px_0_rgba(0,0,0,0.6)] crt-text">ІНСТРУМЕНТИ</div>
                                 
-                                <div class="flex gap-12 mt-6 justify-center items-end h-[160px]">
+                                <div class="flex gap-10 mt-6 justify-center items-end h-[160px]">
                                     
                                     <!-- Pass Stamp Slot -->
-                                    <div class="w-[170px] h-[160px] flex items-end justify-center relative">
+                                    <div class="w-[210px] h-[160px] flex items-end justify-center relative">
                                         <div class="absolute bottom-0 w-[180px] h-[30px] bg-black/60 rounded-[50%] blur-sm"></div>
                                         
                                         <!-- The Physical Pass Stamp -->
-                                        <div id="phys-stamp-pass" onmousedown="pickupStamp('pass', event)" class="physical-stamp relative w-[160px] h-[100px] bg-[#2e7d32] border-[6px] border-black shadow-[inset_-6px_-6px_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.2),0_12px_0_#1b5e20,0_20px_15px_rgba(0,0,0,0.7)] flex items-center justify-center group z-30">
+                                        <div id="phys-stamp-pass" onmousedown="pickupStamp('pass', event)" class="physical-stamp relative w-[200px] h-[90px] bg-[#2e7d32] border-[6px] border-black shadow-[inset_-6px_-6px_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.2),0_12px_0_#1b5e20,0_20px_15px_rgba(0,0,0,0.7)] flex items-center justify-center group z-30">
                                             <div class="absolute -top-[50px] w-[50px] h-[50px] bg-[#8d6e63] border-[6px] border-black border-b-0 shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_0_0_rgba(255,255,255,0.1)] flex justify-center group-hover:brightness-110">
                                                 <div class="absolute -top-[40px] w-[90px] h-[40px] bg-[#5d4037] border-[6px] border-black rounded-t-[16px] shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.1)]"></div>
                                             </div>
-                                            <div class="bg-[#e8e8e8] border-4 border-black px-5 py-1 text-[#1b5e20] font-bold text-4xl shadow-[inset_3px_3px_0_rgba(0,0,0,0.2)] transform -rotate-2 z-10 group-hover:bg-white transition-colors">ЗАРАХ</div>
-                                            <div class="absolute -bottom-[24px] w-[152px] h-[18px] bg-[#1b5e20] border-[6px] border-black border-t-0 shadow-[10px_10px_0_rgba(0,0,0,0.6)]"></div>
+                                            <div class="bg-[#e8e8e8] border-4 border-black px-6 py-2 text-[#1b5e20] font-bold text-4xl shadow-[inset_3px_3px_0_rgba(0,0,0,0.2)] transform -rotate-2 z-10 group-hover:bg-white transition-colors tracking-widest">ЗАРАХ</div>
+                                            <div class="absolute -bottom-[24px] w-[192px] h-[18px] bg-[#1b5e20] border-[6px] border-black border-t-0 shadow-[10px_10px_0_rgba(0,0,0,0.6)]"></div>
                                         </div>
                                     </div>
 
                                     <!-- Fail Stamp Slot -->
-                                    <div class="w-[170px] h-[160px] flex items-end justify-center relative">
+                                    <div class="w-[210px] h-[160px] flex items-end justify-center relative">
                                         <div class="absolute bottom-0 w-[180px] h-[30px] bg-black/60 rounded-[50%] blur-sm"></div>
                                         
                                         <!-- The Physical Fail Stamp -->
-                                        <div id="phys-stamp-fail" onmousedown="pickupStamp('fail', event)" class="physical-stamp relative w-[160px] h-[100px] bg-[#c62828] border-[6px] border-black shadow-[inset_-6px_-6px_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.2),0_12px_0_#b71c1c,0_20px_15px_rgba(0,0,0,0.7)] flex items-center justify-center group z-30">
+                                        <div id="phys-stamp-fail" onmousedown="pickupStamp('fail', event)" class="physical-stamp relative w-[200px] h-[90px] bg-[#c62828] border-[6px] border-black shadow-[inset_-6px_-6px_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.2),0_12px_0_#b71c1c,0_20px_15px_rgba(0,0,0,0.7)] flex items-center justify-center group z-30">
                                             <div class="absolute -top-[50px] w-[50px] h-[50px] bg-[#8d6e63] border-[6px] border-black border-b-0 shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_0_0_rgba(255,255,255,0.1)] flex justify-center group-hover:brightness-110">
                                                 <div class="absolute -top-[40px] w-[90px] h-[40px] bg-[#5d4037] border-[6px] border-black rounded-t-[16px] shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.1)]"></div>
                                             </div>
-                                            <div class="bg-[#e8e8e8] border-4 border-black px-5 py-1 text-[#b71c1c] font-bold text-4xl shadow-[inset_3px_3px_0_rgba(0,0,0,0.2)] transform rotate-3 z-10 group-hover:bg-white transition-colors">ВІДМ</div>
-                                            <div class="absolute -bottom-[24px] w-[152px] h-[18px] bg-[#b71c1c] border-[6px] border-black border-t-0 shadow-[10px_10px_0_rgba(0,0,0,0.6)]"></div>
+                                            <div class="bg-[#e8e8e8] border-4 border-black px-6 py-2 text-[#b71c1c] font-bold text-4xl shadow-[inset_3px_3px_0_rgba(0,0,0,0.2)] transform rotate-3 z-10 group-hover:bg-white transition-colors tracking-widest">ВІДМ</div>
+                                            <div class="absolute -bottom-[24px] w-[192px] h-[18px] bg-[#b71c1c] border-[6px] border-black border-t-0 shadow-[10px_10px_0_rgba(0,0,0,0.6)]"></div>
                                         </div>
                                     </div>
 
@@ -484,7 +477,7 @@
                 </div>
 
                 <!-- Citation Slip (Штраф) -->
-                <div id="citation-slip" class="p-8 flex flex-col">
+                <div id="citation-slip" class="p-8 flex flex-col z-50">
                     <div class="border-b-8 border-[#f57f17] pb-3 mb-6 flex justify-between items-end">
                         <h2 class="text-5xl font-bold text-black">ДОГАНА ВІД ДЕКАНАТУ</h2>
                         <span class="text-3xl bg-[#f57f17] text-white px-3 py-1 font-bold">ОФІЦІЙНО</span>
@@ -509,32 +502,32 @@
         <!-- Overlays -->
         <!-- Law Book UI -->
         <div id="modal-law" class="hidden absolute inset-0 z-50 bg-[rgba(0,0,0,0.85)] flex items-center justify-center p-6 md:p-12">
-            <div class="paper w-full max-w-6xl max-h-[90vh] h-full p-0 flex flex-col relative pixel-shadow modal-animate">
-                <div class="bg-[#7f0000] text-white p-3 md:p-5 border-b-8 border-black flex justify-between items-center text-2xl md:text-4xl shadow-[0_5px_15px_rgba(0,0,0,0.5)] shrink-0">
+            <div class="paper w-full max-w-6xl max-h-[95vh] h-full p-0 flex flex-col relative pixel-shadow modal-animate">
+                <div class="bg-[#7f0000] text-white p-4 md:p-6 border-b-8 border-black flex justify-between items-center text-3xl md:text-5xl shadow-[0_5px_15px_rgba(0,0,0,0.5)] shrink-0">
                     <span class="font-serif tracking-widest font-bold">ЦИВІЛЬНИЙ КОДЕКС УКРАЇНИ</span>
-                    <button onclick="toggleLawBook()" class="btn-pixel px-4 md:px-6 py-1 md:py-2 bg-red-600 text-xl md:text-3xl">ЗАКРИТИ</button>
+                    <button onclick="toggleLawBook()" class="btn-pixel px-4 md:px-6 py-2 bg-red-600 text-2xl md:text-4xl">ЗАКРИТИ</button>
                 </div>
-                <div class="p-6 md:p-8 h-full border-l-[16px] border-red-900 bg-[#e8e8e8] overflow-y-auto scroll-custom">
-                    <div id="law-content" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 w-full text-xl md:text-3xl text-black break-words"></div>
+                <div class="p-6 md:p-12 h-full border-l-[16px] border-red-900 bg-[#e8e8e8] overflow-y-auto scroll-custom">
+                    <div id="law-content" class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 w-full text-2xl md:text-4xl text-black break-words"></div>
                 </div>
             </div>
         </div>
 
         <!-- Journal UI -->
         <div id="modal-journal" class="hidden absolute inset-0 z-50 bg-[rgba(0,0,0,0.85)] flex items-center justify-center p-6 md:p-12">
-            <div class="paper paper-grid w-full max-w-6xl max-h-[90vh] h-full p-0 flex flex-col relative pixel-shadow modal-animate">
-                <div class="bg-[#5d4037] text-white p-3 md:p-5 border-b-8 border-black flex justify-between items-center text-2xl md:text-4xl shadow-[0_5px_15px_rgba(0,0,0,0.5)] shrink-0">
+            <div class="paper paper-grid w-full max-w-6xl max-h-[95vh] h-full p-0 flex flex-col relative pixel-shadow modal-animate">
+                <div class="bg-[#5d4037] text-white p-4 md:p-6 border-b-8 border-black flex justify-between items-center text-3xl md:text-5xl shadow-[0_5px_15px_rgba(0,0,0,0.5)] shrink-0">
                     <span class="font-bold tracking-widest">ЕЛЕКТРОННА ВІДОМІСТЬ (ЄДЕБО)</span>
-                    <button onclick="toggleJournal()" class="btn-pixel px-4 md:px-6 py-1 md:py-2 bg-red-600 text-xl md:text-3xl">ЗАКРИТИ</button>
+                    <button onclick="toggleJournal()" class="btn-pixel px-4 md:px-6 py-2 bg-red-600 text-2xl md:text-4xl">ЗАКРИТИ</button>
                 </div>
-                <div class="p-6 md:p-8 overflow-y-auto scroll-custom h-full">
-                    <table class="w-full text-left text-xl md:text-3xl text-black border-collapse border-8 border-black bg-white pixel-shadow-sm break-words">
+                <div class="p-6 md:p-12 overflow-y-auto scroll-custom h-full">
+                    <table class="w-full text-left text-2xl md:text-4xl text-black border-collapse border-8 border-black bg-white pixel-shadow-sm break-words">
                         <thead class="bg-[#ccc] border-b-8 border-black">
                             <tr>
-                                <th class="p-2 md:p-4 border-r-4 border-black w-12 md:w-20">#</th>
-                                <th class="p-2 md:p-4 border-r-4 border-black">ПІБ СТУДЕНТА</th>
-                                <th class="p-2 md:p-4 border-r-4 border-black w-20 md:w-32">БІЛЕТ</th>
-                                <th class="p-2 md:p-4 bg-[#ffecb3] w-40 md:w-56">ІДЕНТИФІКАТОР</th>
+                                <th class="p-3 md:p-5 border-r-4 border-black w-16 md:w-24">#</th>
+                                <th class="p-3 md:p-5 border-r-4 border-black">ПІБ СТУДЕНТА</th>
+                                <th class="p-3 md:p-5 border-r-4 border-black w-24 md:w-40">БІЛЕТ</th>
+                                <th class="p-3 md:p-5 bg-[#ffecb3] w-48 md:w-64">ІДЕНТИФІКАТОР</th>
                             </tr>
                         </thead>
                         <tbody id="journal-body"></tbody>
@@ -545,33 +538,33 @@
 
         <!-- Final Summary -->
         <div id="modal-summary" class="hidden absolute inset-0 z-[60] bg-black/95 flex items-center justify-center p-6 md:p-12">
-            <div class="bg-[#111] text-white pixel-border p-6 md:p-10 max-w-4xl w-full text-center relative border-[#fff] shadow-[0_0_50px_rgba(255,255,255,0.1)] modal-animate max-h-[90vh] overflow-y-auto scroll-custom">
+            <div class="bg-[#111] text-white pixel-border p-8 md:p-16 max-w-5xl w-full text-center relative border-[#fff] shadow-[0_0_50px_rgba(255,255,255,0.1)] modal-animate max-h-[95vh] overflow-y-auto scroll-custom">
                 
-                <h2 class="text-4xl md:text-6xl mb-4 md:mb-6 text-[#d4af37] crt-text" id="summary-title">СЕСІЮ ЗАВЕРШЕНО</h2>
+                <h2 class="text-5xl md:text-7xl mb-6 md:mb-10 text-[#d4af37] crt-text" id="summary-title">СЕСІЮ ЗАВЕРШЕНО</h2>
                 
-                <div id="summary-reason" class="hidden border-4 border-[#d32f2f] p-4 md:p-6 bg-black text-white text-xl md:text-3xl pixel-shadow-inset mb-4 md:mb-6 text-left">
+                <div id="summary-reason" class="hidden border-4 border-[#d32f2f] p-6 md:p-8 bg-black text-white text-2xl md:text-4xl pixel-shadow-inset mb-6 md:mb-10 text-left">
                     <span class="text-[#d32f2f] font-bold">> ВЕРДИКТ РЕКТОРАТУ:</span><br><br>
-                    <span id="summary-reason-text" class="leading-relaxed block mt-1">...</span>
+                    <span id="summary-reason-text" class="leading-relaxed block mt-2">...</span>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 text-left text-xl md:text-2xl mb-6 md:mb-8" id="summary-stats-grid">
-                    <div class="border-4 border-[#555] p-4 md:p-8 bg-black space-y-3 md:space-y-4 pixel-shadow-inset">
-                        <p class="text-[#aaa] border-b-4 border-[#333] pb-2 font-bold">РЕЗУЛЬТАТИ ЕКЗАМЕНУ:</p>
-                        <p>ОПИТАНО: <span class="text-white bg-[#333] px-2 font-bold" id="sum-total">0</span></p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 text-left text-2xl md:text-4xl mb-8 md:mb-12" id="summary-stats-grid">
+                    <div class="border-4 border-[#555] p-6 md:p-10 bg-black space-y-4 md:space-y-6 pixel-shadow-inset">
+                        <p class="text-[#aaa] border-b-4 border-[#333] pb-2 md:pb-4 font-bold">РЕЗУЛЬТАТИ ЕКЗАМЕНУ:</p>
+                        <p>ОПИТАНО: <span class="text-white bg-[#333] px-3 font-bold" id="sum-total">0</span></p>
                         <p>ЧЕСНИХ ОЦІНОК: <span class="text-[#4caf50] crt-text-green font-bold" id="sum-correct">0</span></p>
                         <p>СУМНІВНИХ РІШЕНЬ: <span class="text-[#d32f2f] font-bold" id="sum-wrong">0</span></p>
                     </div>
-                    <div class="border-4 border-[#555] p-4 md:p-8 bg-black space-y-3 md:space-y-4 pixel-shadow-inset">
-                        <p class="text-[#aaa] border-b-4 border-[#333] pb-2 font-bold">СТАТУС ВИКЛАДАЧА:</p>
+                    <div class="border-4 border-[#555] p-6 md:p-10 bg-black space-y-4 md:space-y-6 pixel-shadow-inset">
+                        <p class="text-[#aaa] border-b-4 border-[#333] pb-2 md:pb-4 font-bold">СТАТУС ВИКЛАДАЧА:</p>
                         <p>ГАМАНЕЦЬ: <span class="text-[#4caf50] crt-text-green font-bold" id="sum-money">0 ₴</span></p>
                         <p>АВТОРИТЕТ: <span class="text-[#2196f3] crt-text font-bold" id="sum-rep">0%</span></p>
                     </div>
                 </div>
                 
-                <div class="text-[#888] text-xl md:text-3xl mb-2 md:mb-4 font-bold" id="summary-rating-label">ПІДСУМКОВА ОЦІНКА:</div>
-                <div id="summary-rating" class="text-5xl md:text-7xl mb-6 md:mb-8 text-[#d4af37] tracking-widest drop-shadow-[0_0_20px_rgba(212,175,55,1)]">*****</div>
+                <div class="text-[#888] text-2xl md:text-4xl mb-4 md:mb-6 font-bold" id="summary-rating-label">ПІДСУМКОВА ОЦІНКА:</div>
+                <div id="summary-rating" class="text-6xl md:text-8xl mb-8 md:mb-12 text-[#d4af37] tracking-widest drop-shadow-[0_0_20px_rgba(212,175,55,1)]">*****</div>
                 
-                <button onclick="resetGame()" class="btn-pixel px-6 md:px-10 py-3 md:py-5 text-3xl md:text-5xl w-full bg-[#1976d2] crt-text font-bold hover:bg-[#2196f3]">
+                <button onclick="resetGame()" class="btn-pixel px-6 md:px-10 py-4 md:py-8 text-4xl md:text-6xl w-full bg-[#1976d2] crt-text font-bold hover:bg-[#2196f3]">
                     [ НАСТУПНИЙ ДЕНЬ ]
                 </button>
             </div>
@@ -582,7 +575,6 @@
 <script>
     // --- ПІКСЕЛЬ АРТ ГЕНЕРАТОР ОБЛИЧ (24x24) ---
     const PIXEL_DESIGNS = [
-        // 0: Standard Guy
         [
             "        hhhhhhhh        ",
             "      hhhhhhhhhhhh      ",
@@ -609,7 +601,6 @@
             "  cccccccRRwwRRccccccc  ",
             "  cccccccRRwwRRccccccc  "
         ],
-        // 1: Girl Long Hair
         [
             "        HHHHHHHH        ",
             "      HHHHHHHHHHHH      ",
@@ -636,7 +627,6 @@
             "  HHCCCCCCCCCCCCCCCCCH  ",
             "  HHCCCCCCCCCCCCCCCCCH  "
         ],
-        // 2: Glasses Nerd
         [
             "        bbbbbbbb        ",
             "      bbbbbbbbbbbb      ",
@@ -663,7 +653,6 @@
             "  GGGGGGGGGGGGGGGGGGGG  ",
             "  GGGGGGGGGGGGGGGGGGGG  "
         ],
-        // 3: Tired Student
         [
             "       h  hhhh  h       ",
             "      hhh hhhh hhh      ",
@@ -690,7 +679,6 @@
             "  CCCCCCCCwwwwCCCCCCCC  ",
             "  CCCCCCCCwwwwCCCCCCCC  "
         ],
-        // 4: Suit Guy
         [
             "        bbbbbbbb        ",
             "       bbbbbbbbbb       ",
@@ -717,7 +705,6 @@
             "  DDDDDDDTwwwwTDDDDDDD  ",
             "  DDDDDDDTwwwwTDDDDDDD  "
         ],
-        // 5: Punk Girl
         [
             "        PPPPPPPP        ",
             "      PPPPPPPPPPPP      ",
@@ -744,7 +731,6 @@
             "  bbbbbbbbbbbbbbbbbbbb  ",
             "  bbbbbbbbbbbbbbbbbbbb  "
         ],
-        // 6: Cap Guy
         [
             "      RRRRRRRRRRRR      ",
             "     RRRRRRRRRRRRRR     ",
@@ -771,7 +757,6 @@
             "  AAAAAAAAAAAAAAAAAAAA  ",
             "  AAAAAAAAAAAAAAAAAAAA  "
         ],
-        // 7: Mustache Guy
         [
             "        bbbbbbbb        ",
             "      bbbbbbbbbbbb      ",
@@ -798,7 +783,6 @@
             "  DDDDDDDDDDDDDDDDDDDD  ",
             "  DDDDDDDDDDDDDDDDDDDD  "
         ],
-        // 8: Sunglasses Guy
         [
             "        HHHHHHHH        ",
             "      HHHHHHHHHHHH      ",
@@ -825,7 +809,6 @@
             "  wwwwwwTwwwwwwwwTwwwwww",
             "  wwwwwwTwwwwwwwwTwwwwww"
         ],
-        // 9: Short Hair Girl
         [
             "        PPPPPPPP        ",
             "      PPPPPPPPPPPP      ",
@@ -878,7 +861,6 @@
         return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
     }
 
-    // --- ПІКСЕЛЬ АРТ ГЕНЕРАТОР МИЛОГО КОТА (24x24) ---
     function generateCatFace() {
         const design = [
             "                        ",
@@ -967,6 +949,28 @@
                 setTimeout(() => this.playTone(400, 'square', 0.05, 0.1), time);
                 time += 60;
             }
+        },
+        paper: function() {
+            if (!this.ctx) return;
+            let dur = 0.1;
+            let bufferSize = this.ctx.sampleRate * dur;
+            let buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+            let data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+            let noise = this.ctx.createBufferSource();
+            noise.buffer = buffer;
+            let filter = this.ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 800; 
+            let gain = this.ctx.createGain();
+            gain.gain.setValueAtTime(0.5, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + dur);
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.ctx.destination);
+            noise.start();
         }
     };
 
@@ -985,6 +989,12 @@
         timeMinutes: 0,
         clockInterval: null,
         isGameOver: false
+    };
+
+    let dragState = {
+        active: false,
+        offsetX: 0,
+        offsetY: 0
     };
 
     const LAWS = [
@@ -1050,18 +1060,152 @@
 
     let typingTimer = null;
 
-    // --- CURSOR LOGIC (RETICLE) ---
+    // --- CURSOR LOGIC (RETICLE & DRAG) ---
     document.addEventListener('mousemove', (e) => {
         if (state.isStampActive && !state.isGameOver) {
             const cursor = document.getElementById('stamp-reticle');
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
         }
+
+        if (dragState.active && !state.isGameOver) {
+            const gb = document.getElementById('gradebook');
+            gb.style.left = (e.clientX - dragState.offsetX) + 'px';
+            gb.style.top = (e.clientY - dragState.offsetY) + 'px';
+            gb.style.transform = 'none'; 
+        }
     });
+
+    document.addEventListener('mouseup', (e) => {
+        if (dragState.active) {
+            dragState.active = false;
+            const gb = document.getElementById('gradebook');
+            sfx.paper();
+            gb.style.zIndex = 40;
+            
+            const studentZone = document.getElementById('cctv-student-container');
+            studentZone.classList.remove('ring-8', 'ring-[#4caf50]', 'ring-dashed', 'animate-pulse');
+            document.getElementById('cctv-zone-label').classList.remove('bg-[#4caf50]', 'text-black');
+            document.getElementById('cctv-zone-label').classList.add('bg-[#050505]/90');
+            
+            const zoneRect = studentZone.getBoundingClientRect();
+            const gbRect = gb.getBoundingClientRect();
+            
+            if (gbRect.left < zoneRect.right && gbRect.right > zoneRect.left && 
+                gbRect.top < zoneRect.bottom && gbRect.bottom > zoneRect.top) {
+                
+                const s = state.students[state.currentStudentIndex];
+                if (!s.decision) {
+                    notify("! ПОСТАВТЕ ХОЧА Б ОДНУ ПЕЧАТКУ", "text-[#d32f2f]");
+                    resetGradebookPosition();
+                } else {
+                    gb.style.transition = 'left 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+                    gb.style.left = '-1000px';
+                    setTimeout(() => finishStudent(s.decision), 500);
+                }
+            }
+            // Видалено блок else, щоб заліковка лишалась там де її відпустили
+        }
+    });
+
+    function resetGradebookPosition() {
+        const gb = document.getElementById('gradebook');
+        gb.style.transition = 'all 0.3s ease-out';
+        gb.style.left = '50%';
+        gb.style.top = '50%';
+        gb.style.transform = 'translate(-50%, -50%)';
+    }
 
     document.addEventListener('mousedown', (e) => {
         if (state.isStampActive && !e.target.closest('#gradebook') && !e.target.closest('.physical-stamp')) {
             returnStamp();
+        }
+    });
+
+    // DRAG GRADEBOOK OR APPLY STAMP
+    document.getElementById('gradebook').addEventListener('mousedown', function(e) {
+        if (e.target.closest('#bribe-element')) return;
+
+        if (state.isStampActive) {
+            e.stopPropagation();
+            
+            const type = state.isStampActive;
+            const area = document.getElementById('gb-ink-layer');
+            const x = e.clientX;
+            const y = e.clientY;
+
+            document.getElementById('stamp-reticle').classList.add('hidden');
+
+            const fallingStamp = document.createElement('div');
+            fallingStamp.className = 'falling-stamp fixed flex flex-col items-center justify-end';
+            fallingStamp.style.left = x + 'px';
+            fallingStamp.style.top = y + 'px';
+            fallingStamp.innerHTML = getPhysicalStampHTML(type);
+            document.body.appendChild(fallingStamp);
+            
+            setTimeout(() => {
+                sfx.stamp();
+
+                const desk = document.getElementById('game-container');
+                desk.style.transition = 'none';
+                desk.style.transform = 'translate(10px, 15px)';
+                setTimeout(() => { desk.style.transform = 'translate(-8px, -12px)'; }, 40);
+                setTimeout(() => { desk.style.transform = 'translate(5px, 8px)'; }, 80);
+                setTimeout(() => { desk.style.transform = 'translate(0, 0)'; }, 120);
+                
+                const rect = document.getElementById('gradebook').getBoundingClientRect();
+                const inkX = x - rect.left;
+                const inkY = y - rect.top;
+                
+                const text = type === 'pass' ? 'ЗАРАХ' : 'ВІДМОВА';
+                const cssClass = type === 'pass' ? 'text-[#1b5e20] border-[#1b5e20]' : 'text-[#b71c1c] border-[#b71c1c]';
+                const rot = (Math.random() * 16) - 8;
+                
+                const ink = document.createElement('div');
+                ink.className = `w-[200px] h-[90px] border-[6px] border-double ${cssClass} stamp-placed text-5xl whitespace-nowrap font-bold tracking-widest flex items-center justify-center`;
+                ink.style.left = `${inkX}px`;
+                ink.style.top = `${inkY}px`;
+                ink.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
+                ink.innerHTML = text;
+                
+                area.appendChild(ink);
+
+                const s = state.students[state.currentStudentIndex];
+                if (!s.decision) {
+                    s.decision = type;
+                    notify("> РІШЕННЯ ЗАФІКСОВАНО: " + (type === 'pass' ? "ЗАРАХОВАНО" : "ВІДМОВА") + ". ВІДДАЙТЕ ЗАЛІКОВКУ.", "text-white");
+                }
+
+            }, 120); 
+
+            setTimeout(() => {
+                fallingStamp.remove();
+                pickupStamp(type, e); // Return reticle instead of returning stamp to rack to allow multiple stamps
+            }, 400); 
+
+        } else {
+            if (state.currentStudentIndex !== null) {
+                dragState.active = true;
+                const gb = document.getElementById('gradebook');
+                const rect = gb.getBoundingClientRect();
+                const parentRect = gb.offsetParent.getBoundingClientRect();
+                
+                // Рахуємо позицію відносно батьківського контейнера (столу), а не всього екрану
+                dragState.offsetX = e.clientX - (rect.left - parentRect.left);
+                dragState.offsetY = e.clientY - (rect.top - parentRect.top);
+                
+                gb.style.transition = 'none';
+                gb.style.transform = 'none';
+                gb.style.left = (e.clientX - dragState.offsetX) + 'px';
+                gb.style.top = (e.clientY - dragState.offsetY) + 'px';
+                gb.style.zIndex = 100;
+                sfx.paper();
+                
+                const studentZone = document.getElementById('cctv-student-container');
+                studentZone.classList.add('ring-8', 'ring-[#4caf50]', 'ring-dashed', 'animate-pulse');
+                document.getElementById('cctv-zone-label').classList.remove('bg-[#050505]/90');
+                document.getElementById('cctv-zone-label').classList.add('bg-[#4caf50]', 'text-black');
+            }
         }
     });
 
@@ -1070,7 +1214,7 @@
             notify("! ВІДСУТНЯ ЗАЛІКОВКА НА СТОЛІ");
             return;
         }
-        e.stopPropagation();
+        if(e) e.stopPropagation();
 
         state.isStampActive = type;
         
@@ -1084,8 +1228,10 @@
         if (type === 'pass') cursor.classList.add('reticle-pass');
         else cursor.classList.add('reticle-fail');
         
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
+        if(e) {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        }
     }
 
     function returnStamp() {
@@ -1102,12 +1248,12 @@
         const bottomColor = type === 'pass' ? 'bg-[#1b5e20]' : 'bg-[#b71c1c]';
         
         return `
-            <div class="relative w-[160px] h-[100px] ${baseColor} border-[6px] border-black shadow-[inset_-6px_-6px_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.2)] flex items-center justify-center">
+            <div class="relative w-[200px] h-[90px] ${baseColor} border-[6px] border-black shadow-[inset_-6px_-6px_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.2)] flex items-center justify-center">
                 <div class="absolute -top-[50px] w-[50px] h-[50px] bg-[#8d6e63] border-[6px] border-black border-b-0 shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_0_0_rgba(255,255,255,0.1)] flex justify-center">
                     <div class="absolute -top-[40px] w-[90px] h-[40px] bg-[#5d4037] border-[6px] border-black rounded-t-[16px] shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.1)]"></div>
                 </div>
                 <div class="bg-[#e8e8e8] border-4 border-black px-5 py-1 ${labelColor} font-bold text-4xl shadow-[inset_3px_3px_0_rgba(0,0,0,0.2)] transform -rotate-2">${labelText}</div>
-                <div class="absolute -bottom-[24px] w-[152px] h-[18px] ${bottomColor} border-[6px] border-black border-t-0 shadow-[10px_10px_0_rgba(0,0,0,0.6)]"></div>
+                <div class="absolute -bottom-[24px] w-[192px] h-[18px] ${bottomColor} border-[6px] border-black border-t-0 shadow-[10px_10px_0_rgba(0,0,0,0.6)]"></div>
             </div>
         `;
     }
@@ -1117,13 +1263,11 @@
         const totalStudents = 8;
         let catGenerated = false;
 
-        // Перемішуємо індекси зовнішностей, щоб вони не повторювались у межах групи
         let availableFaces = Array.from({length: PIXEL_DESIGNS.length}, (_, i) => i);
         availableFaces.sort(() => Math.random() - 0.5);
 
         for (let i = 0; i < totalStudents; i++) {
             
-            // Максимум 1 кіт за сесію
             let isCat = false;
             if (!catGenerated && Math.random() < 0.10) {
                 isCat = true;
@@ -1147,7 +1291,8 @@
                     bribeTaken: false,
                     isSpecial: false,
                     isCat: true,
-                    isProcessed: false
+                    isProcessed: false,
+                    decision: null
                 });
             } else {
                 let initial1 = ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
@@ -1167,7 +1312,6 @@
                 let documentId = isFraud ? "ID-" + (1000 + Math.floor(Math.random() * 9000)) : idNum;
                 let inJournal = !(isFraud && Math.random() > 0.5);
                 
-                // Беремо унікальне обличчя з пулу
                 let faceIndex = availableFaces.pop();
 
                 state.students.push({
@@ -1186,7 +1330,8 @@
                     bribeTaken: false,
                     isSpecial: isSpecial,
                     isCat: false,
-                    isProcessed: false
+                    isProcessed: false,
+                    decision: null
                 });
             }
         }
@@ -1327,8 +1472,17 @@
 
         const gb = document.getElementById('gradebook');
         gb.classList.remove('hidden');
-        gb.style.transform = 'translateY(120%)';
-        setTimeout(() => gb.style.transform = 'translateY(0)', 50);
+        
+        gb.style.transition = 'none';
+        gb.style.left = '50%';
+        gb.style.top = '150%';
+        gb.style.transform = 'translate(-50%, -50%)';
+        
+        void gb.offsetWidth;
+        
+        gb.style.transition = 'top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        gb.style.top = '50%';
+        sfx.paper();
 
         document.getElementById('gb-name').innerText = s.name;
         document.getElementById('gb-id').innerText = s.idNum;
@@ -1356,7 +1510,7 @@
         
         setTimeout(() => {
             if(state.currentStudentIndex === index) {
-                typeDialogue(dialogue + `> ВІДПОВІДЬ НА БІЛЕТ:\n"${s.answer}"`);
+                typeDialogue(dialogue + `> ВІДПОВІДЬ НА БІЛЕТ:\n"${s.answer}"\n\n> ПЕРЕВІРТЕ ЗАЛІКОВКУ, ПОСТАВТЕ ПЕЧАТКУ ТА ВІДДАЙТЕ СТУДЕНТУ.`);
             }
         }, 3500);
 
@@ -1389,62 +1543,6 @@
         updateUI();
         checkGameOver();
     }
-
-    // ВДАРЯННЯ ПЕЧАТКОЮ ПО ЗАЛІКОВЦІ
-    document.getElementById('gradebook').addEventListener('mousedown', function(e) {
-        if (!state.isStampActive) return;
-        e.stopPropagation();
-        
-        const type = state.isStampActive;
-        const area = document.getElementById('gb-ink-layer');
-        
-        const x = e.clientX;
-        const y = e.clientY;
-
-        document.getElementById('stamp-reticle').classList.add('hidden');
-
-        const fallingStamp = document.createElement('div');
-        fallingStamp.className = 'falling-stamp fixed z-[10000] flex flex-col items-center justify-end';
-        fallingStamp.style.left = x + 'px';
-        fallingStamp.style.top = y + 'px';
-        fallingStamp.innerHTML = getPhysicalStampHTML(type);
-        document.body.appendChild(fallingStamp);
-        
-        setTimeout(() => {
-            sfx.stamp();
-
-            const desk = document.getElementById('game-container');
-            desk.style.transition = 'none';
-            desk.style.transform = 'translate(10px, 15px)';
-            setTimeout(() => { desk.style.transform = 'translate(-8px, -12px)'; }, 40);
-            setTimeout(() => { desk.style.transform = 'translate(5px, 8px)'; }, 80);
-            setTimeout(() => { desk.style.transform = 'translate(0, 0)'; }, 120);
-            
-            const rect = this.getBoundingClientRect();
-            const inkX = x - rect.left;
-            const inkY = y - rect.top;
-            
-            const text = type === 'pass' ? 'ЗАРАХ' : 'ВІДМОВА';
-            const cssClass = type === 'pass' ? 'text-[#1b5e20] border-[#1b5e20]' : 'text-[#b71c1c] border-[#b71c1c]';
-            const rot = (Math.random() * 30) - 15;
-            
-            const ink = document.createElement('div');
-            ink.className = `px-6 py-3 border-[10px] border-double ${cssClass} stamp-placed text-7xl whitespace-nowrap font-bold tracking-widest`;
-            ink.style.left = `${inkX}px`;
-            ink.style.top = `${inkY}px`;
-            ink.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
-            ink.innerHTML = text;
-            
-            area.appendChild(ink);
-
-        }, 120); 
-
-        setTimeout(() => {
-            fallingStamp.remove();
-            returnStamp();
-            setTimeout(() => finishStudent(type), 500);
-        }, 300); 
-    });
 
     function showCitation(reason, moneyFine, repFine) {
         sfx.error(); 
@@ -1536,9 +1634,7 @@
         state.totalChecked++;
 
         const gb = document.getElementById('gradebook');
-        gb.style.transition = 'transform 0.4s ease-in';
-        gb.style.transform = 'translateY(150%)';
-        setTimeout(() => { gb.classList.add('hidden'); gb.style.transition = ''; }, 400);
+        gb.classList.add('hidden');
 
         setTimeout(() => {
             document.getElementById('cctv-student').classList.add('hidden');
@@ -1596,9 +1692,9 @@
         content.innerHTML = '';
         LAWS.forEach(l => {
             content.innerHTML += `
-                <div class="bg-white border-4 border-black p-4 md:p-6 pixel-shadow-sm h-min hover:-translate-y-1 transition-transform break-words">
-                    <h3 class="font-bold text-2xl md:text-4xl border-b-4 border-black mb-2 md:mb-4 pb-1 text-[#4a148c]">${l.art}</h3>
-                    <p class="text-xl md:text-3xl leading-tight text-[#222]">"${l.text}"</p>
+                <div class="bg-white border-4 border-black p-6 md:p-8 pixel-shadow-sm h-min hover:-translate-y-1 transition-transform break-words">
+                    <h3 class="font-bold text-3xl md:text-5xl border-b-4 border-black mb-3 md:mb-5 pb-2 text-[#4a148c]">${l.art}</h3>
+                    <p class="text-2xl md:text-4xl leading-tight text-[#222]">"${l.text}"</p>
                 </div>
             `;
         });
@@ -1613,10 +1709,10 @@
             
             body.innerHTML += `
                 <tr class="hover:bg-[#ddd] border-b-4 border-gray-300">
-                    <td class="p-2 md:p-4 border-r-4 border-black font-bold text-gray-500">${rowNum++}</td>
-                    <td class="p-2 md:p-4 border-r-4 border-black font-bold break-words">${s.name}</td>
-                    <td class="p-2 md:p-4 border-r-4 border-black text-center text-2xl md:text-4xl">${s.ticket}</td>
-                    <td class="p-2 md:p-4 bg-[#fff9c4] font-bold text-gray-700 break-words">${s.journalId}</td>
+                    <td class="p-3 md:p-5 border-r-4 border-black font-bold text-gray-500">${rowNum++}</td>
+                    <td class="p-3 md:p-5 border-r-4 border-black font-bold break-words">${s.name}</td>
+                    <td class="p-3 md:p-5 border-r-4 border-black text-center text-3xl md:text-5xl">${s.ticket}</td>
+                    <td class="p-3 md:p-5 bg-[#fff9c4] font-bold text-gray-700 break-words">${s.journalId}</td>
                 </tr>
             `;
         });
@@ -1654,14 +1750,14 @@
         else if (state.reputation > 30) rating = "**";
 
         document.getElementById('summary-title').innerText = "СЕСІЮ ЗАВЕРШЕНО";
-        document.getElementById('summary-title').className = "text-4xl md:text-6xl mb-4 md:mb-6 text-[#d4af37] crt-text";
+        document.getElementById('summary-title').className = "text-5xl md:text-7xl mb-6 md:mb-10 text-[#d4af37] crt-text";
         document.getElementById('summary-reason').classList.add('hidden');
         
         populateStats();
         
         document.getElementById('summary-rating-label').classList.remove('hidden');
         document.getElementById('summary-rating').innerText = rating;
-        document.getElementById('summary-rating').className = "text-5xl md:text-7xl mb-6 md:mb-8 text-[#d4af37] tracking-widest drop-shadow-[0_0_20px_rgba(212,175,55,1)]";
+        document.getElementById('summary-rating').className = "text-6xl md:text-8xl mb-8 md:mb-12 text-[#d4af37] tracking-widest drop-shadow-[0_0_20px_rgba(212,175,55,1)]";
     }
 
     function gameOver(reason) {
@@ -1675,7 +1771,7 @@
         modal.classList.remove('hidden');
         
         document.getElementById('summary-title').innerText = "ЗВІЛЬНЕНО";
-        document.getElementById('summary-title').className = "text-5xl md:text-7xl mb-4 md:mb-6 text-[#d32f2f] font-bold crt-text drop-shadow-[0_0_20px_rgba(255,0,0,0.8)]";
+        document.getElementById('summary-title').className = "text-6xl md:text-8xl mb-6 md:mb-8 text-[#d32f2f] font-bold crt-text drop-shadow-[0_0_20px_rgba(255,0,0,0.8)]";
         
         const reasonBox = document.getElementById('summary-reason');
         reasonBox.classList.remove('hidden');
@@ -1685,7 +1781,7 @@
         
         document.getElementById('summary-rating-label').classList.add('hidden');
         document.getElementById('summary-rating').innerText = "[ СИСТЕМУ ЗАБЛОКОВАНО ]";
-        document.getElementById('summary-rating').className = "text-3xl md:text-5xl mb-6 md:mb-8 mt-2 text-[#d32f2f] crt-text";
+        document.getElementById('summary-rating').className = "text-4xl md:text-6xl mb-8 md:mb-12 mt-4 text-[#d32f2f] crt-text";
     }
 
     function resetGame() {
