@@ -129,6 +129,9 @@
         @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
         .animate-bob { animation: bob 2s infinite steps(2, end); }
 
+        @keyframes steam { 0% { transform: translateY(0) scale(1); opacity: 0.5; } 100% { transform: translateY(-20px) scale(1.5); opacity: 0; } }
+        .steam-particle { animation: steam 2s infinite linear; }
+
         @keyframes floatBribe { 0%, 100% { transform: translateY(0) rotate(12deg); } 50% { transform: translateY(-6px) rotate(15deg); } }
         .banknote {
             background-color: #6a9955;
@@ -202,6 +205,8 @@
             color: #4caf50;
         }
         @keyframes blink { 50% { opacity: 0; } }
+        @keyframes blink-red { 50% { opacity: 0; } }
+        .cctv-blink { animation: blink-red 2s step-end infinite; color: #ff0000; }
 
         .pixel-photo { image-rendering: pixelated; image-rendering: -moz-crisp-edges; image-rendering: crisp-edges; }
 
@@ -258,6 +263,7 @@
                 <p>● <b>НОВЕ:</b> Книги та печатки тепер фізичні об'єкти на столі.</p>
                 <p>● Клікай на хабарі, щоб забрати їх (камери іноді фіксують!).</p>
                 <p>● Репутація &lt; 30% = КІНЕЦЬ.</p>
+                <p class="text-[#4caf50] mt-2">● Іноді на іспит забігає кафедральний кіт. Не ображайте його!</p>
                 <p class="text-yellow-600 mt-4 md:mt-6 font-bold text-2xl md:text-3xl text-center w-full block">УВІМКНІТЬ ЗВУК ДЛЯ КРАЩОГО ДОСВІДУ 🔊</p>
             </div>
             
@@ -326,8 +332,8 @@
                             ВІЛЬНО
                         </div>
                         
-                        <div id="cctv-student" class="w-72 h-72 transform translate-y-2 z-10 hidden animate-bob flex items-end justify-center">
-                            <img id="cctv-student-img" src="" class="w-full h-full pixel-photo object-cover filter drop-shadow-[8px_8px_0_rgba(0,0,0,0.6)] object-bottom" alt="student">
+                        <div id="cctv-student" class="w-full h-full transform translate-y-2 z-10 hidden animate-bob flex items-end justify-center px-4">
+                            <img id="cctv-student-img" src="" class="w-full h-full pixel-photo object-contain filter drop-shadow-[8px_8px_0_rgba(0,0,0,0.6)] object-bottom" alt="student">
                         </div>
                         
                         <div class="absolute bottom-0 w-full h-12 bg-[#3e2723] border-t-4 border-black z-30 shadow-[0_-5px_10px_rgba(0,0,0,0.5)]"></div>
@@ -371,22 +377,23 @@
                                 <h4 class="text-4xl text-black font-bold">ЗАЛІКОВКА</h4>
                                 <span class="text-2xl bg-white border-4 border-black px-3 py-1 font-bold">ДЕННА ФОРМА</span>
                             </div>
-                            <div class="p-8 pb-12 bg-[#f9f9f9] bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQIW2NkYGD4z8DAwMgAI0AMDA4IAm1+xXgAAAAASUVORK5CYII=')] relative">
+                            <div class="p-8 pb-12 bg-[#f9f9f9] bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQIW2NkYGD4z8DAwMgAI0AMDA4IAm1+xXgAAAAASUVORK5CYII=')] relative min-h-[480px]">
                                 <div class="flex gap-6 mb-8 items-center border-b-4 border-black pb-8 relative z-10">
                                     <div class="bg-[#546e7a] pixel-border pixel-shadow-sm w-40 h-40 flex-shrink-0 relative overflow-hidden flex items-end justify-center">
-                                        <img id="gb-photo" src="" class="w-full h-full pixel-photo object-cover transform translate-y-1" alt="student">
+                                        <img id="gb-photo" src="" class="w-full h-full pixel-photo object-contain transform translate-y-1" alt="student">
                                     </div>
                                     <div class="text-3xl space-y-3 text-black font-bold flex-1 min-w-0">
-                                        <p class="text-[#555] text-2xl border-b border-dashed border-[#aaa] pb-1">ПІБ СТУДЕНТА:</p>
+                                        <p class="text-[#555] text-2xl border-b border-dashed border-[#aaa] pb-1">ІМ'Я:</p>
                                         <p id="gb-name" class="text-4xl uppercase text-[#111] break-words leading-none mt-2">...</p>
                                         <p class="text-[#555] mt-4 flex items-center gap-2">ІДЕНТ. КОД: <span id="gb-id" class="text-white bg-black px-3 py-1 pixel-shadow-sm">...</span></p>
                                     </div>
                                 </div>
                                 
-                                <div class="border-4 border-black p-5 text-3xl text-black bg-white pixel-shadow-inset relative z-10">
+                                <div class="border-4 border-black p-5 text-3xl text-black bg-white pixel-shadow-inset relative z-10 group-hover:bg-[#f0f0f0] transition-colors">
                                     <p class="mb-4 border-b-2 border-dashed border-[#aaa] pb-2 text-[#555]">ДИСЦИПЛІНА: ЦИВ. ПРАВО</p>
-                                    <div class="h-40 flex items-center justify-center relative mt-5 border-4 border-dashed border-[#ccc] bg-[#f0f0f0]">
-                                        <span class="text-2xl text-[#aaa] absolute uppercase pointer-events-none text-center">[МІСЦЕ ДЛЯ ПЕЧАТОК]</span>
+                                    <div class="h-40 flex items-center justify-center relative mt-5 border-4 border-dashed border-[#ccc] bg-[#f0f0f0] group-hover:bg-[#e0e0e0] transition-colors" id="gb-stamp-area-container">
+                                        <span class="text-2xl text-[#aaa] absolute uppercase pointer-events-none text-center leading-tight">[КЛІКНІТЬ БУДЬ-ДЕ НА ПАПЕРІ,<br>ЩОБ ПОСТАВИТИ ПЕЧАТКУ]</span>
+                                        <div id="gb-stamp-area" class="z-10 w-full h-full flex items-center justify-center absolute pointer-events-none"></div>
                                     </div>
                                 </div>
 
@@ -442,7 +449,7 @@
                                 
                                 <div class="flex gap-12 mt-6 justify-center items-end h-[160px]">
                                     
-                                    <!-- Pass Stamp Slot placeholder -->
+                                    <!-- Pass Stamp Slot -->
                                     <div class="w-[170px] h-[160px] flex items-end justify-center relative">
                                         <div class="absolute bottom-0 w-[180px] h-[30px] bg-black/60 rounded-[50%] blur-sm"></div>
                                         
@@ -456,7 +463,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- Fail Stamp Slot placeholder -->
+                                    <!-- Fail Stamp Slot -->
                                     <div class="w-[170px] h-[160px] flex items-end justify-center relative">
                                         <div class="absolute bottom-0 w-[180px] h-[30px] bg-black/60 rounded-[50%] blur-sm"></div>
                                         
@@ -477,7 +484,7 @@
                 </div>
 
                 <!-- Citation Slip (Штраф) -->
-                <div id="citation-slip" class="p-8">
+                <div id="citation-slip" class="p-8 flex flex-col">
                     <div class="border-b-8 border-[#f57f17] pb-3 mb-6 flex justify-between items-end">
                         <h2 class="text-5xl font-bold text-black">ДОГАНА ВІД ДЕКАНАТУ</h2>
                         <span class="text-3xl bg-[#f57f17] text-white px-3 py-1 font-bold">ОФІЦІЙНО</span>
@@ -490,7 +497,8 @@
                         <p>> СТЯГНЕННЯ З ПРЕМІЇ: <span id="citation-money" class="text-white bg-[#d32f2f] px-3 py-1">-500 ₴</span></p>
                         <p>> ПАДІННЯ АВТОРИТЕТУ: <span id="citation-rep" class="text-white bg-[#d32f2f] px-3 py-1">-20%</span></p>
                     </div>
-                    <div class="mt-8 text-right">
+                    <div class="mt-8 flex justify-between items-end">
+                        <button onclick="closeCitation()" class="bg-[#f57f17] text-white border-4 border-black px-6 py-3 text-3xl font-bold hover:brightness-110 active:translate-y-1 shadow-[4px_4px_0_rgba(0,0,0,0.5)]">ОЗНАЙОМЛЕНИЙ</button>
                         <div class="inline-block border-t-4 border-black pt-2 text-2xl text-black font-bold">ПІДПИС ДЕКАНА</div>
                     </div>
                 </div>
@@ -572,7 +580,7 @@
 </div>
 
 <script>
-    // --- ПІКСЕЛЬ АРТ ГЕНЕРАТОР ОБЛИЧ (24x24 Деталізований) ---
+    // --- ПІКСЕЛЬ АРТ ГЕНЕРАТОР ОБЛИЧ (24x24) ---
     function generatePixelFace() {
         const designs = [
             [
@@ -708,10 +716,10 @@
         ];
 
         const palette = {
-            's': '%23e0ac69', 'S': '%23c68642', 'w': '%23ffffff', 'e': '%23111111',
-            'h': '%234a3018', 'H': '%23e8c35d', 'b': '%23111111', 'c': '%234267b2',
-            'C': '%23888888', 'm': '%238a3324', 'R': '%23d32f2f', 'G': '%232e7d32',
-            'g': '%2388ccff', 'D': '%23222222', 'T': '%23ffb300', ' ': 'transparent'
+            's': '#e0ac69', 'S': '#c68642', 'w': '#ffffff', 'e': '#111111',
+            'h': '#4a3018', 'H': '#e8c35d', 'b': '#111111', 'c': '#4267b2',
+            'C': '#888888', 'm': '#8a3324', 'R': '#d32f2f', 'G': '#2e7d32',
+            'g': '#88ccff', 'D': '#222222', 'T': '#ffb300', ' ': 'transparent'
         };
 
         const design = designs[Math.floor(Math.random() * designs.length)];
@@ -726,7 +734,54 @@
             }
         }
         svg += `</svg>`;
-        return `data:image/svg+xml;utf8,${svg}`;
+        return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+    }
+
+    // --- ПІКСЕЛЬ АРТ ГЕНЕРАТОР МИЛОГО КОТА (24x24) ---
+    function generateCatFace() {
+        const design = [
+            "                        ",
+            "     SS          SS     ",
+            "    SPPS        SPPS    ",
+            "   SPPPPS      SPPPPS   ",
+            "   SPPPPSSSSSSSSPPPPS   ",
+            "    SPPSSSSSSSSSSPPS    ",
+            "     SSSSSSSSSSSSSS     ",
+            "    SSSSSSSSSSSSSSSS    ",
+            "   SSSSSSSSSSSSSSSSSS   ",
+            "  SSSSSeeeSSSSeeeSSSSS  ",
+            "  SSSSeggeSSSSeggeSSSS  ",
+            "  SSSSeggeSSSSeggeSSSS  ",
+            "  SSSSSeeeSSSSeeeSSSSS  ",
+            "  SSSSSSSSSppSSSSSSSSS  ",
+            "  SSSSSSSwwwwwwSSSSSSS  ",
+            "   SSSSSwwSwwSwwSSSSS   ",
+            "    SSSSwwSSSSwwSSSS    ",
+            "     SSSSSSSSSSSSSS     ",
+            "      SSSSSSSSSSSS      ",
+            "        SSSSSSSS        ",
+            "                        ",
+            "                        ",
+            "                        ",
+            "                        "
+        ];
+
+        const palette = {
+            'S': '#f39c12', 'P': '#ffb6c1', 'w': '#ffffff', 
+            'e': '#2c3e50', 'g': '#2ecc71', 'p': '#e74c3c', ' ': 'transparent'
+        };
+
+        let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" shape-rendering="crispEdges">`;
+        for(let y=0; y<24; y++) {
+            for(let x=0; x<24; x++) {
+                let char = design[y][x];
+                if(char !== ' ') {
+                    svg += `<rect x="${x}" y="${y}" width="1" height="1" fill="${palette[char]}"/>`;
+                }
+            }
+        }
+        svg += `</svg>`;
+        return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
     }
 
     // --- AUDIO SYNTHESIZER ---
@@ -854,7 +909,7 @@
 
     let typingTimer = null;
 
-    // --- CURSOR LOGIC (RETICLE & PHYSICAL FALLING STAMP) ---
+    // --- CURSOR LOGIC (RETICLE) ---
     document.addEventListener('mousemove', (e) => {
         if (state.isStampActive && !state.isGameOver) {
             const cursor = document.getElementById('stamp-reticle');
@@ -920,40 +975,65 @@
         state.students = [];
         const totalStudents = 8;
         for (let i = 0; i < totalStudents; i++) {
-            let initial1 = ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
-            let initial2 = ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
-            let name = `${LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)]} ${initial1}.${initial2}.`;
-            let idNum = "ID-" + (1000 + Math.floor(Math.random() * 9000));
-            let ticket = 1 + Math.floor(Math.random() * 20);
             
-            let isFraud = Math.random() < 0.25; 
-            let knowledgeGap = Math.random() < 0.35; 
-            let bribeOffer = Math.random() < 0.35; 
-            let isSpecial = Math.random() < 0.1; 
+            let isCat = Math.random() < 0.10;
 
-            let randomLaw = LAWS[Math.floor(Math.random() * LAWS.length)];
-            let answer = knowledgeGap ? randomLaw.wrongText : randomLaw.text;
+            if (isCat) {
+                state.students.push({
+                    id: i,
+                    name: "КІТ",
+                    idNum: "МЯУ-0000",
+                    journalId: "МЯУ-0000",
+                    inJournal: true,
+                    ticket: "МЯУ",
+                    photo: generateCatFace(),
+                    answer: "Мяу... Мррр... Мяу!",
+                    correctLaw: null,
+                    isFraud: false,
+                    isWrongAnswer: false,
+                    bribe: 0,
+                    bribeTaken: false,
+                    isSpecial: false,
+                    isCat: true,
+                    isProcessed: false
+                });
+            } else {
+                let initial1 = ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
+                let initial2 = ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
+                let name = `${LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)]} ${initial1}.${initial2}.`;
+                let idNum = "ID-" + (1000 + Math.floor(Math.random() * 9000));
+                let ticket = 1 + Math.floor(Math.random() * 20);
+                
+                let isFraud = Math.random() < 0.25; 
+                let knowledgeGap = Math.random() < 0.35; 
+                let bribeOffer = Math.random() < 0.35; 
+                let isSpecial = Math.random() < 0.1; 
 
-            let documentId = isFraud ? "ID-" + (1000 + Math.floor(Math.random() * 9000)) : idNum;
-            let inJournal = !(isFraud && Math.random() > 0.5);
+                let randomLaw = LAWS[Math.floor(Math.random() * LAWS.length)];
+                let answer = knowledgeGap ? randomLaw.wrongText : randomLaw.text;
 
-            state.students.push({
-                id: i,
-                name: name,
-                idNum: documentId, 
-                journalId: idNum,
-                inJournal: inJournal,
-                ticket: ticket,
-                photo: generatePixelFace(), 
-                answer: answer,
-                correctLaw: randomLaw,
-                isFraud: isFraud,
-                isWrongAnswer: knowledgeGap,
-                bribe: bribeOffer ? 300 + Math.floor(Math.random() * 700) : 0, 
-                bribeTaken: false,
-                isSpecial: isSpecial,
-                isProcessed: false
-            });
+                let documentId = isFraud ? "ID-" + (1000 + Math.floor(Math.random() * 9000)) : idNum;
+                let inJournal = !(isFraud && Math.random() > 0.5);
+
+                state.students.push({
+                    id: i,
+                    name: name,
+                    idNum: documentId, 
+                    journalId: idNum,
+                    inJournal: inJournal,
+                    ticket: ticket,
+                    photo: generatePixelFace(), 
+                    answer: answer,
+                    correctLaw: randomLaw,
+                    isFraud: isFraud,
+                    isWrongAnswer: knowledgeGap,
+                    bribe: bribeOffer ? 300 + Math.floor(Math.random() * 700) : 0, 
+                    bribeTaken: false,
+                    isSpecial: isSpecial,
+                    isCat: false,
+                    isProcessed: false
+                });
+            }
         }
         document.getElementById('stat-quota').innerText = `0/${totalStudents}`;
     }
@@ -1065,7 +1145,7 @@
             btn.onclick = () => selectStudent(idx);
             btn.innerHTML = `
                 <div class="w-16 h-16 bg-[#546e7a] flex-shrink-0 border-4 border-[#333] overflow-hidden flex items-end justify-center">
-                    <img src="${s.photo}" class="pixel-photo w-full h-full object-cover transform translate-y-1">
+                    <img src="${s.photo}" class="pixel-photo w-full h-full object-contain">
                 </div>
                 <div class="flex-1 min-w-0">
                     <div class="text-2xl font-bold truncate">${s.name.split(' ')[0]}</div>
@@ -1083,7 +1163,7 @@
         const s = state.students[index];
         
         returnStamp();
-        document.getElementById('citation-slip').classList.remove('show');
+        closeCitation();
 
         document.getElementById('cctv-empty').classList.add('hidden');
         document.getElementById('cctv-student').classList.remove('hidden');
@@ -1101,21 +1181,26 @@
         document.getElementById('gb-ink-layer').innerHTML = '';
         
         const bribeEl = document.getElementById('bribe-element');
-        if (s.bribe > 0) {
+        if (s.bribe > 0 && !s.isCat) {
             document.getElementById('bribe-amount').innerText = s.bribe;
             bribeEl.classList.remove('hidden');
         } else {
             bribeEl.classList.add('hidden');
         }
 
-        let dialogue = `> ДОБРИЙ ДЕНЬ. СТУДЕНТ ${s.name}, БІЛЕТ #${s.ticket}.\n`;
-        if (s.isSpecial) dialogue += "> [ СТУДЕНТ ВІД ДЕКАНА ]\n";
+        let dialogue = "";
+        if (s.isCat) {
+            dialogue = `> ... \n> Мяу... Мррр...\n`;
+        } else {
+            dialogue = `> ДОБРИЙ ДЕНЬ. СТУДЕНТ ${s.name}, БІЛЕТ #${s.ticket}.\n`;
+            if (s.isSpecial) dialogue += "> [ СТУДЕНТ ВІД ДЕКАНА ]\n";
+        }
         
         typeDialogue(dialogue + "> ...");
         
         setTimeout(() => {
             if(state.currentStudentIndex === index) {
-                 typeDialogue(dialogue + `> ВІДПОВІДЬ НА БІЛЕТ:\n"${s.answer}"`);
+                typeDialogue(dialogue + `> ВІДПОВІДЬ НА БІЛЕТ:\n"${s.answer}"`);
             }
         }, 2000);
 
@@ -1127,7 +1212,7 @@
         if (state.currentStudentIndex === null || state.isGameOver) return;
         
         const s = state.students[state.currentStudentIndex];
-        if (s.bribe <= 0) return;
+        if (s.bribe <= 0 || s.isCat) return;
 
         sfx.cash();
 
@@ -1216,6 +1301,11 @@
         slip.classList.add('show');
     }
 
+    function closeCitation() {
+        const slip = document.getElementById('citation-slip');
+        slip.classList.remove('show');
+    }
+
     function finishStudent(decision) {
         const s = state.students[state.currentStudentIndex];
         let repChange = 0;
@@ -1224,47 +1314,59 @@
         let isViolation = false;
 
         const passed = (decision === 'pass');
-        const shouldPass = (!s.isFraud && !s.isWrongAnswer);
 
-        if (s.bribeTaken && passed) {
-            if (s.isFraud) {
-                repChange = -25; 
-                moneyChange = -800;
-                state.wrongDecisions++;
-                isViolation = true;
-                feedback = "ЗАРАХОВАНО 'МЕРТВУ ДУШУ' АБО ФАЛЬШИВІ ДОКУМЕНТИ. ДЕКАНАТ ВИМАГАЄ ПОЯСНЕНЬ.";
-            } else {
-                repChange = 0; 
+        if (s.isCat) {
+            if (passed) {
+                repChange = 10;
                 state.correctDecisions++;
-                feedback = "> РЕЗУЛЬТАТ ПРИЙНЯТО";
-            }
-        } else if (s.bribeTaken && !passed) {
-            repChange = -15; 
-            feedback = "! СТУДЕНТ ДОНІС У ДЕКАНАТ ПРО ХАБАР!";
-            if (!shouldPass) {
-                state.correctDecisions++; 
+                feedback = "> КІТ ЗАДОВОЛЕНИЙ. +10 АВТОРИТЕТУ";
             } else {
-                state.wrongDecisions++;
-                moneyChange = -300;
-                isViolation = true;
-                feedback += " І НЕОБҐРУНТОВАНЕ 'НЕ ЗАРАХОВАНО'.";
+                gameOver("ВИ ВІДРАХУВАЛИ КОТА! СТУДЕНТИ ВЛАШТУВАЛИ БУНТ, А ДЕКАНАТ В ШОЦІ ВІД ВАШОЇ ЖОРСТОКОСТІ.");
+                return;
             }
         } else {
-            if (passed === shouldPass) {
-                repChange = 3; 
-                state.correctDecisions++;
-                feedback = "> РЕЗУЛЬТАТ ПРИЙНЯТО";
-            } else {
-                repChange = -20; 
-                moneyChange = -400; 
-                state.wrongDecisions++;
-                isViolation = true;
-                if (s.isFraud && passed) {
-                    feedback = "ПРОПУСК ФАЛЬШИВОГО ID АБО СТУДЕНТА, ЯКОГО НЕМАЄ В ЖУРНАЛІ.";
-                } else if (!s.isFraud && s.isWrongAnswer && passed) {
-                    feedback = "ОЦІНКА НЕ ВІДПОВІДАЄ ЗНАННЯМ ЦИВІЛЬНОГО КОДЕКСУ.";
+            const shouldPass = (!s.isFraud && !s.isWrongAnswer);
+
+            if (s.bribeTaken && passed) {
+                if (s.isFraud) {
+                    repChange = -25; 
+                    moneyChange = -800;
+                    state.wrongDecisions++;
+                    isViolation = true;
+                    feedback = "КРИТИЧНА ПОМИЛКА: ЗАРАХОВАНО ФАЛЬШИВІ ДОКУМЕНТИ! ХАБАР НЕ ВРЯТУВАВ ВІД КОМІСІЇ.";
                 } else {
-                    feedback = "БЕЗПІДСТАВНЕ 'НЕ ЗАРАХОВАНО'. СКАРГА ВІД СТУДЕНТА.";
+                    repChange = 0; 
+                    state.correctDecisions++;
+                    feedback = "> РЕЗУЛЬТАТ ПРИЙНЯТО";
+                }
+            } else if (s.bribeTaken && !passed) {
+                repChange = -15; 
+                feedback = "! СКАРГА: СТУДЕНТ ДОНІС У ДЕКАНАТ ПРО ХАБАР!";
+                if (!shouldPass) {
+                    state.correctDecisions++; 
+                } else {
+                    state.wrongDecisions++;
+                    moneyChange = -300;
+                    isViolation = true;
+                    feedback += " І НЕОБҐРУНТОВАНЕ 'НЕ ЗАРАХОВАНО'.";
+                }
+            } else {
+                if (passed === shouldPass) {
+                    repChange = 3; 
+                    state.correctDecisions++;
+                    feedback = "> РЕЗУЛЬТАТ ПРИЙНЯТО";
+                } else {
+                    repChange = -20; 
+                    moneyChange = -400; 
+                    state.wrongDecisions++;
+                    isViolation = true;
+                    if (s.isFraud && passed) {
+                        feedback = "ПРОПУСК ФАЛЬШИВОГО ID АБО СТУДЕНТА, ЯКОГО НЕМАЄ В ЖУРНАЛІ.";
+                    } else if (!s.isFraud && s.isWrongAnswer && passed) {
+                        feedback = "ОЦІНКА НЕ ВІДПОВІДАЄ ЗНАННЯМ ЦИВІЛЬНОГО КОДЕКСУ.";
+                    } else {
+                        feedback = "БЕЗПІДСТАВНЕ 'НЕ ЗАРАХОВАНО'. СКАРГА ВІД СТУДЕНТА.";
+                    }
                 }
             }
         }
@@ -1293,7 +1395,7 @@
         if (isViolation) {
             setTimeout(() => showCitation(feedback, Math.abs(moneyChange), Math.abs(repChange)), 600);
         } else {
-            notify(feedback, repChange >= 0 ? "text-white" : "text-[#d32f2f]");
+            notify(feedback, repChange >= 0 ? "text-[#4caf50]" : "text-[#d32f2f]");
         }
 
         updateUI();
@@ -1453,7 +1555,7 @@
         document.getElementById('modal-summary').classList.add('hidden');
         document.getElementById('screen-game').classList.add('hidden');
         document.getElementById('gradebook').classList.add('hidden');
-        document.getElementById('citation-slip').classList.remove('show');
+        closeCitation();
         document.getElementById('cctv-student').classList.add('hidden');
         document.getElementById('cctv-empty').classList.remove('hidden');
         
