@@ -106,6 +106,7 @@
         }
         #gradebook {
             touch-action: none;
+            /* Початкове позиціонування буде контролюватись суто через style в JS */
         }
         
         .paper-grid {
@@ -170,8 +171,6 @@
             transform: translate(-50%, -50%);
             box-sizing: border-box;
         }
-        .reticle-pass { border-color: rgba(27, 94, 32, 0.8); background-color: rgba(27, 94, 32, 0.15); color: rgba(27, 94, 32, 0.8); }
-        .reticle-fail { border-color: rgba(183, 28, 28, 0.8); background-color: rgba(183, 28, 28, 0.15); color: rgba(183, 28, 28, 0.8); }
 
         /* ФІЗИЧНИЙ УДАР ПЕЧАТКОЮ З ВДАВЛЮВАННЯМ */
         .falling-stamp {
@@ -287,7 +286,7 @@
             </div>
 
             <div class="text-lg md:text-xl mb-6 md:mb-8 text-[#aaa] text-left inline-block space-y-2">
-                <p>● <b>ЯК ГРАТИ:</b> Звіряйте відповіді студента з Кодексом, а його документи — з Журналом.</p>
+                <p>● <b>МЕТА ГРИ:</b> Приймати іспит, звіряючи відповіді студента з Кодексом, а його документи — з Журналом.</p>
                 <p>● Уважно перевіряйте <b>ПІБ, ID, Дату народження та Дисципліну</b> на підробки.</p>
                 <p>● Поставте печатку (ЗАРАХ/ВІДМ) та <b>перетягніть заліковку на студента</b>, щоб віддати її.</p>
                 <p>● Камера фіксує хабарі! Клікайте на гроші <b>лише</b> коли статус <span class="text-[#888]">ОФЛАЙН</span>.</p>
@@ -322,6 +321,11 @@
             <!-- ЗОНА СТАТУСУ ТА КАМЕРИ -->
             <div class="flex gap-8 items-center mt-1">
                 
+                <!-- Кнопка Музики -->
+                <button id="btn-music" onclick="toggleMusic()" class="bg-[#111] border-4 border-[#333] px-4 py-3 text-[#aaa] font-bold text-2xl crt-text shadow-[4px_4px_0_rgba(0,0,0,0.5)] hover:bg-[#222] active:translate-y-1 active:shadow-[2px_2px_0_rgba(0,0,0,0.5)] transition-all focus:outline-none">
+                    МУЗИКА: УВІМК
+                </button>
+
                 <!-- Індикатор камери -->
                 <div class="bg-[#111] border-4 border-[#333] px-5 py-3 flex items-center gap-4 shadow-[4px_4px_0_rgba(0,0,0,0.5)]">
                     <div id="cam-indicator" class="w-6 h-6 rounded-full bg-[#333] shadow-[inset_2px_2px_4px_rgba(0,0,0,0.5)] border-2 border-black"></div>
@@ -387,8 +391,8 @@
 
                 <div id="notification-container" class="absolute top-8 right-8 z-50 flex flex-col gap-4 pointer-events-none"></div>
 
-                <!-- Floating Gradebook (Без transform для уникнення багів кліку) -->
-                <div id="gradebook" class="hidden absolute paper pixel-shadow w-[440px] p-0 z-40 cursor-grab active:cursor-grabbing left-[calc(35%-220px)] top-[150%]">
+                <!-- Floating Gradebook (Позиціонування жорстко через стиль) -->
+                <div id="gradebook" class="hidden absolute paper pixel-shadow w-[440px] p-0 z-40 cursor-grab active:cursor-grabbing" style="left: 35%; top: 150%; transform: translate(-50%, -50%);">
                     <div class="p-3 border-b-6 border-black bg-[#c4b598] flex justify-between items-center select-none">
                         <h4 class="text-3xl text-black font-bold">ЗАЛІКОВКА</h4>
                         <span class="text-xl bg-white border-4 border-black px-2 py-1 font-bold">ДЕННА ФОРМА</span>
@@ -416,7 +420,7 @@
                         <!-- Шар куди падає чорнило -->
                         <div id="gb-ink-layer" class="absolute inset-0 pointer-events-none overflow-hidden z-20"></div>
 
-                        <div id="bribe-element" onpointerdown="takeBribe(event)" class="hidden absolute -bottom-10 -right-10 banknote px-5 py-3 text-3xl z-30 pixel-shadow-sm">
+                        <div id="bribe-element" onpointerdown="takeBribe(event)" class="hidden absolute -bottom-10 -right-10 banknote px-5 py-3 text-3xl z-30 pixel-shadow-sm pointer-events-auto cursor-pointer">
                             <div class="border-4 border-black border-dashed px-3 py-2 flex flex-col items-center">
                                 <span>₴ <span id="bribe-amount">200</span></span>
                                 <div class="bg-black text-white text-lg px-2 py-1 mt-2 w-full text-center">НЕПОМІТНО ВЗЯТИ</div>
@@ -485,7 +489,7 @@
                                     <div class="w-[210px] h-[160px] flex items-end justify-center relative">
                                         <div class="absolute bottom-0 w-[180px] h-[30px] bg-black/60 rounded-[50%] blur-sm"></div>
                                         
-                                        <!-- The Physical Pass Stamp (Нова 3D структура) -->
+                                        <!-- The Physical Pass Stamp -->
                                         <div id="phys-stamp-pass" onpointerdown="pickupStamp('pass', event)" class="physical-stamp relative w-[200px] h-[90px] bg-[#1b5e20] border-[6px] border-black flex items-center justify-center shadow-[0_20px_15px_rgba(0,0,0,0.7)] group z-30">
                                             <div class="stamp-block-table absolute w-[200px] h-[90px] bg-[#2e7d32] border-[6px] border-black flex items-center justify-center shadow-[inset_-6px_-6px_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.2)] transition-transform duration-75 group-active:translate-y-[8px]" style="transform: translateY(-24px);">
                                                 <div class="absolute -top-[50px] w-[50px] h-[50px] bg-[#8d6e63] border-[6px] border-black border-b-0 shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_0_0_rgba(255,255,255,0.1)] flex justify-center group-hover:brightness-110">
@@ -953,8 +957,31 @@
     // --- AUDIO SYNTHESIZER ---
     const sfx = {
         ctx: null,
+        master: null,
+        delay: null,
+        musicInterval: null,
+        isMuted: false,
         init: function() {
-            if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            if (!this.ctx) {
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                this.master = this.ctx.createGain();
+                this.master.gain.value = 0.5;
+                this.master.connect(this.ctx.destination);
+                
+                this.delay = this.ctx.createDelay();
+                this.delay.delayTime.value = 0.375; 
+                const feedback = this.ctx.createGain();
+                feedback.gain.value = 0.35;
+                const delayFilter = this.ctx.createBiquadFilter();
+                delayFilter.type = 'lowpass';
+                delayFilter.frequency.value = 800;
+                
+                this.delay.connect(delayFilter);
+                delayFilter.connect(feedback);
+                feedback.connect(this.delay);
+                this.delay.connect(this.master);
+            }
             if (this.ctx.state === 'suspended') this.ctx.resume();
         },
         playTone: function(freq, type, duration, vol, detune = 0) {
@@ -1014,8 +1041,110 @@
             filter.connect(gain);
             gain.connect(this.ctx.destination);
             noise.start();
+        },
+        startSoundtrack: function() {
+            if (!this.ctx) this.init();
+            if (this.musicInterval || this.isMuted) return;
+
+            const sequence = [
+                { note: 73.42, kick: true }, 
+                { note: 0,     kick: false },
+                { note: 73.42, kick: true }, 
+                { note: 0,     kick: false },
+                { note: 58.27, kick: true }, 
+                { note: 0,     kick: false },
+                { note: 55.00, kick: true }, 
+                { note: 43.65, kick: false } 
+            ];
+            let tick = 0;
+
+            this.musicInterval = setInterval(() => {
+                if (this.isMuted) return;
+                const time = this.ctx.currentTime;
+                const step = sequence[tick % sequence.length];
+                
+                if (step.kick) {
+                    const kOsc = this.ctx.createOscillator();
+                    const kGain = this.ctx.createGain();
+                    kOsc.type = 'sine';
+                    kOsc.frequency.setValueAtTime(80, time);
+                    kOsc.frequency.exponentialRampToValueAtTime(0.01, time + 0.3);
+                    kGain.gain.setValueAtTime(0.3, time); 
+                    kGain.gain.exponentialRampToValueAtTime(0.01, time + 0.3);
+                    kOsc.connect(kGain);
+                    kGain.connect(this.master);
+                    kOsc.start(time);
+                    kOsc.stop(time + 0.3);
+                    
+                    const noiseSize = this.ctx.sampleRate * 0.1;
+                    const nBuf = this.ctx.createBuffer(1, noiseSize, this.ctx.sampleRate);
+                    const nData = nBuf.getChannelData(0);
+                    for(let i=0; i<noiseSize; i++) nData[i] = Math.random() * 2 - 1;
+                    const nSrc = this.ctx.createBufferSource();
+                    nSrc.buffer = nBuf;
+                    const nFilter = this.ctx.createBiquadFilter();
+                    nFilter.type = 'bandpass';
+                    nFilter.frequency.value = 1500;
+                    const nGain = this.ctx.createGain();
+                    nGain.gain.setValueAtTime(0.05, time); 
+                    nGain.gain.exponentialRampToValueAtTime(0.01, time + 0.1);
+                    nSrc.connect(nFilter);
+                    nFilter.connect(nGain);
+                    nGain.connect(this.master);
+                    nSrc.start(time);
+                }
+
+                if (step.note > 0) {
+                    const osc1 = this.ctx.createOscillator();
+                    const filter = this.ctx.createBiquadFilter();
+                    const gain = this.ctx.createGain();
+
+                    osc1.type = 'sawtooth';
+                    osc1.frequency.setValueAtTime(step.note * 2, time); 
+                    
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(600, time);
+                    filter.frequency.exponentialRampToValueAtTime(150, time + 0.6);
+
+                    gain.gain.setValueAtTime(0, time);
+                    gain.gain.linearRampToValueAtTime(0.08, time + 0.05); 
+                    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.8); 
+
+                    osc1.connect(filter);
+                    filter.connect(gain);
+                    
+                    gain.connect(this.master);
+                    gain.connect(this.delay); 
+
+                    osc1.start(time);
+                    osc1.stop(time + 1);
+                }
+                
+                tick++;
+            }, 500); 
+        },
+        stopSoundtrack: function() {
+            if (this.musicInterval) {
+                clearInterval(this.musicInterval);
+                this.musicInterval = null;
+            }
+        },
+        toggleMusic: function() {
+            this.isMuted = !this.isMuted;
+            const btn = document.getElementById('btn-music');
+            if (this.isMuted) {
+                this.stopSoundtrack();
+                if(btn) btn.innerText = "МУЗИКА: ВИМК";
+            } else {
+                this.startSoundtrack();
+                if(btn) btn.innerText = "МУЗИКА: УВІМК";
+            }
         }
     };
+
+    function toggleMusic() {
+        sfx.toggleMusic();
+    }
 
     // --- GAME STATE ---
     let state = {
@@ -1118,8 +1247,12 @@
         if (dragState.active && !state.isGameOver) {
             const gb = document.getElementById('gradebook');
             const parentRect = gb.offsetParent.getBoundingClientRect();
-            gb.style.left = (e.clientX - dragState.offsetX - parentRect.left) + 'px';
-            gb.style.top = (e.clientY - dragState.offsetY - parentRect.top) + 'px';
+            
+            const targetVisualLeft = e.clientX - dragState.offsetX - parentRect.left;
+            const targetVisualTop = e.clientY - dragState.offsetY - parentRect.top;
+            
+            gb.style.left = (targetVisualLeft + gb.offsetWidth / 2) + 'px';
+            gb.style.top = (targetVisualTop + gb.offsetHeight / 2) + 'px';
         }
     });
 
@@ -1155,8 +1288,8 @@
     function resetGradebookPosition() {
         const gb = document.getElementById('gradebook');
         gb.style.transition = 'all 0.3s ease-out';
-        gb.style.left = 'calc(35% - 220px)';
-        gb.style.top = 'calc(65% - 210px)';
+        gb.style.left = '35%';
+        gb.style.top = '65%';
     }
 
     document.addEventListener('pointerdown', (e) => {
@@ -1174,21 +1307,21 @@
             
             const type = state.isStampActive;
             const area = document.getElementById('gb-ink-layer');
-            const x = e.clientX;
-            const y = e.clientY;
+            const clickX = e.clientX;
+            const clickY = e.clientY;
 
-            // Зчитуємо координати ДО будь-яких анімацій і трансформацій столу
+            // Відразу фіксуємо координати відбитку (до тряски)
             const rect = area.getBoundingClientRect();
-            const inkX = x - rect.left;
-            const inkY = y - rect.top;
+            const inkX = clickX - rect.left;
+            const inkY = clickY - rect.top;
 
             document.getElementById('stamp-reticle').classList.add('hidden');
 
             const fallingStamp = document.createElement('div');
             fallingStamp.className = 'falling-stamp fixed flex flex-col items-center justify-center';
-            fallingStamp.style.left = x + 'px';
-            fallingStamp.style.top = y + 'px';
-            fallingStamp.innerHTML = getPhysicalStampHTML(type, true); // Анімація вдавлювання
+            fallingStamp.style.left = clickX + 'px';
+            fallingStamp.style.top = clickY + 'px';
+            fallingStamp.innerHTML = getPhysicalStampHTML(type, true); 
             document.body.appendChild(fallingStamp);
             
             setTimeout(() => {
@@ -1207,6 +1340,8 @@
                 
                 const ink = document.createElement('div');
                 ink.className = `w-[200px] h-[90px] border-[6px] border-double ${cssClass} stamp-placed text-5xl whitespace-nowrap font-bold tracking-widest flex items-center justify-center`;
+                
+                // Використовуємо абсолютні пікселі для ідеальної точності
                 ink.style.left = `${inkX}px`;
                 ink.style.top = `${inkY}px`;
                 ink.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
@@ -1224,7 +1359,7 @@
 
             setTimeout(() => {
                 fallingStamp.remove();
-                pickupStamp(type); // Відновлюємо приціл для наступного штампу
+                pickupStamp(type); 
                 document.getElementById('stamp-reticle').classList.remove('hidden');
             }, 400); 
 
@@ -1232,17 +1367,12 @@
             if (state.currentStudentIndex !== null) {
                 const gb = document.getElementById('gradebook');
                 const rect = gb.getBoundingClientRect();
-                const parentRect = gb.offsetParent.getBoundingClientRect();
-                
-                // Встановлюємо жорсткі координати, щоб уникнути стрибків при кліку
-                gb.style.transition = 'none';
-                gb.style.left = (rect.left - parentRect.left) + 'px';
-                gb.style.top = (rect.top - parentRect.top) + 'px';
                 
                 dragState.offsetX = e.clientX - rect.left;
                 dragState.offsetY = e.clientY - rect.top;
                 dragState.active = true;
                 
+                gb.style.transition = 'none';
                 gb.style.zIndex = 100;
                 sfx.paper();
                 
@@ -1452,7 +1582,6 @@
                 stat.className = "text-[#555] text-3xl font-bold crt-text tracking-widest";
             }
             
-            // Зменшене вікно офлайну (від 1.5 до 3.5 сек)
             const delay = state.cameraActive ? (2000 + Math.random() * 4000) : (1500 + Math.random() * 2000);
             state.cameraTimeout = setTimeout(toggleCamera, delay);
         }
@@ -1506,6 +1635,7 @@
         renderLawBook();
         renderJournal();
         startCameraSystem();
+        sfx.startSoundtrack(); 
         
         typeDialogue("> СИСТЕМА ГОТОВА. ВИКЛИКАЙТЕ СТУДЕНТА З КОРИДОРУ.");
         state.clockInterval = setInterval(tickClock, 1200); 
@@ -1596,13 +1726,13 @@
         gb.classList.remove('hidden');
         
         gb.style.transition = 'none';
-        gb.style.left = 'calc(35% - 220px)';
+        gb.style.left = '35%';
         gb.style.top = '150%';
         
         void gb.offsetWidth;
         
         gb.style.transition = 'top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-        gb.style.top = 'calc(65% - 210px)';
+        gb.style.top = '65%';
         sfx.paper();
 
         document.getElementById('gb-name').innerText = s.name;
@@ -1877,6 +2007,7 @@
         state.isGameOver = true;
         clearInterval(state.clockInterval);
         clearTimeout(state.cameraTimeout);
+        sfx.stopSoundtrack(); 
         
         const modal = document.getElementById('modal-summary');
         modal.classList.remove('hidden');
@@ -1903,6 +2034,7 @@
         state.isGameOver = true;
         clearInterval(state.clockInterval);
         clearTimeout(state.cameraTimeout);
+        sfx.stopSoundtrack(); 
         
         sfx.error(); 
         
@@ -1927,6 +2059,7 @@
         clearInterval(state.clockInterval);
         clearTimeout(state.cameraTimeout);
         clearTimeout(typingTimer);
+        sfx.stopSoundtrack(); 
 
         state = {
             money: 0,
