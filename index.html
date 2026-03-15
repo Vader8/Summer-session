@@ -17,6 +17,11 @@
             cursor: crosshair;
         }
         
+        /* ПРИХОВУЄМО СИСТЕМНИЙ КУРСОР, КОЛИ ПЕЧАТКА В РУЦІ */
+        body.stamp-mode, body.stamp-mode * {
+            cursor: none !important;
+        }
+        
         button, .cursor-pointer, .banknote, .physical-stamp, .physical-book {
             cursor: pointer !important;
         }
@@ -97,6 +102,7 @@
             background-image: repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.03) 1px, rgba(0,0,0,0.03) 2px);
             color: #111;
             border: 4px solid #000;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
         
         .paper-grid {
@@ -137,6 +143,13 @@
         }
         .banknote:hover { filter: brightness(1.3); }
 
+        /* КАМЕРА */
+        @keyframes camBlink {
+            0%, 49% { background-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
+            50%, 100% { background-color: #880000; box-shadow: none; }
+        }
+        .cam-recording { animation: camBlink 1s infinite; }
+
         /* ВІДБИТОК ПЕЧАТКИ */
         .stamp-placed { 
             font-weight: bold; 
@@ -148,14 +161,14 @@
             z-index: 40;
         }
 
-        /* ПРИЦІЛ */
+        /* ІДЕАЛЬНИЙ ПРИЦІЛ */
         #stamp-reticle {
             pointer-events: none;
             transform: translate(-50%, -50%);
             box-sizing: border-box;
         }
-        .reticle-pass { border-color: rgba(27, 94, 32, 0.8); background-color: rgba(27, 94, 32, 0.15); }
-        .reticle-fail { border-color: rgba(183, 28, 28, 0.8); background-color: rgba(183, 28, 28, 0.15); }
+        .reticle-pass { border-color: rgba(27, 94, 32, 0.8); background-color: rgba(27, 94, 32, 0.15); color: rgba(27, 94, 32, 0.8); }
+        .reticle-fail { border-color: rgba(183, 28, 28, 0.8); background-color: rgba(183, 28, 28, 0.15); color: rgba(183, 28, 28, 0.8); }
 
         /* ФІЗИЧНИЙ УДАР ПЕЧАТКОЮ З ВДАВЛЮВАННЯМ */
         .falling-stamp {
@@ -173,9 +186,18 @@
             100% { transform: translate(-50%, calc(-50% - 200px)) scale(1.1); filter: drop-shadow(0 40px 20px rgba(0,0,0,0.2)); opacity: 0; } 
         }
 
-        .physical-stamp { transition: transform 0.1s steps(2, end); }
+        .stamp-block-squish {
+            animation: squishBlock 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+        @keyframes squishBlock {
+            0%, 28% { transform: translateY(-24px); }
+            32% { transform: translateY(-6px); }
+            45%, 100% { transform: translateY(-24px); }
+        }
+
+        .physical-stamp { transition: transform 0.1s; }
         .physical-stamp:hover { transform: translateY(-6px); filter: brightness(1.1); }
-        .physical-stamp:active { transform: translateY(0px); filter: brightness(0.9); }
+        .physical-stamp:active { transform: translateY(2px); filter: brightness(0.9); }
 
         /* ШТРАФНИЙ ТАЛОН */
         #citation-slip {
@@ -229,12 +251,15 @@
     <div class="crt-overlay"></div>
 
     <!-- Custom Stamp Reticle -->
-    <div id="stamp-reticle" class="hidden fixed z-[9999] w-[200px] h-[90px] border-[4px] border-dashed flex items-center justify-center">
-        <div class="w-4 h-4 border-t-4 border-l-4 absolute top-1 left-1"></div>
-        <div class="w-4 h-4 border-t-4 border-r-4 absolute top-1 right-1"></div>
-        <div class="w-4 h-4 border-b-4 border-l-4 absolute bottom-1 left-1"></div>
-        <div class="w-4 h-4 border-b-4 border-r-4 absolute bottom-1 right-1"></div>
-        <div class="w-2 h-2 rounded-full bg-current opacity-50"></div>
+    <div id="stamp-reticle" class="hidden fixed z-[9999] w-[200px] h-[90px] border-[4px] border-dashed pointer-events-none" style="transform: translate(-50%, -50%);">
+        <div class="w-4 h-4 border-t-4 border-l-4 absolute top-1 left-1 border-current"></div>
+        <div class="w-4 h-4 border-t-4 border-r-4 absolute top-1 right-1 border-current"></div>
+        <div class="w-4 h-4 border-b-4 border-l-4 absolute bottom-1 left-1 border-current"></div>
+        <div class="w-4 h-4 border-b-4 border-r-4 absolute bottom-1 right-1 border-current"></div>
+        
+        <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-[2px] bg-white shadow-[0_0_2px_rgba(0,0,0,1)] opacity-90"></div>
+        <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[2px] h-8 bg-white shadow-[0_0_2px_rgba(0,0,0,1)] opacity-90"></div>
+        <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-1 bg-red-500 rounded-full z-10"></div>
     </div>
 
     <!-- Boot Sequence Screen -->
@@ -259,9 +284,9 @@
             </div>
 
             <div class="text-lg md:text-xl mb-6 md:mb-8 text-[#aaa] text-left inline-block space-y-2">
-                <p>● <b>НОВЕ:</b> Тепер заліковка інтерактивна! Ви можете ставити стільки штампів, скільки захочете.</p>
-                <p>● <b>ВАЖЛИВО:</b> Лише перший штамп фіксує рішення. Щоб прийняти екзамен — перетягніть заліковку до студента!</p>
-                <p>● Клікай на хабарі, щоб забрати їх (камери іноді фіксують!).</p>
+                <p>● <b>НОВЕ:</b> Перевіряйте уважно: Дата Народження, Дисципліна та ID можуть бути підроблені!</p>
+                <p>● <b>НОВЕ:</b> Камера працює жорсткіше. Вікно <span class="text-[#888]">ОФЛАЙН</span> дуже коротке, беріть хабарі обережно!</p>
+                <p>● Щоб прийняти екзамен — поставте штамп і перетягніть заліковку до студента!</p>
                 <p class="text-[#4caf50] mt-1">● Іноді на іспит забігає кафедральний кіт. Не ображайте його!</p>
                 <p class="text-yellow-600 mt-3 md:mt-4 font-bold text-xl md:text-2xl text-center w-full block">УВІМКНІТЬ ЗВУК ДЛЯ КРАЩОГО ДОСВІДУ 🔊</p>
             </div>
@@ -275,7 +300,7 @@
     <!-- Main Game UI -->
     <div id="screen-game" class="hidden flex-1 flex flex-col h-full w-full">
         
-        <!-- Top Hardware Bar (Dark Retro Theme) -->
+        <!-- Top Hardware Bar -->
         <div class="h-28 bg-[#1a1a1a] border-b-8 border-black flex items-center justify-between px-8 z-40 relative shadow-[0_10px_20px_rgba(0,0,0,0.8)] shrink-0">
             <div class="absolute bottom-0 left-0 right-0 h-2 bg-[#0a0a0a]"></div>
 
@@ -290,8 +315,16 @@
                 </div>
             </div>
 
-            <div class="flex gap-10 items-center mt-1">
-                <div class="bg-[#050505] text-[#aaa] px-6 py-3 border-4 border-black shadow-[4px_4px_0_rgba(0,0,0,0.5)]">
+            <!-- ЗОНА СТАТУСУ ТА КАМЕРИ -->
+            <div class="flex gap-8 items-center mt-1">
+                
+                <!-- Індикатор камери -->
+                <div class="bg-[#111] border-4 border-[#333] px-5 py-3 flex items-center gap-4 shadow-[4px_4px_0_rgba(0,0,0,0.5)]">
+                    <div id="cam-indicator" class="w-6 h-6 rounded-full bg-[#333] shadow-[inset_2px_2px_4px_rgba(0,0,0,0.5)] border-2 border-black"></div>
+                    <span id="cam-status" class="text-[#555] text-3xl font-bold crt-text tracking-widest">CCTV: ОФЛАЙН</span>
+                </div>
+
+                <div class="bg-[#050505] text-[#aaa] px-6 py-3 border-4 border-black shadow-[4px_4px_0_rgba(0,0,0,0.5)] flex items-center gap-4">
                     <span class="text-[#888]">ГАМАНЕЦЬ:</span>
                     <span id="stat-money" class="text-[#4caf50] text-4xl font-bold crt-text drop-shadow-[0_0_5px_rgba(76,175,80,0.5)]">0 ₴</span>
                 </div>
@@ -316,6 +349,10 @@
                 <!-- Direct Student View -->
                 <div class="h-80 border-b-8 border-black bg-[#1b5e20] p-4 flex flex-col relative shrink-0 overflow-hidden shadow-[inset_0_20px_20px_rgba(0,0,0,0.6)] transition-all" id="cctv-student-container">
                     <div class="absolute inset-0 bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQIW2NkYGD4z8DAwMgAI0AMDA4IAm1+xXgAAAAASUVORK5CYII=')] opacity-20"></div>
+                    
+                    <div class="absolute top-5 left-5 flex items-center gap-2 z-20 bg-[#050505]/90 px-3 py-1 border-4 border-black shadow-[4px_4px_0_rgba(0,0,0,0.5)] transition-colors" id="cctv-zone-label">
+                        <span class="text-[#4caf50] text-lg font-bold">МІСЦЕ ДЛЯ ВІДПОВІДІ</span>
+                    </div>
                     
                     <div class="flex-1 relative flex justify-center items-end">
                         <div id="cctv-empty" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#a5d6a7] text-4xl z-10 w-full text-center opacity-50">
@@ -347,30 +384,32 @@
                 <div id="notification-container" class="absolute top-8 right-8 z-50 flex flex-col gap-4 pointer-events-none"></div>
 
                 <!-- Floating Gradebook -->
-                <div id="gradebook" class="hidden absolute paper pixel-shadow w-[420px] p-0 z-40 cursor-grab active:cursor-grabbing left-[35%] top-[150%] transform -translate-x-1/2 -translate-y-1/2">
-                    <div class="p-4 border-b-6 border-black bg-[#c4b598] flex justify-between items-center select-none">
+                <div id="gradebook" class="hidden absolute paper pixel-shadow w-[440px] p-0 z-40 cursor-grab active:cursor-grabbing left-[35%] top-[150%] transform -translate-x-1/2 -translate-y-1/2">
+                    <div class="p-3 border-b-6 border-black bg-[#c4b598] flex justify-between items-center select-none">
                         <h4 class="text-3xl text-black font-bold">ЗАЛІКОВКА</h4>
                         <span class="text-xl bg-white border-4 border-black px-2 py-1 font-bold">ДЕННА ФОРМА</span>
                     </div>
-                    <div class="p-6 pb-10 bg-[#f9f9f9] bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQIW2NkYGD4z8DAwMgAI0AMDA4IAm1+xXgAAAAASUVORK5CYII=')] relative min-h-[400px]">
-                        <div class="flex gap-4 mb-6 items-center border-b-4 border-black pb-6 relative z-10 select-none">
+                    <div class="p-5 pb-8 bg-[#f9f9f9] bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQIW2NkYGD4z8DAwMgAI0AMDA4IAm1+xXgAAAAASUVORK5CYII=')] relative min-h-[420px]">
+                        <div class="flex gap-4 mb-4 items-center border-b-4 border-black pb-4 relative z-10 select-none">
                             <div class="bg-[#546e7a] pixel-border pixel-shadow-sm w-32 h-32 flex-shrink-0 relative overflow-hidden flex items-end justify-center">
                                 <img id="gb-photo" src="" class="w-full h-full pixel-photo object-contain transform translate-y-1 pointer-events-none" alt="student">
                             </div>
-                            <div class="text-2xl space-y-2 text-black font-bold flex-1 min-w-0">
-                                <p class="text-[#555] text-xl border-b border-dashed border-[#aaa] pb-1">ІМ'Я:</p>
-                                <p id="gb-name" class="text-3xl uppercase text-[#111] break-words leading-none mt-1">...</p>
-                                <p class="text-[#555] mt-3 flex items-center gap-2 text-lg">ІДЕНТ. КОД: <span id="gb-id" class="text-white bg-black px-2 py-1 pixel-shadow-sm text-xl">...</span></p>
+                            <div class="text-2xl space-y-1 text-black font-bold flex-1 min-w-0">
+                                <p class="text-[#555] text-lg border-b border-dashed border-[#aaa] pb-1">ІМ'Я:</p>
+                                <p id="gb-name" class="text-2xl uppercase text-[#111] break-words leading-none mt-1">...</p>
+                                <p class="text-[#555] mt-2 flex items-center gap-2 text-lg">ДАТА НАР.: <span id="gb-dob" class="text-black font-bold">...</span></p>
+                                <p class="text-[#555] mt-1 flex items-center gap-2 text-lg">ІДЕНТ. КОД: <span id="gb-id" class="text-white bg-black px-2 py-1 pixel-shadow-sm text-lg">...</span></p>
                             </div>
                         </div>
                         
-                        <div class="border-4 border-black p-4 text-2xl text-black bg-white pixel-shadow-inset relative z-10 select-none pointer-events-none">
-                            <p class="mb-3 border-b-2 border-dashed border-[#aaa] pb-2 text-[#555]">ДИСЦ.: ЦИВ. ПРАВО</p>
-                            <div class="h-32 flex items-center justify-center relative mt-4 border-4 border-dashed border-[#ccc] bg-[#f0f0f0]">
+                        <div class="border-4 border-black p-3 text-xl text-black bg-white pixel-shadow-inset relative z-10 select-none pointer-events-none">
+                            <p id="gb-discipline" class="mb-2 border-b-2 border-dashed border-[#aaa] pb-1 text-[#555] uppercase font-bold text-xl">ДИСЦ.: ...</p>
+                            <div class="h-32 flex items-center justify-center relative mt-3 border-4 border-dashed border-[#ccc] bg-[#f0f0f0]">
                                 <span class="text-xl text-[#aaa] absolute uppercase text-center leading-tight">[КЛІКНІТЬ ПЕЧАТКОЮ<br>ДЛЯ ЗАПИСУ ОЦІНКИ]</span>
                             </div>
                         </div>
 
+                        <!-- Шар куди падає чорнило -->
                         <div id="gb-ink-layer" class="absolute inset-0 pointer-events-none overflow-hidden z-20"></div>
 
                         <div id="bribe-element" onmousedown="takeBribe(event)" class="hidden absolute -bottom-10 -right-10 banknote px-5 py-3 text-3xl z-30 pixel-shadow-sm">
@@ -382,7 +421,7 @@
                     </div>
                 </div>
 
-                <!-- Static Interaction Zone (Tools and Dialogue) -->
+                <!-- Static Interaction Zone -->
                 <div class="relative w-full max-w-6xl p-12 flex flex-col items-center justify-center z-20 h-full pointer-events-none">
                     
                     <!-- Dialogue Terminal -->
@@ -397,7 +436,7 @@
                     </div>
 
                     <div class="flex gap-16 items-start w-full justify-end relative pointer-events-none">
-                        <!-- Right: Tools (Books & Stamps) -->
+                        <!-- Tools (Books & Stamps) -->
                         <div class="flex flex-col gap-10 z-20 w-[480px] items-center pointer-events-auto">
                             
                             <!-- Books Row -->
@@ -443,12 +482,13 @@
                                         <div class="absolute bottom-0 w-[180px] h-[30px] bg-black/60 rounded-[50%] blur-sm"></div>
                                         
                                         <!-- The Physical Pass Stamp -->
-                                        <div id="phys-stamp-pass" onmousedown="pickupStamp('pass', event)" class="physical-stamp relative w-[200px] h-[90px] bg-[#2e7d32] border-[6px] border-black shadow-[inset_-6px_-6px_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.2),0_12px_0_#1b5e20,0_20px_15px_rgba(0,0,0,0.7)] flex items-center justify-center group z-30">
-                                            <div class="absolute -top-[50px] w-[50px] h-[50px] bg-[#8d6e63] border-[6px] border-black border-b-0 shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_0_0_rgba(255,255,255,0.1)] flex justify-center group-hover:brightness-110">
-                                                <div class="absolute -top-[40px] w-[90px] h-[40px] bg-[#5d4037] border-[6px] border-black rounded-t-[16px] shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.1)]"></div>
+                                        <div id="phys-stamp-pass" onmousedown="pickupStamp('pass', event)" class="physical-stamp relative w-[200px] h-[90px] bg-[#1b5e20] border-[6px] border-black flex items-center justify-center shadow-[0_20px_15px_rgba(0,0,0,0.7)] group z-30">
+                                            <div class="stamp-block-table absolute w-[200px] h-[90px] bg-[#2e7d32] border-[6px] border-black flex items-center justify-center shadow-[inset_-6px_-6px_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.2)] transition-transform duration-75 group-active:translate-y-[8px]" style="transform: translateY(-24px);">
+                                                <div class="absolute -top-[50px] w-[50px] h-[50px] bg-[#8d6e63] border-[6px] border-black border-b-0 shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_0_0_rgba(255,255,255,0.1)] flex justify-center group-hover:brightness-110">
+                                                    <div class="absolute -top-[40px] w-[90px] h-[40px] bg-[#5d4037] border-[6px] border-black rounded-t-[16px] shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.1)]"></div>
+                                                </div>
+                                                <div class="bg-[#e8e8e8] border-4 border-black px-6 py-2 text-[#1b5e20] font-bold text-4xl shadow-[inset_3px_3px_0_rgba(0,0,0,0.2)] transform -rotate-2 z-10 group-hover:bg-white transition-colors tracking-widest">ЗАРАХ</div>
                                             </div>
-                                            <div class="bg-[#e8e8e8] border-4 border-black px-6 py-2 text-[#1b5e20] font-bold text-4xl shadow-[inset_3px_3px_0_rgba(0,0,0,0.2)] transform -rotate-2 z-10 group-hover:bg-white transition-colors tracking-widest">ЗАРАХ</div>
-                                            <div class="absolute -bottom-[24px] w-[192px] h-[18px] bg-[#1b5e20] border-[6px] border-black border-t-0 shadow-[10px_10px_0_rgba(0,0,0,0.6)]"></div>
                                         </div>
                                     </div>
 
@@ -457,12 +497,13 @@
                                         <div class="absolute bottom-0 w-[180px] h-[30px] bg-black/60 rounded-[50%] blur-sm"></div>
                                         
                                         <!-- The Physical Fail Stamp -->
-                                        <div id="phys-stamp-fail" onmousedown="pickupStamp('fail', event)" class="physical-stamp relative w-[200px] h-[90px] bg-[#c62828] border-[6px] border-black shadow-[inset_-6px_-6px_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.2),0_12px_0_#b71c1c,0_20px_15px_rgba(0,0,0,0.7)] flex items-center justify-center group z-30">
-                                            <div class="absolute -top-[50px] w-[50px] h-[50px] bg-[#8d6e63] border-[6px] border-black border-b-0 shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_0_0_rgba(255,255,255,0.1)] flex justify-center group-hover:brightness-110">
-                                                <div class="absolute -top-[40px] w-[90px] h-[40px] bg-[#5d4037] border-[6px] border-black rounded-t-[16px] shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.1)]"></div>
+                                        <div id="phys-stamp-fail" onmousedown="pickupStamp('fail', event)" class="physical-stamp relative w-[200px] h-[90px] bg-[#b71c1c] border-[6px] border-black flex items-center justify-center shadow-[0_20px_15px_rgba(0,0,0,0.7)] group z-30">
+                                            <div class="stamp-block-table absolute w-[200px] h-[90px] bg-[#c62828] border-[6px] border-black flex items-center justify-center shadow-[inset_-6px_-6px_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.2)] transition-transform duration-75 group-active:translate-y-[8px]" style="transform: translateY(-24px);">
+                                                <div class="absolute -top-[50px] w-[50px] h-[50px] bg-[#8d6e63] border-[6px] border-black border-b-0 shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_0_0_rgba(255,255,255,0.1)] flex justify-center group-hover:brightness-110">
+                                                    <div class="absolute -top-[40px] w-[90px] h-[40px] bg-[#5d4037] border-[6px] border-black rounded-t-[16px] shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.1)]"></div>
+                                                </div>
+                                                <div class="bg-[#e8e8e8] border-4 border-black px-6 py-2 text-[#b71c1c] font-bold text-4xl shadow-[inset_3px_3px_0_rgba(0,0,0,0.2)] transform rotate-3 z-10 group-hover:bg-white transition-colors tracking-widest">ВІДМ</div>
                                             </div>
-                                            <div class="bg-[#e8e8e8] border-4 border-black px-6 py-2 text-[#b71c1c] font-bold text-4xl shadow-[inset_3px_3px_0_rgba(0,0,0,0.2)] transform rotate-3 z-10 group-hover:bg-white transition-colors tracking-widest">ВІДМ</div>
-                                            <div class="absolute -bottom-[24px] w-[192px] h-[18px] bg-[#b71c1c] border-[6px] border-black border-t-0 shadow-[10px_10px_0_rgba(0,0,0,0.6)]"></div>
                                         </div>
                                     </div>
 
@@ -511,19 +552,21 @@
 
         <!-- Journal UI -->
         <div id="modal-journal" class="hidden absolute inset-0 z-50 bg-[rgba(0,0,0,0.85)] flex items-center justify-center p-6 md:p-12">
-            <div class="paper paper-grid w-full max-w-6xl max-h-[95vh] h-full p-0 flex flex-col relative pixel-shadow modal-animate">
+            <div class="paper paper-grid w-full max-w-7xl max-h-[95vh] h-full p-0 flex flex-col relative pixel-shadow modal-animate">
                 <div class="bg-[#5d4037] text-white p-4 md:p-6 border-b-8 border-black flex justify-between items-center text-3xl md:text-5xl shadow-[0_5px_15px_rgba(0,0,0,0.5)] shrink-0">
                     <span class="font-bold tracking-widest">ЕЛЕКТРОННА ВІДОМІСТЬ (ЄДЕБО)</span>
                     <button onclick="toggleJournal()" class="btn-pixel px-4 md:px-6 py-2 bg-red-600 text-2xl md:text-4xl">ЗАКРИТИ</button>
                 </div>
-                <div class="p-6 md:p-12 overflow-y-auto scroll-custom h-full">
-                    <table class="w-full text-left text-2xl md:text-4xl text-black border-collapse border-8 border-black bg-white pixel-shadow-sm break-words">
+                <div class="p-6 md:p-10 overflow-y-auto scroll-custom h-full">
+                    <table class="w-full text-left text-2xl md:text-3xl text-black border-collapse border-8 border-black bg-white pixel-shadow-sm break-words">
                         <thead class="bg-[#ccc] border-b-8 border-black">
                             <tr>
-                                <th class="p-3 md:p-5 border-r-4 border-black w-16 md:w-24">#</th>
-                                <th class="p-3 md:p-5 border-r-4 border-black">ПІБ СТУДЕНТА</th>
-                                <th class="p-3 md:p-5 border-r-4 border-black w-24 md:w-40">БІЛЕТ</th>
-                                <th class="p-3 md:p-5 bg-[#ffecb3] w-48 md:w-64">ІДЕНТИФІКАТОР</th>
+                                <th class="p-2 md:p-3 border-r-4 border-black w-12 md:w-20 text-center">#</th>
+                                <th class="p-2 md:p-3 border-r-4 border-black">ПІБ СТУДЕНТА</th>
+                                <th class="p-2 md:p-3 border-r-4 border-black w-16 md:w-24 text-center">БІЛЕТ</th>
+                                <th class="p-2 md:p-3 border-r-4 border-black w-32 md:w-40">ДАТА НАР.</th>
+                                <th class="p-2 md:p-3 border-r-4 border-black w-40 md:w-56">ДИСЦИПЛІНА</th>
+                                <th class="p-2 md:p-3 bg-[#ffecb3] w-40 md:w-56">ІДЕНТИФІКАТОР</th>
                             </tr>
                         </thead>
                         <tbody id="journal-body"></tbody>
@@ -984,6 +1027,8 @@
         timeHours: 9,
         timeMinutes: 0,
         clockInterval: null,
+        cameraActive: false,
+        cameraTimeout: null,
         isGameOver: false
     };
 
@@ -1046,6 +1091,8 @@
         }
     ];
 
+    const DISCIPLINES = ["ЦИВІЛЬНЕ ПРАВО", "КРИМІНАЛЬНЕ ПРАВО", "СІМЕЙНЕ ПРАВО", "АДМІН. ПРАВО", "ПОДАТКОВЕ ПРАВО"];
+
     const LAST_NAMES = [
         "ІВАНЕНКО", "ПЕТРЕНКО", "СИДОРЕНКО", "МЕЛЬНИК", "КОВАЛЕНКО", "БОНДАР", 
         "ТКАЧ", "ШЕВЧЕНКО", "ОЛІЙНИК", "КРАВЧУК", "БОЙКО", "ПОЛІЩУК", 
@@ -1098,7 +1145,6 @@
                     setTimeout(() => finishStudent(s.decision), 500);
                 }
             }
-            // Видалено блок else, щоб заліковка лишалась там де її відпустили
         }
     });
 
@@ -1128,13 +1174,18 @@
             const x = e.clientX;
             const y = e.clientY;
 
+            // Відразу фіксуємо координати відбитку відносно паперу
+            const rect = area.getBoundingClientRect();
+            const inkX = x - rect.left;
+            const inkY = y - rect.top;
+
             document.getElementById('stamp-reticle').classList.add('hidden');
 
             const fallingStamp = document.createElement('div');
-            fallingStamp.className = 'falling-stamp fixed flex flex-col items-center justify-end';
+            fallingStamp.className = 'falling-stamp fixed flex flex-col items-center justify-center';
             fallingStamp.style.left = x + 'px';
             fallingStamp.style.top = y + 'px';
-            fallingStamp.innerHTML = getPhysicalStampHTML(type);
+            fallingStamp.innerHTML = getPhysicalStampHTML(type, true); // Анімація вдавлювання
             document.body.appendChild(fallingStamp);
             
             setTimeout(() => {
@@ -1146,10 +1197,6 @@
                 setTimeout(() => { desk.style.transform = 'translate(-8px, -12px)'; }, 40);
                 setTimeout(() => { desk.style.transform = 'translate(5px, 8px)'; }, 80);
                 setTimeout(() => { desk.style.transform = 'translate(0, 0)'; }, 120);
-                
-                const rect = document.getElementById('gradebook').getBoundingClientRect();
-                const inkX = x - rect.left;
-                const inkY = y - rect.top;
                 
                 const text = type === 'pass' ? 'ЗАРАХ' : 'ВІДМОВА';
                 const cssClass = type === 'pass' ? 'text-[#1b5e20] border-[#1b5e20]' : 'text-[#b71c1c] border-[#b71c1c]';
@@ -1174,7 +1221,8 @@
 
             setTimeout(() => {
                 fallingStamp.remove();
-                pickupStamp(type, e); // Return reticle instead of returning stamp to rack to allow multiple stamps
+                pickupStamp(type); // Без "e", щоб приціл не стрибав назад
+                document.getElementById('stamp-reticle').classList.remove('hidden');
             }, 400); 
 
         } else {
@@ -1208,6 +1256,7 @@
         if(e) e.stopPropagation();
 
         state.isStampActive = type;
+        document.body.classList.add('stamp-mode');
         
         document.getElementById('phys-stamp-pass').classList.remove('hidden');
         document.getElementById('phys-stamp-fail').classList.remove('hidden');
@@ -1227,24 +1276,27 @@
 
     function returnStamp() {
         state.isStampActive = null;
+        document.body.classList.remove('stamp-mode');
         document.getElementById('stamp-reticle').classList.add('hidden');
         document.getElementById('phys-stamp-pass').classList.remove('hidden');
         document.getElementById('phys-stamp-fail').classList.remove('hidden');
     }
 
-    function getPhysicalStampHTML(type) {
+    function getPhysicalStampHTML(type, isFalling = false) {
         const baseColor = type === 'pass' ? 'bg-[#2e7d32]' : 'bg-[#c62828]';
         const labelText = type === 'pass' ? 'ЗАРАХ' : 'ВІДМ';
         const labelColor = type === 'pass' ? 'text-[#1b5e20]' : 'text-[#b71c1c]';
         const bottomColor = type === 'pass' ? 'bg-[#1b5e20]' : 'bg-[#b71c1c]';
+        const animationClass = isFalling ? 'stamp-block-squish' : '';
         
         return `
-            <div class="relative w-[200px] h-[90px] ${baseColor} border-[6px] border-black shadow-[inset_-6px_-6px_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.2)] flex items-center justify-center">
-                <div class="absolute -top-[50px] w-[50px] h-[50px] bg-[#8d6e63] border-[6px] border-black border-b-0 shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_0_0_rgba(255,255,255,0.1)] flex justify-center">
-                    <div class="absolute -top-[40px] w-[90px] h-[40px] bg-[#5d4037] border-[6px] border-black rounded-t-[16px] shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.1)]"></div>
+            <div class="relative w-[200px] h-[90px] ${bottomColor} border-[6px] border-black flex items-center justify-center">
+                <div class="${animationClass} absolute w-[200px] h-[90px] ${baseColor} border-[6px] border-black flex items-center justify-center shadow-[inset_-6px_-6px_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.2)]" style="transform: translateY(-24px);">
+                    <div class="absolute -top-[50px] w-[50px] h-[50px] bg-[#8d6e63] border-[6px] border-black border-b-0 shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_0_0_rgba(255,255,255,0.1)] flex justify-center group-hover:brightness-110">
+                        <div class="absolute -top-[40px] w-[90px] h-[40px] bg-[#5d4037] border-[6px] border-black rounded-t-[16px] shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.1)]"></div>
+                    </div>
+                    <div class="bg-[#e8e8e8] border-4 border-black px-5 py-1 ${labelColor} font-bold text-4xl shadow-[inset_3px_3px_0_rgba(0,0,0,0.2)] transform -rotate-2">${labelText}</div>
                 </div>
-                <div class="bg-[#e8e8e8] border-4 border-black px-5 py-1 ${labelColor} font-bold text-4xl shadow-[inset_3px_3px_0_rgba(0,0,0,0.2)] transform -rotate-2">${labelText}</div>
-                <div class="absolute -bottom-[24px] w-[192px] h-[18px] ${bottomColor} border-[6px] border-black border-t-0 shadow-[10px_10px_0_rgba(0,0,0,0.6)]"></div>
             </div>
         `;
     }
@@ -1256,6 +1308,12 @@
 
         let availableFaces = Array.from({length: PIXEL_DESIGNS.length}, (_, i) => i);
         availableFaces.sort(() => Math.random() - 0.5);
+
+        let availableNames = [...LAST_NAMES];
+        availableNames.sort(() => Math.random() - 0.5);
+
+        let availableTickets = Array.from({length: 30}, (_, i) => i + 1);
+        availableTickets.sort(() => Math.random() - 0.5);
 
         for (let i = 0; i < totalStudents; i++) {
             
@@ -1269,14 +1327,19 @@
                 state.students.push({
                     id: i,
                     name: "КІТ",
-                    idNum: "МЯУ-0000",
+                    gbId: "МЯУ-0000",
                     journalId: "МЯУ-0000",
+                    gbDob: "??.??.????",
+                    journalDob: "??.??.????",
+                    gbDiscipline: "КОТОЗНАВСТВО",
+                    journalDiscipline: "КОТОЗНАВСТВО",
                     inJournal: true,
                     ticket: "МЯУ",
                     photo: generateCatFace(),
                     answer: "Мяу... Мррр... Мяу!",
                     correctLaw: null,
                     isFraud: false,
+                    fraudType: -1,
                     isWrongAnswer: false,
                     bribe: 0,
                     bribeTaken: false,
@@ -1288,9 +1351,9 @@
             } else {
                 let initial1 = ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
                 let initial2 = ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
-                let name = `${LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)]} ${initial1}.${initial2}.`;
-                let idNum = "ID-" + (1000 + Math.floor(Math.random() * 9000));
-                let ticket = 1 + Math.floor(Math.random() * 20);
+                let lastName = availableNames.pop() || LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)];
+                let name = `${lastName} ${initial1}.${initial2}.`;
+                let ticket = availableTickets.pop() || (1 + Math.floor(Math.random() * 30));
                 
                 let isFraud = Math.random() < 0.25; 
                 let knowledgeGap = Math.random() < 0.35; 
@@ -1300,22 +1363,59 @@
                 let randomLaw = LAWS[Math.floor(Math.random() * LAWS.length)];
                 let answer = knowledgeGap ? randomLaw.wrongText : randomLaw.text;
 
-                let documentId = isFraud ? "ID-" + (1000 + Math.floor(Math.random() * 9000)) : idNum;
-                let inJournal = !(isFraud && Math.random() > 0.5);
+                // Генерація справжніх даних
+                let trueId = "ID-" + (1000 + Math.floor(Math.random() * 9000));
+                let trueYear = 2000 + Math.floor(Math.random() * 6);
+                let trueMonth = String(1 + Math.floor(Math.random() * 12)).padStart(2, '0');
+                let trueDay = String(1 + Math.floor(Math.random() * 28)).padStart(2, '0');
+                let trueDob = `${trueDay}.${trueMonth}.${trueYear}`;
+                let trueDiscipline = DISCIPLINES[0]; // ЦИВІЛЬНЕ ПРАВО
+
+                let journalId = trueId;
+                let journalDob = trueDob;
+                let journalDiscipline = trueDiscipline;
+                let gbId = trueId;
+                let gbDob = trueDob;
+                let gbDiscipline = trueDiscipline;
+                let inJournal = true;
+                let fraudType = -1; // 0: missing, 1: ID, 2: DOB, 3: Discipline
+
+                if (isFraud) {
+                    fraudType = Math.floor(Math.random() * 4);
+                    if (fraudType === 0) {
+                        inJournal = false; // Немає в журналі
+                    } else if (fraudType === 1) {
+                        gbId = "ID-" + (1000 + Math.floor(Math.random() * 9000)); // Фейковий ID
+                    } else if (fraudType === 2) {
+                        let fakeYear = 2000 + Math.floor(Math.random() * 6);
+                        let fakeMonth = String(1 + Math.floor(Math.random() * 12)).padStart(2, '0');
+                        let fakeDay = String(1 + Math.floor(Math.random() * 28)).padStart(2, '0');
+                        gbDob = `${fakeDay}.${fakeMonth}.${fakeYear}`;
+                        if (gbDob === trueDob) gbDob = "01.01.1999";
+                    } else if (fraudType === 3) {
+                        // Випадкова інша дисципліна
+                        gbDiscipline = DISCIPLINES[1 + Math.floor(Math.random() * (DISCIPLINES.length - 1))];
+                    }
+                }
                 
-                let faceIndex = availableFaces.pop();
+                let faceIndex = availableFaces.pop() || Math.floor(Math.random() * PIXEL_DESIGNS.length);
 
                 state.students.push({
                     id: i,
                     name: name,
-                    idNum: documentId, 
-                    journalId: idNum,
+                    gbId: gbId,
+                    journalId: journalId,
+                    gbDob: gbDob,
+                    journalDob: journalDob,
+                    gbDiscipline: gbDiscipline,
+                    journalDiscipline: journalDiscipline,
                     inJournal: inJournal,
                     ticket: ticket,
                     photo: generatePixelFace(faceIndex), 
                     answer: answer,
                     correctLaw: randomLaw,
                     isFraud: isFraud,
+                    fraudType: fraudType,
                     isWrongAnswer: knowledgeGap,
                     bribe: bribeOffer ? 300 + Math.floor(Math.random() * 700) : 0, 
                     bribeTaken: false,
@@ -1327,6 +1427,32 @@
             }
         }
         document.getElementById('stat-quota').innerText = `0/${totalStudents}`;
+    }
+
+    function startCameraSystem() {
+        clearTimeout(state.cameraTimeout);
+        function toggleCamera() {
+            if(state.isGameOver) return;
+            
+            state.cameraActive = !state.cameraActive;
+            const ind = document.getElementById('cam-indicator');
+            const stat = document.getElementById('cam-status');
+            
+            if(state.cameraActive) {
+                ind.className = "w-6 h-6 rounded-full border-2 border-black cam-recording";
+                stat.innerText = "CCTV: ЗАПИС";
+                stat.className = "text-[#ff0000] text-3xl font-bold crt-text tracking-widest";
+            } else {
+                ind.className = "w-6 h-6 rounded-full bg-[#333] shadow-[inset_2px_2px_4px_rgba(0,0,0,0.5)] border-2 border-black";
+                stat.innerText = "CCTV: ОФЛАЙН";
+                stat.className = "text-[#555] text-3xl font-bold crt-text tracking-widest";
+            }
+            
+            // Зменшене вікно офлайну (від 1.5 до 3.5 сек)
+            const delay = state.cameraActive ? (2000 + Math.random() * 4000) : (1500 + Math.random() * 2000);
+            state.cameraTimeout = setTimeout(toggleCamera, delay);
+        }
+        state.cameraTimeout = setTimeout(toggleCamera, 3000);
     }
 
     function startBootSequence() {
@@ -1375,6 +1501,7 @@
         renderClassroom();
         renderLawBook();
         renderJournal();
+        startCameraSystem();
         
         typeDialogue("> СИСТЕМА ГОТОВА. ВИКЛИКАЙТЕ СТУДЕНТА З КОРИДОРУ.");
         state.clockInterval = setInterval(tickClock, 1200); 
@@ -1476,7 +1603,9 @@
         sfx.paper();
 
         document.getElementById('gb-name').innerText = s.name;
-        document.getElementById('gb-id').innerText = s.idNum;
+        document.getElementById('gb-id').innerText = s.gbId;
+        document.getElementById('gb-dob').innerText = s.gbDob;
+        document.getElementById('gb-discipline').innerText = `ДИСЦ.: ${s.gbDiscipline}`;
         document.getElementById('gb-photo').src = s.photo; 
         
         document.getElementById('gb-ink-layer').innerHTML = '';
@@ -1515,16 +1644,20 @@
         const s = state.students[state.currentStudentIndex];
         if (s.bribe <= 0 || s.isCat) return;
 
-        sfx.cash();
-
-        state.money += s.bribe;
         s.bribeTaken = true; 
         state.bribesTaken++;
         
-        if (Math.random() < 0.25) {
-            state.reputation -= 15;
-            notify(`! КАМЕРА ЗАФІКСУВАЛА ПІДОЗРІЛІ ДІЇ (-15%) | + ${s.bribe} ₴`, "text-[#d32f2f]");
+        if (state.cameraActive) {
+            sfx.error();
+            const fine = 500;
+            const repPenalty = 25;
+            state.money -= fine;
+            state.reputation -= repPenalty;
+            
+            showCitation("ФІКСАЦІЯ ОТРИМАННЯ ХАБАРА НА КАМЕРУ! ПОРУШЕННЯ АНТИКОРУПЦІЙНОГО ПРОТОКОЛУ.", fine, repPenalty);
         } else {
+            sfx.cash();
+            state.money += s.bribe;
             notify(`+ ${s.bribe} ₴ ПРИХОВАНО В КИШЕНЮ`, "text-[#4caf50]");
         }
         
@@ -1578,7 +1711,11 @@
                     moneyChange = -800;
                     state.wrongDecisions++;
                     isViolation = true;
-                    feedback = "КРИТИЧНА ПОМИЛКА: ЗАРАХОВАНО ФАЛЬШИВІ ДОКУМЕНТИ! ХАБАР НЕ ВРЯТУВАВ ВІД КОМІСІЇ.";
+                    if (s.fraudType === 0) feedback = "КРИТИЧНА ПОМИЛКА: СТУДЕНТА НЕМАЄ В ЖУРНАЛІ! ХАБАР НЕ ДОПОМІГ.";
+                    else if (s.fraudType === 1) feedback = "КРИТИЧНА ПОМИЛКА: ФАЛЬШИВИЙ ID! ХАБАР НЕ ДОПОМІГ.";
+                    else if (s.fraudType === 2) feedback = "КРИТИЧНА ПОМИЛКА: НЕВІРНА ДАТА НАРОДЖЕННЯ! ХАБАР НЕ ДОПОМІГ.";
+                    else if (s.fraudType === 3) feedback = "КРИТИЧНА ПОМИЛКА: ЕКЗАМЕН З ІНШОЇ ДИСЦИПЛІНИ! ХАБАР НЕ ДОПОМІГ.";
+                    else feedback = "КРИТИЧНА ПОМИЛКА: ФАЛЬШИВІ ДОКУМЕНТИ!";
                 } else {
                     repChange = 0; 
                     state.correctDecisions++;
@@ -1606,7 +1743,11 @@
                     state.wrongDecisions++;
                     isViolation = true;
                     if (s.isFraud && passed) {
-                        feedback = "ПРОПУСК ФАЛЬШИВОГО ID АБО СТУДЕНТА, ЯКОГО НЕМАЄ В ЖУРНАЛІ.";
+                        if (s.fraudType === 0) feedback = "ПРОПУСК СТУДЕНТА, ЯКОГО НЕМАЄ В ЖУРНАЛІ (ЄДЕБО).";
+                        else if (s.fraudType === 1) feedback = "ФАЛЬШИВИЙ ІДЕНТИФІКАТОР У ЗАЛІКОВЦІ!";
+                        else if (s.fraudType === 2) feedback = "ДАТА НАРОДЖЕННЯ НЕ ЗБІГАЄТЬСЯ З БАЗОЮ!";
+                        else if (s.fraudType === 3) feedback = "ЕКЗАМЕН З ІНШОЇ ДИСЦИПЛІНИ! ЦЕ НЕ ЦИВІЛЬНЕ ПРАВО!";
+                        else feedback = "ПРОПУСК ФАЛЬШИВИХ ДОКУМЕНТІВ.";
                     } else if (!s.isFraud && s.isWrongAnswer && passed) {
                         feedback = "ОЦІНКА НЕ ВІДПОВІДАЄ ЗНАННЯМ ЦИВІЛЬНОГО КОДЕКСУ.";
                     } else {
@@ -1700,10 +1841,12 @@
             
             body.innerHTML += `
                 <tr class="hover:bg-[#ddd] border-b-4 border-gray-300">
-                    <td class="p-3 md:p-5 border-r-4 border-black font-bold text-gray-500">${rowNum++}</td>
-                    <td class="p-3 md:p-5 border-r-4 border-black font-bold break-words">${s.name}</td>
-                    <td class="p-3 md:p-5 border-r-4 border-black text-center text-3xl md:text-5xl">${s.ticket}</td>
-                    <td class="p-3 md:p-5 bg-[#fff9c4] font-bold text-gray-700 break-words">${s.journalId}</td>
+                    <td class="p-2 md:p-3 border-r-4 border-black font-bold text-gray-500 text-center">${rowNum++}</td>
+                    <td class="p-2 md:p-3 border-r-4 border-black font-bold break-words">${s.name}</td>
+                    <td class="p-2 md:p-3 border-r-4 border-black text-center text-2xl md:text-3xl">${s.ticket}</td>
+                    <td class="p-2 md:p-3 border-r-4 border-black font-bold text-[#444] whitespace-nowrap">${s.journalDob}</td>
+                    <td class="p-2 md:p-3 border-r-4 border-black font-bold text-[#444] break-words uppercase">${s.journalDiscipline}</td>
+                    <td class="p-2 md:p-3 bg-[#fff9c4] font-bold text-gray-700 whitespace-nowrap">${s.journalId}</td>
                 </tr>
             `;
         });
@@ -1730,6 +1873,7 @@
         if(state.isGameOver) return;
         state.isGameOver = true;
         clearInterval(state.clockInterval);
+        clearTimeout(state.cameraTimeout);
         
         const modal = document.getElementById('modal-summary');
         modal.classList.remove('hidden');
@@ -1755,6 +1899,7 @@
         if(state.isGameOver) return;
         state.isGameOver = true;
         clearInterval(state.clockInterval);
+        clearTimeout(state.cameraTimeout);
         
         sfx.error(); 
         
@@ -1777,6 +1922,7 @@
 
     function resetGame() {
         clearInterval(state.clockInterval);
+        clearTimeout(state.cameraTimeout);
         clearTimeout(typingTimer);
 
         state = {
@@ -1792,8 +1938,16 @@
             timeHours: 9,
             timeMinutes: 0,
             clockInterval: null,
+            cameraActive: false,
+            cameraTimeout: null,
             isGameOver: false
         };
+
+        const ind = document.getElementById('cam-indicator');
+        const stat = document.getElementById('cam-status');
+        ind.className = "w-6 h-6 rounded-full bg-[#333] shadow-[inset_2px_2px_4px_rgba(0,0,0,0.5)] border-2 border-black";
+        stat.innerText = "CCTV: ОФЛАЙН";
+        stat.className = "text-[#555] text-3xl font-bold crt-text tracking-widest";
 
         document.getElementById('modal-summary').classList.add('hidden');
         document.getElementById('screen-game').classList.add('hidden');
