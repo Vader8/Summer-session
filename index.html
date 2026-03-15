@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Сесія: Симулятор Викладача Права</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -38,6 +38,7 @@
             justify-content: center;
             height: 100vh;
             width: 100vw;
+            touch-action: none; /* Забороняє скрол на мобільних під час гри */
         }
 
         #game-container {
@@ -102,7 +103,9 @@
             background-image: repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.03) 1px, rgba(0,0,0,0.03) 2px);
             color: #111;
             border: 4px solid #000;
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        #gradebook {
+            touch-action: none;
         }
         
         .paper-grid {
@@ -384,8 +387,8 @@
 
                 <div id="notification-container" class="absolute top-8 right-8 z-50 flex flex-col gap-4 pointer-events-none"></div>
 
-                <!-- Floating Gradebook -->
-                <div id="gradebook" class="hidden absolute paper pixel-shadow w-[440px] p-0 z-40 cursor-grab active:cursor-grabbing left-[35%] top-[150%] transform -translate-x-1/2 -translate-y-1/2">
+                <!-- Floating Gradebook (Без transform для уникнення багів кліку) -->
+                <div id="gradebook" class="hidden absolute paper pixel-shadow w-[440px] p-0 z-40 cursor-grab active:cursor-grabbing left-[calc(35%-220px)] top-[150%]">
                     <div class="p-3 border-b-6 border-black bg-[#c4b598] flex justify-between items-center select-none">
                         <h4 class="text-3xl text-black font-bold">ЗАЛІКОВКА</h4>
                         <span class="text-xl bg-white border-4 border-black px-2 py-1 font-bold">ДЕННА ФОРМА</span>
@@ -413,7 +416,7 @@
                         <!-- Шар куди падає чорнило -->
                         <div id="gb-ink-layer" class="absolute inset-0 pointer-events-none overflow-hidden z-20"></div>
 
-                        <div id="bribe-element" onmousedown="takeBribe(event)" class="hidden absolute -bottom-10 -right-10 banknote px-5 py-3 text-3xl z-30 pixel-shadow-sm">
+                        <div id="bribe-element" onpointerdown="takeBribe(event)" class="hidden absolute -bottom-10 -right-10 banknote px-5 py-3 text-3xl z-30 pixel-shadow-sm">
                             <div class="border-4 border-black border-dashed px-3 py-2 flex flex-col items-center">
                                 <span>₴ <span id="bribe-amount">200</span></span>
                                 <div class="bg-black text-white text-lg px-2 py-1 mt-2 w-full text-center">НЕПОМІТНО ВЗЯТИ</div>
@@ -482,8 +485,8 @@
                                     <div class="w-[210px] h-[160px] flex items-end justify-center relative">
                                         <div class="absolute bottom-0 w-[180px] h-[30px] bg-black/60 rounded-[50%] blur-sm"></div>
                                         
-                                        <!-- The Physical Pass Stamp -->
-                                        <div id="phys-stamp-pass" onmousedown="pickupStamp('pass', event)" class="physical-stamp relative w-[200px] h-[90px] bg-[#1b5e20] border-[6px] border-black flex items-center justify-center shadow-[0_20px_15px_rgba(0,0,0,0.7)] group z-30">
+                                        <!-- The Physical Pass Stamp (Нова 3D структура) -->
+                                        <div id="phys-stamp-pass" onpointerdown="pickupStamp('pass', event)" class="physical-stamp relative w-[200px] h-[90px] bg-[#1b5e20] border-[6px] border-black flex items-center justify-center shadow-[0_20px_15px_rgba(0,0,0,0.7)] group z-30">
                                             <div class="stamp-block-table absolute w-[200px] h-[90px] bg-[#2e7d32] border-[6px] border-black flex items-center justify-center shadow-[inset_-6px_-6px_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.2)] transition-transform duration-75 group-active:translate-y-[8px]" style="transform: translateY(-24px);">
                                                 <div class="absolute -top-[50px] w-[50px] h-[50px] bg-[#8d6e63] border-[6px] border-black border-b-0 shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_0_0_rgba(255,255,255,0.1)] flex justify-center group-hover:brightness-110">
                                                     <div class="absolute -top-[40px] w-[90px] h-[40px] bg-[#5d4037] border-[6px] border-black rounded-t-[16px] shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.1)]"></div>
@@ -498,7 +501,7 @@
                                         <div class="absolute bottom-0 w-[180px] h-[30px] bg-black/60 rounded-[50%] blur-sm"></div>
                                         
                                         <!-- The Physical Fail Stamp -->
-                                        <div id="phys-stamp-fail" onmousedown="pickupStamp('fail', event)" class="physical-stamp relative w-[200px] h-[90px] bg-[#b71c1c] border-[6px] border-black flex items-center justify-center shadow-[0_20px_15px_rgba(0,0,0,0.7)] group z-30">
+                                        <div id="phys-stamp-fail" onpointerdown="pickupStamp('fail', event)" class="physical-stamp relative w-[200px] h-[90px] bg-[#b71c1c] border-[6px] border-black flex items-center justify-center shadow-[0_20px_15px_rgba(0,0,0,0.7)] group z-30">
                                             <div class="stamp-block-table absolute w-[200px] h-[90px] bg-[#c62828] border-[6px] border-black flex items-center justify-center shadow-[inset_-6px_-6px_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.2)] transition-transform duration-75 group-active:translate-y-[8px]" style="transform: translateY(-24px);">
                                                 <div class="absolute -top-[50px] w-[50px] h-[50px] bg-[#8d6e63] border-[6px] border-black border-b-0 shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_0_0_rgba(255,255,255,0.1)] flex justify-center group-hover:brightness-110">
                                                     <div class="absolute -top-[40px] w-[90px] h-[40px] bg-[#5d4037] border-[6px] border-black rounded-t-[16px] shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.1)]"></div>
@@ -589,7 +592,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 text-left text-2xl md:text-4xl mb-8 md:mb-12" id="summary-stats-grid">
                     <div class="border-4 border-[#555] p-6 md:p-10 bg-black space-y-4 md:space-y-6 pixel-shadow-inset">
-                        <p class="text-[#aaa] border-b-4 border-[#333] pb-2 md:pb-4 font-bold">РЕЗУЛЬТАТИ ЕКЗАМЕНУ:</p>
+                        <p class="text-[#aaa] border-b-4 border-[#333] pb-2 md:pb-4 font-bold">РЕЗУЛЬТАТЕ ЕКЗАМЕНУ:</p>
                         <p>ОПИТАНО: <span class="text-white bg-[#333] px-3 font-bold" id="sum-total">0</span></p>
                         <p>ЧЕСНИХ ОЦІНОК: <span class="text-[#4caf50] crt-text-green font-bold" id="sum-correct">0</span></p>
                         <p>СУМНІВНИХ РІШЕНЬ: <span class="text-[#d32f2f] font-bold" id="sum-wrong">0</span></p>
@@ -1105,7 +1108,7 @@
     let typingTimer = null;
 
     // --- CURSOR LOGIC (RETICLE & DRAG) ---
-    document.addEventListener('mousemove', (e) => {
+    document.addEventListener('pointermove', (e) => {
         if (state.isStampActive && !state.isGameOver) {
             const cursor = document.getElementById('stamp-reticle');
             cursor.style.left = e.clientX + 'px';
@@ -1114,13 +1117,13 @@
 
         if (dragState.active && !state.isGameOver) {
             const gb = document.getElementById('gradebook');
-            gb.style.left = (e.clientX - dragState.offsetX) + 'px';
-            gb.style.top = (e.clientY - dragState.offsetY) + 'px';
-            gb.style.transform = 'none'; 
+            const parentRect = gb.offsetParent.getBoundingClientRect();
+            gb.style.left = (e.clientX - dragState.offsetX - parentRect.left) + 'px';
+            gb.style.top = (e.clientY - dragState.offsetY - parentRect.top) + 'px';
         }
     });
 
-    document.addEventListener('mouseup', (e) => {
+    document.addEventListener('pointerup', (e) => {
         if (dragState.active) {
             dragState.active = false;
             const gb = document.getElementById('gradebook');
@@ -1152,19 +1155,18 @@
     function resetGradebookPosition() {
         const gb = document.getElementById('gradebook');
         gb.style.transition = 'all 0.3s ease-out';
-        gb.style.left = '35%';
-        gb.style.top = '65%';
-        gb.style.transform = 'translate(-50%, -50%)';
+        gb.style.left = 'calc(35% - 220px)';
+        gb.style.top = 'calc(65% - 210px)';
     }
 
-    document.addEventListener('mousedown', (e) => {
+    document.addEventListener('pointerdown', (e) => {
         if (state.isStampActive && !e.target.closest('#gradebook') && !e.target.closest('.physical-stamp')) {
             returnStamp();
         }
     });
 
     // DRAG GRADEBOOK OR APPLY STAMP
-    document.getElementById('gradebook').addEventListener('mousedown', function(e) {
+    document.getElementById('gradebook').addEventListener('pointerdown', function(e) {
         if (e.target.closest('#bribe-element')) return;
 
         if (state.isStampActive) {
@@ -1175,11 +1177,10 @@
             const x = e.clientX;
             const y = e.clientY;
 
-            // Відразу фіксуємо координати відбитку відносно паперу
+            // Зчитуємо координати ДО будь-яких анімацій і трансформацій столу
             const rect = area.getBoundingClientRect();
-            // Використовуємо відсотки, щоб уникнути проблем зі зміщенням через масштабування (zoom/scale) сторінки
-            const percentX = ((x - rect.left) / rect.width) * 100;
-            const percentY = ((y - rect.top) / rect.height) * 100;
+            const inkX = x - rect.left;
+            const inkY = y - rect.top;
 
             document.getElementById('stamp-reticle').classList.add('hidden');
 
@@ -1206,8 +1207,8 @@
                 
                 const ink = document.createElement('div');
                 ink.className = `w-[200px] h-[90px] border-[6px] border-double ${cssClass} stamp-placed text-5xl whitespace-nowrap font-bold tracking-widest flex items-center justify-center`;
-                ink.style.left = `${percentX}%`;
-                ink.style.top = `${percentY}%`;
+                ink.style.left = `${inkX}px`;
+                ink.style.top = `${inkY}px`;
                 ink.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
                 ink.innerHTML = text;
                 
@@ -1223,24 +1224,25 @@
 
             setTimeout(() => {
                 fallingStamp.remove();
-                pickupStamp(type); // Без "e", щоб приціл не стрибав назад
+                pickupStamp(type); // Відновлюємо приціл для наступного штампу
                 document.getElementById('stamp-reticle').classList.remove('hidden');
             }, 400); 
 
         } else {
             if (state.currentStudentIndex !== null) {
-                dragState.active = true;
                 const gb = document.getElementById('gradebook');
                 const rect = gb.getBoundingClientRect();
                 const parentRect = gb.offsetParent.getBoundingClientRect();
                 
-                dragState.offsetX = e.clientX - (rect.left - parentRect.left);
-                dragState.offsetY = e.clientY - (rect.top - parentRect.top);
-                
+                // Встановлюємо жорсткі координати, щоб уникнути стрибків при кліку
                 gb.style.transition = 'none';
-                gb.style.transform = 'none';
-                gb.style.left = (e.clientX - dragState.offsetX) + 'px';
-                gb.style.top = (e.clientY - dragState.offsetY) + 'px';
+                gb.style.left = (rect.left - parentRect.left) + 'px';
+                gb.style.top = (rect.top - parentRect.top) + 'px';
+                
+                dragState.offsetX = e.clientX - rect.left;
+                dragState.offsetY = e.clientY - rect.top;
+                dragState.active = true;
+                
                 gb.style.zIndex = 100;
                 sfx.paper();
                 
@@ -1594,14 +1596,13 @@
         gb.classList.remove('hidden');
         
         gb.style.transition = 'none';
-        gb.style.left = '35%';
+        gb.style.left = 'calc(35% - 220px)';
         gb.style.top = '150%';
-        gb.style.transform = 'translate(-50%, -50%)';
         
         void gb.offsetWidth;
         
         gb.style.transition = 'top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-        gb.style.top = '65%';
+        gb.style.top = 'calc(65% - 210px)';
         sfx.paper();
 
         document.getElementById('gb-name').innerText = s.name;
