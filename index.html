@@ -452,8 +452,8 @@
 
                 <div id="notification-container" class="absolute top-8 right-8 z-50 flex flex-col gap-4 pointer-events-none"></div>
 
-                <!-- Floating Gradebook (Позиціонування жорстко через стиль) -->
-                <div id="gradebook" class="hidden absolute paper pixel-shadow w-[440px] p-0 z-40 cursor-grab active:cursor-grabbing" style="left: 40px; top: 150%;">
+                <!-- Floating Gradebook (Нове позиціонування - зліва внизу столу) -->
+                <div id="gradebook" class="hidden absolute paper pixel-shadow w-[440px] p-0 z-40 cursor-grab active:cursor-grabbing" style="left: 50px; top: 150%;">
                     <div class="p-3 border-b-6 border-black bg-[#c4b598] flex justify-between items-center select-none">
                         <h4 class="text-3xl text-black font-bold">ЗАЛІКОВКА</h4>
                         <span class="text-xl bg-white border-4 border-black px-2 py-1 font-bold">ДЕННА ФОРМА</span>
@@ -1214,9 +1214,9 @@
         clockInterval: null,
         cameraActive: false,
         cameraTimeout: null,
+        shakeTimeout: null,
         isGameOver: false,
         isPaused: false,
-        isShaking: false,
         settings: {
             musicVol: 0.5,
             sfxVol: 0.5,
@@ -1410,7 +1410,7 @@
         const gb = document.getElementById('gradebook');
         gb.style.transition = 'all 0.3s ease-out';
         gb.style.left = '40px';
-        gb.style.top = '40px';
+        gb.style.top = 'calc(100% - 480px)';
     }
 
     document.addEventListener('pointerdown', (e) => {
@@ -1421,18 +1421,17 @@
 
     // DRAG GRADEBOOK OR APPLY STAMP
     document.getElementById('gradebook').addEventListener('pointerdown', function(e) {
-        if (state.isPaused || e.target.closest('#bribe-element') || state.isShaking) return;
+        if (state.isPaused || e.target.closest('#bribe-element')) return;
 
         if (state.isStampActive) {
             e.stopPropagation();
-            state.isShaking = true; // Блокуємо кліки до кінця анімації
             
             const type = state.isStampActive;
             const area = document.getElementById('gb-ink-layer');
             const clickX = e.clientX;
             const clickY = e.clientY;
 
-            // Зчитуємо координати негайно до будь-яких рухів столу
+            // Відразу фіксуємо координати відбитку (ігноруючи будь-яке поточне трясіння столу)
             const rect = area.getBoundingClientRect();
             const inkX = clickX - rect.left;
             const inkY = clickY - rect.top;
@@ -1450,14 +1449,12 @@
                 sfx.stamp();
 
                 const desk = document.getElementById('game-container');
+                clearTimeout(state.shakeTimeout);
                 desk.style.transition = 'none';
                 desk.style.transform = 'translate(10px, 15px)';
                 setTimeout(() => { desk.style.transform = 'translate(-8px, -12px)'; }, 40);
                 setTimeout(() => { desk.style.transform = 'translate(5px, 8px)'; }, 80);
-                setTimeout(() => { 
-                    desk.style.transform = 'none'; 
-                    state.isShaking = false; // Знімаємо блокування після зупинки столу
-                }, 150); 
+                state.shakeTimeout = setTimeout(() => { desk.style.transform = 'none'; }, 150); 
                 
                 const text = type === 'pass' ? 'ЗАРАХ' : 'ВІДМОВА';
                 const cssClass = type === 'pass' ? 'text-[#1b5e20] border-[#1b5e20]' : 'text-[#b71c1c] border-[#b71c1c]';
@@ -1466,7 +1463,7 @@
                 const ink = document.createElement('div');
                 ink.className = `w-[200px] h-[90px] border-[6px] border-double ${cssClass} stamp-placed text-5xl whitespace-nowrap font-bold tracking-widest flex items-center justify-center`;
                 
-                // Абсолютні пікселі для 100% точності відбитку
+                // Використовуємо абсолютні пікселі для 100% точності відбитку
                 ink.style.left = `${inkX}px`;
                 ink.style.top = `${inkY}px`;
                 ink.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
@@ -1484,8 +1481,9 @@
 
             setTimeout(() => {
                 fallingStamp.remove();
-                pickupStamp(type); 
-                document.getElementById('stamp-reticle').classList.remove('hidden');
+                if (state.isStampActive === type) {
+                    document.getElementById('stamp-reticle').classList.remove('hidden');
+                }
             }, 400); 
 
         } else {
@@ -1871,7 +1869,7 @@
         void gb.offsetWidth;
         
         gb.style.transition = 'top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-        gb.style.top = '40px';
+        gb.style.top = 'calc(100% - 480px)';
         sfx.paper();
 
         document.getElementById('gb-name').innerText = s.name;
