@@ -284,11 +284,11 @@
             </div>
 
             <div class="text-lg md:text-xl mb-6 md:mb-8 text-[#aaa] text-left inline-block space-y-2">
-                <p>● <b>ВАША МЕТА:</b> Приймати іспит у студентів, уважно звіряючи дані з журналом.</p>
-                <p>● Дата Народження, Дисципліна та ID можуть бути підроблені! Будьте пильні.</p>
-                <p>● <b>ВАЖЛИВО:</b> Лише перший штамп фіксує рішення. Щоб прийняти екзамен — перетягніть заліковку до студента!</p>
-                <p>● Камера фіксує хабарі! Беріть їх тільки коли статус <span class="text-[#888]">ОФЛАЙН</span>.</p>
-                <p class="text-[#4caf50] mt-1">● Іноді на іспит забігає кафедральний кіт. Не ображайте його!</p>
+                <p>● <b>ЯК ГРАТИ:</b> Звіряйте відповіді студента з Кодексом, а його документи — з Журналом.</p>
+                <p>● Уважно перевіряйте <b>ПІБ, ID, Дату народження та Дисципліну</b> на підробки.</p>
+                <p>● Поставте печатку (ЗАРАХ/ВІДМ) та <b>перетягніть заліковку на студента</b>, щоб віддати її.</p>
+                <p>● Камера фіксує хабарі! Клікайте на гроші <b>лише</b> коли статус <span class="text-[#888]">ОФЛАЙН</span>.</p>
+                <p class="text-[#4caf50] mt-2">● Іноді забігає кафедральний кіт. Просто поставте йому "ЗАРАХОВАНО"! 🐈</p>
                 <p class="text-yellow-600 mt-3 md:mt-4 font-bold text-xl md:text-2xl text-center w-full block">УВІМКНІТЬ ЗВУК ДЛЯ КРАЩОГО ДОСВІДУ 🔊</p>
             </div>
             
@@ -1177,8 +1177,9 @@
 
             // Відразу фіксуємо координати відбитку відносно паперу
             const rect = area.getBoundingClientRect();
-            const inkX = x - rect.left;
-            const inkY = y - rect.top;
+            // Використовуємо відсотки, щоб уникнути проблем зі зміщенням через масштабування (zoom/scale) сторінки
+            const percentX = ((x - rect.left) / rect.width) * 100;
+            const percentY = ((y - rect.top) / rect.height) * 100;
 
             document.getElementById('stamp-reticle').classList.add('hidden');
 
@@ -1205,8 +1206,8 @@
                 
                 const ink = document.createElement('div');
                 ink.className = `w-[200px] h-[90px] border-[6px] border-double ${cssClass} stamp-placed text-5xl whitespace-nowrap font-bold tracking-widest flex items-center justify-center`;
-                ink.style.left = `${inkX}px`;
-                ink.style.top = `${inkY}px`;
+                ink.style.left = `${percentX}%`;
+                ink.style.top = `${percentY}%`;
                 ink.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
                 ink.innerHTML = text;
                 
