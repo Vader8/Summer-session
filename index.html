@@ -438,7 +438,7 @@
 
                 <div class="bg-[#111] p-5 border-b-4 border-black text-[#888] text-2xl flex justify-between items-center shadow-[0_4px_0_rgba(0,0,0,0.5)] z-10 shrink-0 font-bold">
                     <span class="crt-text">> КОРИДОР</span>
-                    <span id="stat-quota" class="bg-black text-white px-3 py-1 border-2 border-[#333]">0/8</span>
+                    <span id="stat-quota" class="bg-black text-white px-3 py-1 border-2 border-[#333]">0/10</span>
                 </div>
                 
                 <div id="classroom-list" class="flex-1 overflow-y-auto scroll-custom p-5 space-y-4 bg-[#111] bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzhhYWGMYAEYB8RmROaABADeOQ8CXl/xfgAAAABJRU5ErkJggg==')]">
@@ -681,340 +681,6 @@
 </div>
 
 <script>
-    // --- ПІКСЕЛЬ АРТ ГЕНЕРАТОР ОБЛИЧ (24x24) ---
-    const PIXEL_DESIGNS = [
-        [
-            "        hhhhhhhh        ",
-            "      hhhhhhhhhhhh      ",
-            "     hhhhhhhhhhhhhh     ",
-            "    hhhhsssssssshhhh    ",
-            "    hhhsssssssssshhh    ",
-            "    hhsssssssssssshh    ",
-            "    hhsssssssssssshh    ",
-            "    hhssswwwsswwwsshh   ",
-            "     hssseewsseewssh    ",
-            "     hsssssssssssssh    ",
-            "      ssssssssssss      ",
-            "      sssssmmsssss      ",
-            "      ssssssssssss      ",
-            "       ssssssssss       ",
-            "        ssssssss        ",
-            "       wwwsssswww       ",
-            "      cwwwRwwRwwwc      ",
-            "     cccwRRwwRRwccc     ",
-            "    cccccRRwwRRccccc    ",
-            "   ccccccRRwwRRcccccc   ",
-            "   ccccccRRwwRRcccccc   ",
-            "   ccccccRRwwRRcccccc   ",
-            "  cccccccRRwwRRccccccc  ",
-            "  cccccccRRwwRRccccccc  "
-        ],
-        [
-            "        HHHHHHHH        ",
-            "      HHHHHHHHHHHH      ",
-            "     HHHHHHHHHHHHHH     ",
-            "    HHHssssssssssHHH    ",
-            "    HHssssssssssssHH    ",
-            "    HHssssssssssssHH    ",
-            "    HHssssssssssssHH    ",
-            "    HHssswwwsswwwssHH   ",
-            "    HHssseewsseewssHH   ",
-            "    HHsssssssssssssHH   ",
-            "    HHsssssssssssssHH   ",
-            "    HHsssssmmsssssHHH   ",
-            "    HHHssssssssssHHHH   ",
-            "    HHHHssssssssHHHHH   ",
-            "    HHHHHssssssHHHHHH   ",
-            "    HHHHHssssssHHHHHH   ",
-            "   HHHHHHsCCCCsHHHHHHH  ",
-            "   HHHHHCCCCCCCCHHHHHH  ",
-            "  HHHHHCCCCCCCCCCHHHHH  ",
-            "  HHHHCCCCCCCCCCCCHHHH  ",
-            "  HHHCCCCCCCCCCCCCCHHH  ",
-            "  HHHCCCCCCCCCCCCCCHHH  ",
-            "  HHCCCCCCCCCCCCCCCCCH  ",
-            "  HHCCCCCCCCCCCCCCCCCH  "
-        ],
-        [
-            "        bbbbbbbb        ",
-            "      bbbbbbbbbbbb      ",
-            "     bbbbbbbbbbbbbb     ",
-            "    bbbbbbbbbbbbbbbb    ",
-            "    bbbbssssssssbbbb    ",
-            "    bbbssssssssssbbb    ",
-            "    bbbbbbbbbbbbbbbb    ",
-            "    bggggbbbbbbggggbb   ",
-            "    bgweegbbbbbgweegb   ",
-            "    bggggbbssssbggggb   ",
-            "    bbbbssssssssbbbbb   ",
-            "     ssssssmmssssss     ",
-            "      ssssssssssss      ",
-            "       ssssssssss       ",
-            "        ssssssss        ",
-            "       wwwsssswww       ",
-            "      GwwwGwwGwwwG      ",
-            "     GGGwwGGwwGGGGG     ",
-            "    GGGGGwGGwwGGGGGG    ",
-            "   GGGGGGGGwwGGGGGGGG   ",
-            "   GGGGGGGGwwGGGGGGGG   ",
-            "   GGGGGGGGwwGGGGGGGG   ",
-            "  GGGGGGGGGGGGGGGGGGGG  ",
-            "  GGGGGGGGGGGGGGGGGGGG  "
-        ],
-        [
-            "       h  hhhh  h       ",
-            "      hhh hhhh hhh      ",
-            "     hhhhhhhhhhhhhh     ",
-            "    hhhhhhhhhhhhhhhh    ",
-            "    hhsssssssssssshh    ",
-            "     ssssssssssssss     ",
-            "     ssssssssssssss     ",
-            "     sSswwwsswwwsSs     ",
-            "     sSseewsseewsSs     ",
-            "     ssssssssssssss     ",
-            "      ssssssssssss      ",
-            "      ssssssssssss      ",
-            "      sssssmmsssss      ",
-            "       ssssssssss       ",
-            "        ssSSSSss        ",
-            "       CCCssssCCC       ",
-            "      CCCCwCCwCCCC      ",
-            "     CCCCCwwwwCCCCC     ",
-            "    CCCCCCwwwwCCCCCC    ",
-            "   CCCCCCCwwwwCCCCCCC   ",
-            "   CCCCCCCwwwwCCCCCCC   ",
-            "   CCCCCCCwwwwCCCCCCC   ",
-            "  CCCCCCCCwwwwCCCCCCCC  ",
-            "  CCCCCCCCwwwwCCCCCCCC  "
-        ],
-        [
-            "        bbbbbbbb        ",
-            "       bbbbbbbbbb       ",
-            "      bbbbbbbbbbbb      ",
-            "     bbbbbbbbbbbbbb     ",
-            "     bbssssssssssbb     ",
-            "     bssssssssssssb     ",
-            "     sssswwsssswwss     ",
-            "     sssseesssseess     ",
-            "     ssssssssssssss     ",
-            "     ssssssssssssss     ",
-            "      ssssssssssss      ",
-            "      sssSmmmmSsss      ",
-            "      ssssssssssss      ",
-            "       ssssssssss       ",
-            "        ssssssss        ",
-            "       wwwsssswww       ",
-            "      DwwwTwwTwwwD      ",
-            "     DDDwTTwwTTwDDD     ",
-            "    DDDDDTwwwwTDDDDD    ",
-            "   DDDDDDTwwwwTDDDDDD   ",
-            "   DDDDDDTwwwwTDDDDDD   ",
-            "   DDDDDDTwwwwTDDDDDD   ",
-            "  DDDDDDDTwwwwTDDDDDDD  ",
-            "  DDDDDDDTwwwwTDDDDDDD  "
-        ],
-        [
-            "        PPPPPPPP        ",
-            "      PPPPPPPPPPPP      ",
-            "     PPPPPPPPPPPPPP     ",
-            "    PPPPssssssssPPPP    ",
-            "    PPPssssssssssPPP    ",
-            "    PPssssssssssssPP    ",
-            "    PPssssssssssssPP    ",
-            "    PPssswwwsswwwsPP    ",
-            "     PssseewsseewsP     ",
-            "     PssssssssssssP     ",
-            "      ssssssssssss      ",
-            "      sssssmmsssss      ",
-            "      ssssssssssss      ",
-            "       ssssssssss       ",
-            "        ssssssss        ",
-            "       bbbssssbbb       ",
-            "      bbbbbbbbbbbb      ",
-            "     bbbbbbbbbbbbbb     ",
-            "    bbbbbbbbbbbbbbbb    ",
-            "   bbbbbbbbbbbbbbbbbb   ",
-            "   bbbbbbbbbbbbbbbbbb   ",
-            "   bbbbbbbbbbbbbbbbbb   ",
-            "  bbbbbbbbbbbbbbbbbbbb  ",
-            "  bbbbbbbbbbbbbbbbbbbb  "
-        ],
-        [
-            "      RRRRRRRRRRRR      ",
-            "     RRRRRRRRRRRRRR     ",
-            "    RRRRRRRRRRRRRRRRR   ",
-            "    RRRbbbbbbbbbbbb     ",
-            "    bbbbssssssssbbbb    ",
-            "    bbbssssssssssbbb    ",
-            "    bbssssssssssssbb    ",
-            "    bbssswwwsswwwssbb   ",
-            "     bssseewsseewssb    ",
-            "     bsssssssssssssb    ",
-            "      ssssssssssss      ",
-            "      sssssmmsssss      ",
-            "      ssssssssssss      ",
-            "       ssssssssss       ",
-            "        ssssssss        ",
-            "       AAAssssAAA       ",
-            "      AAAAAAAAAAAA      ",
-            "     AAAAAAAAAAAAAA     ",
-            "    AAAAAAAAAAAAAAAA    ",
-            "   AAAAAAAAAAAAAAAAAA   ",
-            "   AAAAAAAAAAAAAAAAAA   ",
-            "   AAAAAAAAAAAAAAAAAA   ",
-            "  AAAAAAAAAAAAAAAAAAAA  ",
-            "  AAAAAAAAAAAAAAAAAAAA  "
-        ],
-        [
-            "        bbbbbbbb        ",
-            "      bbbbbbbbbbbb      ",
-            "     bbbbbbbbbbbbbb     ",
-            "    bbbbssssssssbbbb    ",
-            "    bbbssssssssssbbb    ",
-            "    bbssssssssssssbb    ",
-            "    bbssssssssssssbb    ",
-            "    bbssswwwsswwwssbb   ",
-            "     bssseewsseewssb    ",
-            "     bsssssssssssssb    ",
-            "      ssssssssssss      ",
-            "      ssshhhhhhhss      ",
-            "      ssssssssssss      ",
-            "       ssssssssss       ",
-            "        ssssssss        ",
-            "       wwwsssswww       ",
-            "      DwwwDwwDwwwD      ",
-            "     DDDwwDDwwDDwwDDD   ",
-            "    DDDDDwDDwwDDwDDDDD  ",
-            "   DDDDDDDDwwDDDDDDDD   ",
-            "   DDDDDDDDwwDDDDDDDD   ",
-            "   DDDDDDDDwwDDDDDDDD   ",
-            "  DDDDDDDDDDDDDDDDDDDD  ",
-            "  DDDDDDDDDDDDDDDDDDDD  "
-        ],
-        [
-            "        HHHHHHHH        ",
-            "      HHHHHHHHHHHH      ",
-            "     HHHHHHHHHHHHHH     ",
-            "    HHHHssssssssHHHH    ",
-            "    HHHssssssssssHHH    ",
-            "    HHssseeeeeeeessHH   ",
-            "    HHsseeeeeeeeeessHH  ",
-            "    HHsseeeeeeeeeessHH  ",
-            "     HsssssssssssssH    ",
-            "     HsssssssssssssH    ",
-            "      ssssssssssss      ",
-            "      sssssmmsssss      ",
-            "      ssssssssssss      ",
-            "       ssssssssss       ",
-            "        ssssssss        ",
-            "       wwwsssswww       ",
-            "      TwwwTwwTwwwT      ",
-            "     wwwTwwwwwwwwTwww   ",
-            "    wwwwTwwwwwwwwTwwww  ",
-            "   wwwwwTwwwwwwwwTwwwww ",
-            "   wwwwwTwwwwwwwwTwwwww ",
-            "   wwwwwTwwwwwwwwTwwwww ",
-            "  wwwwwwTwwwwwwwwTwwwwww",
-            "  wwwwwwTwwwwwwwwTwwwwww"
-        ],
-        [
-            "        PPPPPPPP        ",
-            "      PPPPPPPPPPPP      ",
-            "     PPPPPPPPPPPPPP     ",
-            "    PPPPssssssssPPPP    ",
-            "    PPPssssssssssPPP    ",
-            "    PPPssssssssssPPP    ",
-            "    PPPssssssssssPPP    ",
-            "    PPPsswwwsswwwPPP    ",
-            "     PsseewsseewssP     ",
-            "     PssseeeeseeessP    ",
-            "      ssssssssssss      ",
-            "      sssssmmsssss      ",
-            "      ssssssssssss      ",
-            "       ssssssssss       ",
-            "        ssssssss        ",
-            "       CCCssssCCC       ",
-            "      CCCCCCCCCCCC      ",
-            "     CCCCCCCCCCCCCC     ",
-            "    CCCCCCCCCCCCCCCC    ",
-            "   CCCCCCCCCCCCCCCCCC   ",
-            "   CCCCCCCCCCCCCCCCCC   ",
-            "   CCCCCCCCCCCCCCCCCC   ",
-            "  CCCCCCCCCCCCCCCCCCCC  ",
-            "  CCCCCCCCCCCCCCCCCCCC  "
-        ]
-    ];
-
-    const PIXEL_PALETTE = {
-        's': '#e0ac69', 'S': '#c68642', 'w': '#ffffff', 'e': '#111111',
-        'h': '#4a3018', 'H': '#e8c35d', 'b': '#111111', 'c': '#4267b2',
-        'C': '#888888', 'm': '#8a3324', 'R': '#d32f2f', 'G': '#2e7d32',
-        'g': '#88ccff', 'D': '#222222', 'T': '#ffb300', 'P': '#e91e63',
-        'A': '#00bcd4', ' ': 'transparent'
-    };
-
-    function generatePixelFace(index) {
-        const design = PIXEL_DESIGNS[index];
-        let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" shape-rendering="crispEdges">`;
-        
-        for(let y=0; y<24; y++) {
-            for(let x=0; x<24; x++) {
-                let char = design[y][x];
-                if(char !== ' ') {
-                    svg += `<rect x="${x}" y="${y}" width="1" height="1" fill="${PIXEL_PALETTE[char]}"/>`;
-                }
-            }
-        }
-        svg += `</svg>`;
-        return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-    }
-
-    function generateCatFace() {
-        const design = [
-            "                        ",
-            "     SS          SS     ",
-            "    SPPS        SPPS    ",
-            "   SPPPPS      SPPPPS   ",
-            "   SPPPPSSSSSSSSPPPPS   ",
-            "    SPPSSSSSSSSSSPPS    ",
-            "     SSSSSSSSSSSSSS     ",
-            "    SSSSSSSSSSSSSSSS    ",
-            "   SSSSSSSSSSSSSSSSSS   ",
-            "  SSSSSeeeSSSSeeeSSSSS  ",
-            "  SSSSeggeSSSSeggeSSSS  ",
-            "  SSSSeggeSSSSeggeSSSS  ",
-            "  SSSSSeeeSSSSeeeSSSSS  ",
-            "  SSSSSSSSSppSSSSSSSSS  ",
-            "  SSSSSSSwwwwwwSSSSSSS  ",
-            "   SSSSSwwSwwSwwSSSSS   ",
-            "    SSSSwwSSSSwwSSSS    ",
-            "     SSSSSSSSSSSSSS     ",
-            "      SSSSSSSSSSSS      ",
-            "        SSSSSSSS        ",
-            "                        ",
-            "                        ",
-            "                        ",
-            "                        "
-        ];
-
-        const palette = {
-            'S': '#f39c12', 'P': '#ffb6c1', 'w': '#ffffff', 
-            'e': '#2c3e50', 'g': '#2ecc71', 'p': '#e74c3c', ' ': 'transparent'
-        };
-
-        let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" shape-rendering="crispEdges">`;
-        for(let y=0; y<24; y++) {
-            for(let x=0; x<24; x++) {
-                let char = design[y][x];
-                if(char !== ' ') {
-                    svg += `<rect x="${x}" y="${y}" width="1" height="1" fill="${palette[char]}"/>`;
-                }
-            }
-        }
-        svg += `</svg>`;
-        return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-    }
-
     // --- AUDIO SYNTHESIZER ---
     const sfx = {
         ctx: null,
@@ -1125,7 +791,7 @@
             let tick = 0;
 
             this.musicInterval = setInterval(() => {
-                if (state.isPaused) return; // Pause music playback while in settings
+                if (state.isPaused) return; 
                 
                 const time = this.ctx.currentTime;
                 const step = sequence[tick % sequence.length];
@@ -1565,10 +1231,26 @@
 
     function initStudents() {
         state.students = [];
-        const totalStudents = 8;
+        const totalStudents = 10; // Оновлена загальна кількість студентів
         let catGenerated = false;
 
-        let availableFaces = Array.from({length: PIXEL_DESIGNS.length}, (_, i) => i);
+        // Список усіх файлів персонажів-людей, які ви завантажили
+        const HUMAN_FACES = [
+            "pixel1(1).png", 
+            "pixel2.png", 
+            "pixel3.png", 
+            "pixel4.png", 
+            "pixel5.png", 
+            "pixel6.png", 
+            "pixel7.png", 
+            "pixel8.png",
+            "pixel9.png",
+            "pixel10.png",
+            "pixel11.png",
+            "pixel12.png"
+        ];
+        
+        let availableFaces = [...HUMAN_FACES];
         availableFaces.sort(() => Math.random() - 0.5);
 
         let availableNames = [...LAST_NAMES];
@@ -1580,6 +1262,7 @@
         for (let i = 0; i < totalStudents; i++) {
             
             let isCat = false;
+            // Шанс появи кота залишається 10%, гарантовано не більше 1 разу
             if (!catGenerated && Math.random() < 0.10) {
                 isCat = true;
                 catGenerated = true;
@@ -1597,7 +1280,7 @@
                     journalDiscipline: "КОТОЗНАВСТВО",
                     inJournal: true,
                     ticket: "МЯУ",
-                    photo: generateCatFace(),
+                    photo: "meow.png", // Завантажена вами картинка кота
                     answer: "Мяу... Мррр... Мяу!",
                     correctLaw: null,
                     isFraud: false,
@@ -1660,7 +1343,8 @@
                     }
                 }
                 
-                let faceIndex = availableFaces.pop() || Math.floor(Math.random() * PIXEL_DESIGNS.length);
+                // Витягуємо унікальне обличчя, якщо вони закінчились - беремо випадкове з масиву (щоб уникнути помилок через нестачу картинок)
+                let faceImage = availableFaces.pop() || HUMAN_FACES[Math.floor(Math.random() * HUMAN_FACES.length)];
 
                 state.students.push({
                     id: i,
@@ -1673,7 +1357,7 @@
                     journalDiscipline: journalDiscipline,
                     inJournal: inJournal,
                     ticket: ticket,
-                    photo: generatePixelFace(faceIndex), 
+                    photo: faceImage, // Використовуємо локальний файл PNG
                     answer: answer,
                     correctLaw: randomLaw,
                     isFraud: isFraud,
