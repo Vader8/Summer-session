@@ -453,7 +453,7 @@
                 <div id="notification-container" class="absolute top-8 right-8 z-50 flex flex-col gap-4 pointer-events-none"></div>
 
                 <!-- Floating Gradebook (Нове позиціонування - зліва внизу столу) -->
-                <div id="gradebook" class="hidden absolute paper pixel-shadow w-[440px] p-0 z-40 cursor-grab active:cursor-grabbing" style="left: 50px; top: 150%;">
+                <div id="gradebook" class="hidden absolute paper pixel-shadow w-[440px] p-0 z-40 cursor-grab active:cursor-grabbing" style="left: 50px; top: 110%;">
                     <div class="p-3 border-b-6 border-black bg-[#c4b598] flex justify-between items-center select-none">
                         <h4 class="text-3xl text-black font-bold">ЗАЛІКОВКА</h4>
                         <span class="text-xl bg-white border-4 border-black px-2 py-1 font-bold">ДЕННА ФОРМА</span>
@@ -1076,7 +1076,7 @@
         const gb = document.getElementById('gradebook');
         gb.style.transition = 'all 0.3s ease-out';
         gb.style.left = '40px';
-        gb.style.top = 'calc(100% - 480px)';
+        gb.style.top = 'calc(100% - 560px)';
     }
 
     document.addEventListener('pointerdown', (e) => {
@@ -1548,12 +1548,12 @@
         
         gb.style.transition = 'none';
         gb.style.left = '40px';
-        gb.style.top = '150%';
+        gb.style.top = '110%';
         
         void gb.offsetWidth;
         
         gb.style.transition = 'top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-        gb.style.top = 'calc(100% - 480px)';
+        gb.style.top = 'calc(100% - 560px)';
         sfx.paper();
 
         document.getElementById('gb-name').innerText = s.name;
