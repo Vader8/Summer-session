@@ -100,6 +100,7 @@
             transform: translate(4px, 4px);
         }
         .btn-pixel:hover { filter: brightness(1.2); }
+        .btn-pixel:disabled { opacity: 0.5; filter: grayscale(1); cursor: not-allowed !important; transform: none; box-shadow: inset -4px -4px 0px rgba(0,0,0,0.5), inset 4px 4px 0px rgba(255,255,255,0.3), 6px 6px 0px rgba(0,0,0,0.8); }
         
         /* ПОВЗУНКИ (SLIDERS) ДЛЯ НАЛАШТУВАНЬ */
         input[type=range] {
@@ -266,11 +267,13 @@
         .scroll-custom::-webkit-scrollbar { width: 16px; }
         .scroll-custom::-webkit-scrollbar-track { background: #111; border-left: 4px solid #000; }
         .scroll-custom::-webkit-scrollbar-thumb { background: #555; border: 4px solid #000; box-shadow: inset 2px 2px 0px rgba(255,255,255,0.2); }
+        
+        .shop-card { transition: transform 0.2s, box-shadow 0.2s; }
+        .shop-card:hover { transform: translateY(-8px); box-shadow: 8px 12px 0px rgba(0,0,0,0.8); }
     </style>
 </head>
 <body class="crt-flicker">
 
-<!-- SVG Фільтр для ефекту чорнила печатки -->
 <svg width="0" height="0" class="absolute pointer-events-none">
     <filter id="grunge">
         <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" result="noise" />
@@ -282,7 +285,6 @@
 <div id="game-container" class="flex flex-col z-10">
     <div class="crt-overlay"></div>
 
-    <!-- Custom Stamp Reticle -->
     <div id="stamp-reticle" class="hidden fixed z-[9999] w-[200px] h-[90px] border-[4px] border-dashed pointer-events-none" style="transform: translate(-50%, -50%);">
         <div class="w-4 h-4 border-t-4 border-l-4 absolute top-1 left-1 border-current"></div>
         <div class="w-4 h-4 border-t-4 border-r-4 absolute top-1 right-1 border-current"></div>
@@ -300,22 +302,19 @@
     </div>
 
     <!-- Settings Modal -->
-    <div id="modal-settings" class="hidden absolute inset-0 z-[70] bg-[rgba(0,0,0,0.85)] flex items-center justify-center p-6 md:p-12">
+    <div id="modal-settings" class="hidden absolute inset-0 z-[75] bg-[rgba(0,0,0,0.85)] flex items-center justify-center p-6 md:p-12">
         <div class="bg-[#222] text-white pixel-border p-8 md:p-12 max-w-2xl w-full relative pixel-shadow modal-animate">
             <h2 class="text-5xl md:text-6xl mb-8 text-[#d4af37] font-bold crt-text text-center border-b-8 border-[#333] pb-4">НАЛАШТУВАННЯ</h2>
             
             <div class="space-y-8 text-2xl md:text-3xl">
-                <!-- Music Vol -->
                 <div class="bg-[#111] p-6 border-4 border-black pixel-shadow-inset">
                     <label class="block mb-4 text-[#aaa]">ГУЧНІСТЬ МУЗИКИ: <span id="lbl-music-vol" class="text-white font-bold">50%</span></label>
                     <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="changeMusicVol(this.value)">
                 </div>
-                <!-- SFX Vol -->
                 <div class="bg-[#111] p-6 border-4 border-black pixel-shadow-inset">
                     <label class="block mb-4 text-[#aaa]">ГУЧНІСТЬ ЕФЕКТІВ: <span id="lbl-sfx-vol" class="text-white font-bold">50%</span></label>
                     <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="changeSfxVol(this.value)">
                 </div>
-                <!-- Visuals -->
                 <div class="pt-2 space-y-4">
                     <div class="flex justify-between items-center bg-[#111] p-4 border-4 border-black shadow-[4px_4px_0_rgba(0,0,0,0.5)]">
                         <span class="text-[#aaa]">CRT ФІЛЬТР (РЕТРО):</span>
@@ -324,6 +323,10 @@
                     <div class="flex justify-between items-center bg-[#111] p-4 border-4 border-black shadow-[4px_4px_0_rgba(0,0,0,0.5)]">
                         <span class="text-[#aaa]">ЕКРАН:</span>
                         <button onclick="toggleFullscreen()" class="btn-pixel px-4 py-2 text-2xl bg-[#1976d2]">НА ВЕСЬ ЕКРАН</button>
+                    </div>
+                    <div class="flex justify-between items-center bg-[#111] p-4 border-4 border-black shadow-[4px_4px_0_rgba(0,0,0,0.5)]">
+                        <span class="text-[#aaa]">РЕЖИМ ТЕСТУВАННЯ:</span>
+                        <button onclick="debugSkipDay()" class="btn-pixel px-4 py-2 text-2xl bg-[#ff9800] text-black font-bold">ПРОПУСТИТИ ДЕНЬ</button>
                     </div>
                 </div>
             </div>
@@ -335,7 +338,7 @@
     </div>
 
     <!-- Intro Screen -->
-    <div id="screen-intro" class="absolute inset-0 z-50 flex items-center justify-center bg-[#111] bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQIW2NkYGD4z8DAwMgAI0AMDA4IAm1+xXgAAAAASUVORK5CYII=')] p-8 text-center">
+    <div id="screen-intro" class="absolute inset-0 z-[80] flex items-center justify-center bg-[#111] bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQIW2NkYGD4z8DAwMgAI0AMDA4IAm1+xXgAAAAASUVORK5CYII=')] p-8 text-center">
         <div class="max-w-4xl w-full bg-[#222] pixel-border p-6 md:p-8 pixel-shadow relative overflow-y-auto scroll-custom max-h-[90vh]">
             <div class="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.2)_50%)] bg-[length:100%_4px] pointer-events-none"></div>
             
@@ -346,21 +349,20 @@
             <div class="bg-[#111] border-4 border-[#555] p-4 md:p-6 text-left mb-4 md:mb-6 pixel-shadow-inset relative z-10">
                 <p class="text-xl md:text-2xl text-[#ffb300] mb-2 font-bold crt-text">> РОЗПОРЯДЖЕННЯ ДЕКАНУ:</p>
                 <p class="text-xl md:text-2xl text-white leading-relaxed break-words">
-                    "Шановні колеги! Після перевірки МОН ми впровадили суворий контроль. Уважно звіряйте заліковки з нашим новим електронним журналом. <span class="text-[#d32f2f] bg-[#333] px-2 py-1 inline-block mt-2">Виявимо махінації — звільнимо миттєво.</span>"
+                    "Шановні колеги! Після перевірки МОН ми впровадили суворий контроль. Уважно звіряйте заліковки з електронним журналом. <span class="text-[#d32f2f] bg-[#333] px-2 py-1 inline-block mt-2">Виявимо махінації — звільнимо миттєво.</span><br><br>СЕСІЯ ТРИВАТИМЕ 7 ДНІВ. ВИЖИВУТЬ ЛИШЕ НАЙКРАЩІ."
                 </p>
             </div>
 
             <div class="text-lg md:text-xl mb-6 md:mb-8 text-[#aaa] text-left inline-block space-y-2">
-                <p>● <b>МЕТА ГРИ:</b> Приймати іспит, звіряючи відповіді студента з Кодексом, а його документи — з Журналом.</p>
-                <p>● Уважно перевіряйте <b>ПІБ, ID, Дату народження та Дисципліну</b> на підробки.</p>
-                <p>● Поставте печатку (ЗАРАХ/ВІДМ) та <b>перетягніть заліковку на студента</b>, щоб віддати її.</p>
-                <p>● Камера фіксує хабарі! Клікайте на гроші <b>лише</b> коли статус <span class="text-[#888]">ОФЛАЙН</span>.</p>
-                <p class="text-[#4caf50] mt-2">● Іноді забігає кафедральний кіт. Просто поставте йому "ЗАРАХОВАНО"! 🐈</p>
+                <p>● <b>МЕТА:</b> Перевіряйте <b>ПІБ, ID, Дату нар. та Дисципліну</b>. Звіряйте відповіді з Кодексом.</p>
+                <p class="text-[#d32f2f] font-bold">● УВАГА: На 5, 6 та 7 дні за кожну ВІДМОВУ доведеться вказувати точну причину порушення!</p>
+                <p>● Поставте печатку (ЗАРАХ/ВІДМ) та <b>перетягніть заліковку на студента</b>. Ви можете переставити печатку доки документ на столі.</p>
+                <p>● Гроші: Клікайте на хабар <b>лише</b> коли статус <span class="text-[#888]">ОФЛАЙН</span>.</p>
                 <p class="text-yellow-600 mt-3 md:mt-4 font-bold text-xl md:text-2xl text-center w-full block">УВІМКНІТЬ ЗВУК ДЛЯ КРАЩОГО ДОСВІДУ 🔊</p>
             </div>
             
             <button onclick="startBootSequence()" class="btn-pixel px-6 md:px-10 py-3 md:py-4 text-3xl md:text-4xl w-full relative z-10 hover:bg-[#a0a0a0]">
-                [ РОЗПОЧАТИ ЕКЗАМЕН ]
+                [ РОЗПОЧАТИ СЕМЕСТР ]
             </button>
         </div>
     </div>
@@ -372,26 +374,24 @@
         <div class="h-28 bg-[#1a1a1a] border-b-8 border-black flex items-center justify-between px-8 z-40 relative shadow-[0_10px_20px_rgba(0,0,0,0.8)] shrink-0">
             <div class="absolute bottom-0 left-0 right-0 h-2 bg-[#0a0a0a]"></div>
 
-            <div class="flex gap-8 items-center text-4xl mt-1">
+            <div class="flex gap-6 items-center text-4xl mt-1">
+                <div class="bg-[#050505] text-[#aaa] px-6 py-3 border-4 border-black shadow-[4px_4px_0_rgba(0,0,0,0.5)] flex items-center gap-4">
+                    <span class="text-[#888]">ДЕНЬ:</span>
+                    <span id="stat-day" class="text-[#d4af37] crt-text drop-shadow-[0_0_5px_rgba(212,175,55,0.5)]">1/7</span>
+                </div>
                 <div class="bg-[#050505] text-[#aaa] px-6 py-3 border-4 border-black shadow-[4px_4px_0_rgba(0,0,0,0.5)] flex items-center gap-4">
                     <span class="text-[#888]">ЧАС:</span>
                     <span id="stat-clock" class="text-white crt-text drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]">09:00</span>
                 </div>
-                <div class="bg-[#050505] text-[#aaa] px-6 py-3 border-4 border-black shadow-[4px_4px_0_rgba(0,0,0,0.5)] flex items-center gap-4">
-                    <span class="text-[#888]">АУДИТОРІЯ:</span>
-                    <span class="text-white crt-text">304</span>
-                </div>
             </div>
 
             <!-- ЗОНА СТАТУСУ ТА КАМЕРИ -->
-            <div class="flex gap-8 items-center mt-1">
+            <div class="flex gap-6 items-center mt-1">
                 
-                <!-- Кнопка Налаштувань -->
-                <button onclick="toggleSettings()" class="bg-[#111] border-4 border-[#333] px-6 py-3 text-[#aaa] font-bold text-2xl crt-text shadow-[4px_4px_0_rgba(0,0,0,0.5)] hover:bg-[#222] active:translate-y-1 active:shadow-[2px_2px_0_rgba(0,0,0,0.5)] transition-all focus:outline-none">
+                <button onclick="toggleSettings()" class="bg-[#111] border-4 border-[#333] px-5 py-3 text-[#aaa] font-bold text-2xl crt-text shadow-[4px_4px_0_rgba(0,0,0,0.5)] hover:bg-[#222] active:translate-y-1 active:shadow-[2px_2px_0_rgba(0,0,0,0.5)] transition-all">
                     [ НАЛАШТУВАННЯ ]
                 </button>
 
-                <!-- Індикатор камери -->
                 <div class="bg-[#111] border-4 border-[#333] px-5 py-3 flex items-center gap-4 shadow-[4px_4px_0_rgba(0,0,0,0.5)]">
                     <div id="cam-indicator" class="w-6 h-6 rounded-full bg-[#333] shadow-[inset_2px_2px_4px_rgba(0,0,0,0.5)] border-2 border-black"></div>
                     <span id="cam-status" class="text-[#555] text-3xl font-bold crt-text tracking-widest">CCTV: ОФЛАЙН</span>
@@ -401,7 +401,7 @@
                     <span class="text-[#888]">ГАМАНЕЦЬ:</span>
                     <span id="stat-money" class="text-[#4caf50] text-4xl font-bold crt-text drop-shadow-[0_0_5px_rgba(76,175,80,0.5)]">0 ₴</span>
                 </div>
-                <div class="bg-[#050505] px-6 py-4 border-4 border-black shadow-[4px_4px_0_rgba(0,0,0,0.5)] w-80">
+                <div class="bg-[#050505] px-6 py-4 border-4 border-black shadow-[4px_4px_0_rgba(0,0,0,0.5)] w-72">
                     <div class="flex justify-between text-2xl text-[#888] mb-2">
                         <span class="font-bold">АВТОРИТЕТ</span>
                         <span id="stat-rep-text" class="text-[#1976d2] font-bold crt-text">75%</span>
@@ -452,7 +452,7 @@
 
                 <div id="notification-container" class="absolute top-8 right-8 z-50 flex flex-col gap-4 pointer-events-none"></div>
 
-                <!-- Floating Gradebook (Нове позиціонування - зліва внизу столу) -->
+                <!-- Floating Gradebook -->
                 <div id="gradebook" class="hidden absolute paper pixel-shadow w-[440px] p-0 z-40 cursor-grab active:cursor-grabbing" style="left: 50px; top: 110%;">
                     <div class="p-3 border-b-6 border-black bg-[#c4b598] flex justify-between items-center select-none">
                         <h4 class="text-3xl text-black font-bold">ЗАЛІКОВКА</h4>
@@ -478,7 +478,6 @@
                             </div>
                         </div>
 
-                        <!-- Шар куди падає чорнило -->
                         <div id="gb-ink-layer" class="absolute inset-0 pointer-events-none overflow-hidden z-20"></div>
 
                         <div id="bribe-element" onpointerdown="takeBribe(event)" class="hidden absolute -bottom-10 -right-10 banknote px-5 py-3 text-3xl z-30 pixel-shadow-sm pointer-events-auto cursor-pointer">
@@ -508,10 +507,8 @@
                         <!-- Tools (Books & Stamps) -->
                         <div class="flex flex-col gap-10 z-20 w-[480px] items-center pointer-events-auto">
                             
-                            <!-- Books Row -->
                             <div class="flex gap-8 justify-center w-full">
                                 
-                                <!-- Codex Book -->
                                 <div onclick="toggleLawBook()" class="physical-book relative w-[200px] h-[260px] bg-[#7f0000] border-[6px] border-black shadow-[12px_12px_0_rgba(0,0,0,0.8),inset_-6px_0_0_#000] transform -rotate-3 hover:-translate-y-4 hover:rotate-0 transition-transform group flex flex-col z-20">
                                     <div class="absolute right-0 top-0 bottom-0 w-4 bg-[#f4ebd8] border-l-[6px] border-black"></div>
                                     <div class="absolute left-3 top-0 bottom-0 w-3 border-x-4 border-black/40"></div>
@@ -524,7 +521,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Journal Clipboard -->
                                 <div onclick="toggleJournal()" class="physical-book relative w-[200px] h-[260px] bg-[#5d4037] border-[6px] border-black shadow-[12px_12px_0_rgba(0,0,0,0.8)] transform rotate-2 hover:-translate-y-4 hover:rotate-0 transition-transform group flex flex-col items-center pt-8 z-10">
                                     <div class="w-[160px] h-[200px] bg-[#f9f9f9] border-[6px] border-black shadow-[inset_0_0_15px_rgba(0,0,0,0.1)] p-3">
                                         <div class="w-full h-5 border-b-4 border-dashed border-gray-400 mb-3"></div>
@@ -540,17 +536,14 @@
 
                             </div>
 
-                            <!-- Physical Stamp Rack -->
                             <div class="p-8 bg-[#222] border-[6px] border-black shadow-[10px_10px_0_rgba(0,0,0,0.8),inset_4px_4px_0_rgba(255,255,255,0.1)] relative border-t-[16px] border-[#444] w-full">
                                 <div class="absolute -top-8 left-8 bg-[#111] text-[#fff] px-5 py-1 text-3xl border-[6px] border-black shadow-[4px_4px_0_rgba(0,0,0,0.6)] crt-text">ІНСТРУМЕНТИ</div>
                                 
                                 <div class="flex gap-10 mt-6 justify-center items-end h-[160px]">
                                     
-                                    <!-- Pass Stamp Slot -->
                                     <div class="w-[210px] h-[160px] flex items-end justify-center relative">
                                         <div class="absolute bottom-0 w-[180px] h-[30px] bg-black/60 rounded-[50%] blur-sm"></div>
                                         
-                                        <!-- The Physical Pass Stamp (Нова 3D структура) -->
                                         <div id="phys-stamp-pass" onpointerdown="pickupStamp('pass', event)" class="physical-stamp relative w-[200px] h-[90px] bg-[#1b5e20] border-[6px] border-black flex items-center justify-center shadow-[0_20px_15px_rgba(0,0,0,0.7)] group z-30">
                                             <div class="stamp-block-table absolute w-[200px] h-[90px] bg-[#2e7d32] border-[6px] border-black flex items-center justify-center shadow-[inset_-6px_-6px_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.2)] transition-transform duration-75 group-active:translate-y-[8px]" style="transform: translateY(-24px);">
                                                 <div class="absolute -top-[50px] w-[50px] h-[50px] bg-[#8d6e63] border-[6px] border-black border-b-0 shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_0_0_rgba(255,255,255,0.1)] flex justify-center group-hover:brightness-110">
@@ -561,11 +554,9 @@
                                         </div>
                                     </div>
 
-                                    <!-- Fail Stamp Slot -->
                                     <div class="w-[210px] h-[160px] flex items-end justify-center relative">
                                         <div class="absolute bottom-0 w-[180px] h-[30px] bg-black/60 rounded-[50%] blur-sm"></div>
                                         
-                                        <!-- The Physical Fail Stamp -->
                                         <div id="phys-stamp-fail" onpointerdown="pickupStamp('fail', event)" class="physical-stamp relative w-[200px] h-[90px] bg-[#b71c1c] border-[6px] border-black flex items-center justify-center shadow-[0_20px_15px_rgba(0,0,0,0.7)] group z-30">
                                             <div class="stamp-block-table absolute w-[200px] h-[90px] bg-[#c62828] border-[6px] border-black flex items-center justify-center shadow-[inset_-6px_-6px_0_rgba(0,0,0,0.4),inset_6px_6px_0_rgba(255,255,255,0.2)] transition-transform duration-75 group-active:translate-y-[8px]" style="transform: translateY(-24px);">
                                                 <div class="absolute -top-[50px] w-[50px] h-[50px] bg-[#8d6e63] border-[6px] border-black border-b-0 shadow-[inset_-6px_0_0_rgba(0,0,0,0.4),inset_6px_0_0_rgba(255,255,255,0.1)] flex justify-center group-hover:brightness-110">
@@ -606,6 +597,23 @@
         </div>
 
         <!-- Overlays -->
+        
+        <!-- Reason for Rejection UI -->
+        <div id="modal-reason" class="hidden absolute inset-0 z-[70] bg-[rgba(0,0,0,0.85)] flex items-center justify-center p-6 md:p-12">
+            <div class="bg-[#222] text-white pixel-border p-8 max-w-3xl w-full relative pixel-shadow modal-animate">
+                <h2 class="text-5xl mb-6 text-[#d32f2f] font-bold crt-text text-center border-b-8 border-[#333] pb-4">ОБҐРУНТУВАННЯ ВІДМОВИ</h2>
+                <p class="text-2xl text-[#aaa] mb-8 text-center bg-[#111] p-4 border-4 border-black">Видано наказ про сувору звітність. Вкажіть причину, через яку ви не зарахували іспит цьому студенту:</p>
+                
+                <div class="space-y-4 text-3xl">
+                    <button onclick="submitReason('not_in_journal')" class="w-full btn-pixel px-6 py-4 bg-[#333] hover:bg-[#555] text-left border-4 border-black">> ВІДСУТНІЙ У ВІДОМОСТІ (ЄДЕБО)</button>
+                    <button onclick="submitReason('fake_id')" class="w-full btn-pixel px-6 py-4 bg-[#333] hover:bg-[#555] text-left border-4 border-black">> ФАЛЬШИВИЙ ІДЕНТИФІКАТОР (ID)</button>
+                    <button onclick="submitReason('wrong_dob')" class="w-full btn-pixel px-6 py-4 bg-[#333] hover:bg-[#555] text-left border-4 border-black">> НЕВІРНА ДАТА НАРОДЖЕННЯ</button>
+                    <button onclick="submitReason('wrong_discipline')" class="w-full btn-pixel px-6 py-4 bg-[#333] hover:bg-[#555] text-left border-4 border-black">> НЕВІРНА ДИСЦИПЛІНА</button>
+                    <button onclick="submitReason('wrong_answer')" class="w-full btn-pixel px-6 py-4 bg-[#333] hover:bg-[#555] text-left border-4 border-black">> НЕЗНАННЯ КОДЕКСУ (НЕВІРНА ВІДПОВІДЬ)</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Law Book UI -->
         <div id="modal-law" class="hidden absolute inset-0 z-50 bg-[rgba(0,0,0,0.85)] flex items-center justify-center p-6 md:p-12">
             <div class="paper w-full max-w-6xl max-h-[95vh] h-full p-0 flex flex-col relative pixel-shadow modal-animate">
@@ -644,11 +652,11 @@
             </div>
         </div>
 
-        <!-- Final Summary -->
+        <!-- Daily Summary -->
         <div id="modal-summary" class="hidden absolute inset-0 z-[60] bg-black/95 flex items-center justify-center p-6 md:p-12">
             <div class="bg-[#111] text-white pixel-border p-8 md:p-16 max-w-5xl w-full text-center relative border-[#fff] shadow-[0_0_50px_rgba(255,255,255,0.1)] modal-animate max-h-[95vh] overflow-y-auto scroll-custom">
                 
-                <h2 class="text-5xl md:text-7xl mb-6 md:mb-10 text-[#d4af37] crt-text" id="summary-title">СЕСІЮ ЗАВЕРШЕНО</h2>
+                <h2 class="text-5xl md:text-7xl mb-6 md:mb-10 text-[#d4af37] crt-text" id="summary-title">ДЕНЬ ЗАВЕРШЕНО</h2>
                 
                 <div id="summary-reason" class="hidden border-4 border-[#d32f2f] p-6 md:p-8 bg-black text-white text-2xl md:text-4xl pixel-shadow-inset mb-6 md:mb-10 text-left">
                     <span class="text-[#d32f2f] font-bold">> ВЕРДИКТ РЕКТОРАТУ:</span><br><br>
@@ -657,7 +665,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 text-left text-2xl md:text-4xl mb-8 md:mb-12" id="summary-stats-grid">
                     <div class="border-4 border-[#555] p-6 md:p-10 bg-black space-y-4 md:space-y-6 pixel-shadow-inset">
-                        <p class="text-[#aaa] border-b-4 border-[#333] pb-2 md:pb-4 font-bold">РЕЗУЛЬТАТЕ ЕКЗАМЕНУ:</p>
+                        <p class="text-[#aaa] border-b-4 border-[#333] pb-2 md:pb-4 font-bold">РЕЗУЛЬТАТИ ДНЯ:</p>
                         <p>ОПИТАНО: <span class="text-white bg-[#333] px-3 font-bold" id="sum-total">0</span></p>
                         <p>ЧЕСНИХ ОЦІНОК: <span class="text-[#4caf50] crt-text-green font-bold" id="sum-correct">0</span></p>
                         <p>СУМНІВНИХ РІШЕНЬ: <span class="text-[#d32f2f] font-bold" id="sum-wrong">0</span></p>
@@ -669,14 +677,58 @@
                     </div>
                 </div>
                 
-                <div class="text-[#888] text-2xl md:text-4xl mb-4 md:mb-6 font-bold" id="summary-rating-label">ПІДСУМКОВА ОЦІНКА:</div>
+                <div class="text-[#888] text-2xl md:text-4xl mb-4 md:mb-6 font-bold" id="summary-rating-label">ОЦІНКА ДНЯ:</div>
                 <div id="summary-rating" class="text-6xl md:text-8xl mb-8 md:mb-12 text-[#d4af37] tracking-widest drop-shadow-[0_0_20px_rgba(212,175,55,1)]">*****</div>
                 
-                <button onclick="resetGame()" class="btn-pixel px-6 md:px-10 py-4 md:py-8 text-4xl md:text-6xl w-full bg-[#1976d2] crt-text font-bold hover:bg-[#2196f3]">
-                    [ НАСТУПНИЙ ДЕНЬ ]
+                <button id="btn-next-step" onclick="proceedFromSummary()" class="btn-pixel px-6 md:px-10 py-4 md:py-8 text-4xl md:text-6xl w-full bg-[#1976d2] crt-text font-bold hover:bg-[#2196f3]">
+                    [ ПІДПІЛЬНИЙ МАГАЗИН ]
                 </button>
             </div>
         </div>
+
+        <!-- Shop UI -->
+        <div id="modal-shop" class="hidden absolute inset-0 z-[65] bg-black/95 flex flex-col items-center justify-center p-6 md:p-12 overflow-y-auto scroll-custom">
+            <div class="w-full max-w-6xl relative modal-animate flex flex-col items-center">
+                <h2 class="text-5xl md:text-7xl text-[#d4af37] crt-text mb-4 text-center">ПІДПІЛЬНИЙ МАГАЗИН</h2>
+                <p class="text-2xl md:text-3xl text-[#aaa] mb-8 text-center bg-[#111] px-6 py-2 border-4 border-[#333]">ВАШ ГАМАНЕЦЬ: <span id="shop-money" class="text-[#4caf50] font-bold">0 ₴</span></p>
+                
+                <div id="shop-items" class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full mb-12">
+                    <!-- Cards injected by JS -->
+                </div>
+                
+                <button onclick="startNextDay()" class="btn-pixel px-8 py-6 text-3xl md:text-5xl w-full max-w-2xl bg-[#333] crt-text font-bold hover:bg-[#444] border-8 border-black">
+                    [ ПРОПУСТИТИ ТА ПОЧАТИ ДЕНЬ ]
+                </button>
+            </div>
+        </div>
+
+        <!-- Victory UI -->
+        <div id="modal-victory" class="hidden absolute inset-0 z-[70] bg-[#111] flex flex-col items-center justify-center p-8 md:p-12 overflow-y-auto scroll-custom">
+            <div class="pixel-border bg-[#050505] p-12 max-w-5xl w-full text-center relative shadow-[0_0_80px_rgba(212,175,55,0.3)] modal-animate border-8 border-[#d4af37]">
+                <h1 class="text-6xl md:text-8xl text-[#d4af37] mb-6 crt-text drop-shadow-[0_0_15px_rgba(212,175,55,0.8)]">СЕСІЮ ЗАКРИТО!</h1>
+                <p class="text-3xl md:text-4xl text-[#4caf50] mb-12 font-bold">Ви успішно пережили 7 днів екзаменів і не були звільнені.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left text-3xl mb-12">
+                    <div class="bg-[#111] p-8 border-4 border-[#333] shadow-[4px_4px_0_rgba(0,0,0,0.5)]">
+                        <p class="text-[#888] mb-4 font-bold border-b-4 border-[#222] pb-2">СТАТИСТИКА ЗА ТИЖДЕНЬ:</p>
+                        <p class="mb-2 text-white">ВСЬОГО СТУДЕНТІВ: <span id="vic-total" class="text-[#1976d2] font-bold">0</span></p>
+                        <p class="mb-2 text-white">ПРАВИЛЬНИХ РІШЕНЬ: <span id="vic-correct" class="text-[#4caf50] font-bold">0</span></p>
+                        <p class="mb-2 text-white">ПОМИЛОК: <span id="vic-wrong" class="text-[#d32f2f] font-bold">0</span></p>
+                    </div>
+                    <div class="bg-[#111] p-8 border-4 border-[#333] shadow-[4px_4px_0_rgba(0,0,0,0.5)]">
+                        <p class="text-[#888] mb-4 font-bold border-b-4 border-[#222] pb-2">ФІНАНСИ ТА СТАТУС:</p>
+                        <p class="mb-2 text-white">ВЗЯТО ХАБАРІВ: <span id="vic-bribes" class="text-[#ff9800] font-bold">0</span></p>
+                        <p class="mb-2 text-white">ФІНАЛЬНИЙ КАПІТАЛ: <span id="vic-money" class="text-[#4caf50] font-bold">0 ₴</span></p>
+                        <p class="mb-2 text-white">АВТОРИТЕТ: <span id="vic-rep" class="text-[#1976d2] font-bold">0%</span></p>
+                    </div>
+                </div>
+
+                <button onclick="resetGame()" class="btn-pixel px-10 py-6 text-4xl md:text-5xl w-full bg-[#2e7d32] crt-text font-bold hover:bg-[#388e3c]">
+                    [ ПІТИ У ВІДПУСТКУ ]
+                </button>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -744,6 +796,11 @@
         cash: function() {
             this.playTone(1200, 'sine', 0.1, 0.1);
             setTimeout(() => this.playTone(1600, 'sine', 0.2, 0.1), 50);
+        },
+        powerup: function() {
+            this.playTone(400, 'sine', 0.1, 0.2);
+            setTimeout(() => this.playTone(600, 'sine', 0.1, 0.2), 100);
+            setTimeout(() => this.playTone(800, 'sine', 0.2, 0.2), 200);
         },
         print: function() {
             let time = 0;
@@ -866,6 +923,8 @@
 
     // --- GAME STATE ---
     let state = {
+        day: 1,
+        maxDays: 7,
         money: 0,
         reputation: 75, 
         students: [],
@@ -877,12 +936,25 @@
         bribesTaken: 0,
         timeHours: 9,
         timeMinutes: 0,
-        clockInterval: null,
+        clockTimeout: null,
         cameraActive: false,
         cameraTimeout: null,
         shakeTimeout: null,
         isGameOver: false,
         isPaused: false,
+        globalStats: {
+            totalChecked: 0,
+            totalCorrect: 0,
+            totalWrong: 0,
+            totalBribes: 0
+        },
+        buffs: {
+            coffeeLevel: 0,
+            cctvHackLevel: 0,
+            lawyerLevel: 0,
+            scareLevel: 0,
+            tutorLevel: 0
+        },
         settings: {
             musicVol: 0.5,
             sfxVol: 0.5,
@@ -897,56 +969,16 @@
     };
 
     const LAWS = [
-        { 
-            art: "СТ. 21 ЦКУ", 
-            text: "Цивільною правоздатністю фізичної особи є її здатність мати цивільні права та обов'язки. Вона виникає у момент її народження.",
-            wrongText: "Цивільною правоздатністю є здатність людини мати гроші та зв'язки. Вона виникає з моменту отримання першого хабара."
-        },
-        { 
-            art: "СТ. 201 ЦКУ", 
-            text: "Особистими немайновими благами є: здоров'я, життя, честь, гідність і ділова репутація.",
-            wrongText: "Особистими немайновими благами є: криптовалюта, офшори, підписники в Інстаграмі та впливові родичі."
-        },
-        { 
-            art: "СТ. 202 ЦКУ", 
-            text: "Правочином є дія особи, спрямована на набуття, зміну або припинення цивільних прав та обов'язків.",
-            wrongText: "Правочином є хитра дія особи, спрямована на ухилення від сплати податків та обман держави."
-        },
-        { 
-            art: "СТ. 316 ЦКУ", 
-            text: "Правом власності є право особи на майно, яке вона здійснює відповідно до закону за своєю волею.",
-            wrongText: "Правом власності є право особи відібрати річ у слабшого, якщо ця річ їй дуже потрібна."
-        },
-        { 
-            art: "СТ. 509 ЦКУ", 
-            text: "Зобов'язанням є правовідношення, в якому одна сторона (боржник) зобов'язана вчинити на користь другої (кредитора) дію.",
-            wrongText: "Зобов'язанням є добровільна пожертва, яку боржник робить тільки тоді, коли в нього є зайвий настрій і кошти."
-        },
-        { 
-            art: "СТ. 626 ЦКУ", 
-            text: "Договором є домовленість двох або більше сторін, спрямована на встановлення цивільних прав та обов'язків.",
-            wrongText: "Договором є усна обіцянка, яку можна легко порушити, якщо раптово змінився курс долара."
-        },
-        { 
-            art: "СТ. 714 ЦКУ", 
-            text: "За договором дарування одна сторона передає або зобов'язується передати в майбутньому другій стороні майно безоплатно.",
-            wrongText: "За договором дарування дарувальник передає майно, але потім все життя нагадує про свою нереальну щедрість."
-        },
-        { 
-            art: "СТ. 1046 ЦКУ", 
-            text: "За договором позики одна сторона передає у власність другій стороні грошові кошти, а та зобов'язується їх повернути.",
-            wrongText: "За договором позики позичальник бере ваші гроші, а потім блокує вас у всіх месенджерах і не бере слухавку."
-        },
-        { 
-            art: "СТ. 1166 ЦКУ", 
-            text: "Майнова шкода, завдана неправомірними діями, відшкодовується в повному обсязі особою, яка її завдала.",
-            wrongText: "Майнова шкода повністю прощається, якщо особа щиро вибачилася і пообіцяла, що більше так робити не буде."
-        },
-        { 
-            art: "СТ. 1199 ЦКУ", 
-            text: "Шкода, завдана джерелом підвищеної небезпеки, відшкодовується особою, яка володіє транспортним засобом.",
-            wrongText: "Шкода, завдана транспортним засобом, відшкодовується тим пішоходом, який опинився не в тому місці не в той час."
-        }
+        { art: "СТ. 21 ЦКУ", text: "Цивільною правоздатністю фізичної особи є її здатність мати цивільні права та обов'язки. Вона виникає у момент її народження.", wrongText: "Цивільною правоздатністю є здатність людини мати гроші та зв'язки. Вона виникає з моменту отримання першого хабара." },
+        { art: "СТ. 201 ЦКУ", text: "Особистими немайновими благами є: здоров'я, життя, честь, гідність і ділова репутація.", wrongText: "Особистими немайновими благами є: криптовалюта, офшори, підписники в Інстаграмі та впливові родичі." },
+        { art: "СТ. 202 ЦКУ", text: "Правочином є дія особи, спрямована на набуття, зміну або припинення цивільних прав та обов'язків.", wrongText: "Правочином є хитра дія особи, спрямована на ухилення від сплати податків та обман держави." },
+        { art: "СТ. 316 ЦКУ", text: "Правом власності є право особи на майно, яке вона здійснює відповідно до закону за своєю волею.", wrongText: "Правом власності є право особи відібрати річ у слабшого, якщо ця річ їй дуже потрібна." },
+        { art: "СТ. 509 ЦКУ", text: "Зобов'язанням є правовідношення, в якому одна сторона (боржник) зобов'язана вчинити на користь другої (кредитора) дію.", wrongText: "Зобов'язанням є добровільна пожертва, яку боржник робить тільки тоді, коли в нього є зайвий настрій і кошти." },
+        { art: "СТ. 626 ЦКУ", text: "Договором є домовленість двох або більше сторін, спрямована на встановлення цивільних прав та обов'язків.", wrongText: "Договором є усна обіцянка, яку можна легко порушити, якщо раптово змінився курс долара." },
+        { art: "СТ. 714 ЦКУ", text: "За договором дарування одна сторона передає або зобов'язується передати в майбутньому другій стороні майно безоплатно.", wrongText: "За договором дарування дарувальник передає майно, але потім все життя нагадує про свою нереальну щедрість." },
+        { art: "СТ. 1046 ЦКУ", text: "За договором позики одна сторона передає у власність другій стороні грошові кошти, а та зобов'язується їх повернути.", wrongText: "За договором позики позичальник бере ваші гроші, а потім блокує вас у всіх месенджерах і не бере слухавку." },
+        { art: "СТ. 1166 ЦКУ", text: "Майнова шкода, завдана неправомірними діями, відшкодовується в повному обсязі особою, яка її завдала.", wrongText: "Майнова шкода повністю прощається, якщо особа щиро вибачилася і пообіцяла, що більше так робити не буде." },
+        { art: "СТ. 1199 ЦКУ", text: "Шкода, завдана джерелом підвищеної небезпеки, відшкодовується особою, яка володіє транспортним засобом.", wrongText: "Шкода, завдана транспортним засобом, відшкодовується тим пішоходом, який опинився не в тому місці не в той час." }
     ];
 
     const DISCIPLINES = ["ЦИВІЛЬНЕ ПРАВО", "КРИМІНАЛЬНЕ ПРАВО", "СІМЕЙНЕ ПРАВО", "АДМІН. ПРАВО", "ПОДАТКОВЕ ПРАВО"];
@@ -958,6 +990,15 @@
         "СТЕПАНЕНКО", "ГРИГОРЕНКО", "МАРЧЕНКО", "РУДЕНКО", "ПАВЛЕНКО"
     ];
     const ALPHABET = "АБВГДЕЄЖЗІКЛМНОПРСТУФХЦЧШЮЯ";
+
+    const AVAILABLE_BUFFS = [
+        { id: 'coffee', name: 'МІЦНА КАВА', desc: 'Уповільнює плин часу. Більше часу на студентів.', cost: 400, icon: '☕' },
+        { id: 'cctv_hack', name: 'ЗЛАМ КАМЕРИ', desc: 'Камера записує рідше. Більше безпеки для хабарів.', cost: 600, icon: '📹' },
+        { id: 'lawyer', name: 'АДВОКАТ', desc: 'Штрафи від деканату назавжди зменшено на 50%.', cost: 800, icon: '💼' },
+        { id: 'pr', name: 'ПІАР-КАМПАНІЯ', desc: 'Миттєво додає +20% авторитету у керівництва.', cost: 500, icon: '📈' },
+        { id: 'scare', name: 'СУВОРІСТЬ', desc: 'Студенти бояться підробляти документи.', cost: 450, icon: '😠' },
+        { id: 'tutor', name: 'МЕТОДИЧКА', desc: 'Студенти краще знають матеріал і рідше помиляються.', cost: 300, icon: '📖' }
+    ];
 
     let typingTimer = null;
 
@@ -1023,6 +1064,30 @@
         }
     }
 
+    function debugSkipDay() {
+        // Забороняємо пропускати, якщо гра ще не почалась або вже програна
+        if (state.isGameOver || document.getElementById('screen-game').classList.contains('hidden')) return;
+        
+        toggleSettings(); // Закриваємо меню налаштувань
+        
+        // Зупиняємо таймери
+        clearTimeout(state.clockTimeout);
+        clearTimeout(state.cameraTimeout);
+        
+        // Імітуємо кінець дня
+        state.totalChecked = state.students.length;
+        state.timeHours = 18;
+        
+        // Очищаємо інтерфейс
+        document.getElementById('gradebook').classList.add('hidden');
+        document.getElementById('cctv-student').classList.add('hidden');
+        document.getElementById('cctv-empty').classList.remove('hidden');
+        document.getElementById('modal-reason').classList.add('hidden');
+        returnStamp();
+        
+        showSummary();
+    }
+
     // --- CURSOR LOGIC (RETICLE & DRAG) ---
     document.addEventListener('pointermove', (e) => {
         if (state.isStampActive && !state.isGameOver && !state.isPaused) {
@@ -1056,6 +1121,7 @@
             const zoneRect = studentZone.getBoundingClientRect();
             const gbRect = gb.getBoundingClientRect();
             
+            // Якщо заліковку поклали на студента
             if (gbRect.left < zoneRect.right && gbRect.right > zoneRect.left && 
                 gbRect.top < zoneRect.bottom && gbRect.bottom > zoneRect.top) {
                 
@@ -1064,9 +1130,14 @@
                     notify("! ПОСТАВТЕ ХОЧА Б ОДНУ ПЕЧАТКУ", "text-[#d32f2f]");
                     resetGradebookPosition();
                 } else {
-                    gb.style.transition = 'left 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
-                    gb.style.left = '-1000px';
-                    setTimeout(() => finishStudent(s.decision), 500);
+                    // Якщо відмова і день 5+, викликаємо модалку причин
+                    if (s.decision === 'fail' && state.day >= 5 && !s.isCat) {
+                        showReasonModal();
+                    } else {
+                        gb.style.transition = 'left 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+                        gb.style.left = '-1000px';
+                        setTimeout(() => finishStudent(s.decision), 500);
+                    }
                 }
             }
         }
@@ -1097,7 +1168,6 @@
             const clickX = e.clientX;
             const clickY = e.clientY;
 
-            // Відразу фіксуємо координати відбитку (ігноруючи будь-яке поточне трясіння столу)
             const rect = area.getBoundingClientRect();
             const inkX = clickX - rect.left;
             const inkY = clickY - rect.top;
@@ -1126,22 +1196,20 @@
                 const cssClass = type === 'pass' ? 'text-[#1b5e20] border-[#1b5e20]' : 'text-[#b71c1c] border-[#b71c1c]';
                 const rot = (Math.random() * 16) - 8;
                 
+                // Дозволяємо переставляти печатку - очищаємо попередню
+                area.innerHTML = '';
+
                 const ink = document.createElement('div');
                 ink.className = `w-[200px] h-[90px] border-[6px] border-double ${cssClass} stamp-placed text-5xl whitespace-nowrap font-bold tracking-widest flex items-center justify-center`;
-                
-                // Використовуємо абсолютні пікселі для 100% точності відбитку
                 ink.style.left = `${inkX}px`;
                 ink.style.top = `${inkY}px`;
                 ink.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
                 ink.innerHTML = text;
-                
                 area.appendChild(ink);
 
                 const s = state.students[state.currentStudentIndex];
-                if (!s.decision) {
-                    s.decision = type;
-                    notify("> РІШЕННЯ ЗАФІКСОВАНО: " + (type === 'pass' ? "ЗАРАХОВАНО" : "ВІДМОВА") + ". ВІДДАЙТЕ ЗАЛІКОВКУ.", "text-white");
-                }
+                s.decision = type; 
+                notify("> РІШЕННЯ ВСТАНОВЛЕНО: " + (type === 'pass' ? "ЗАРАХОВАНО" : "ВІДМОВА"), "text-white");
 
             }, 120); 
 
@@ -1158,7 +1226,6 @@
                 const rect = gb.getBoundingClientRect();
                 const parentRect = gb.offsetParent.getBoundingClientRect();
                 
-                // Встановлюємо координати відносно батьківського контейнера (desk-surface)
                 gb.style.transition = 'none';
                 gb.style.left = (rect.left - parentRect.left) + 'px';
                 gb.style.top = (rect.top - parentRect.top) + 'px';
@@ -1231,23 +1298,19 @@
 
     function initStudents() {
         state.students = [];
-        const totalStudents = 10; // Оновлена загальна кількість студентів
+        
+        const totalStudents = 6 + state.day; 
+        
+        const baseFraudChance = state.buffs.scareLevel > 0 ? (0.05 + state.day*0.03) : (0.15 + state.day*0.05);
+        const baseGapChance = state.buffs.tutorLevel > 0 ? (0.10 + state.day*0.03) : (0.20 + state.day*0.05);
+        const baseBribeChance = 0.2 + state.day * 0.05;
+
         let catGenerated = false;
 
-        // Список усіх файлів персонажів-людей, які ви завантажили
         const HUMAN_FACES = [
-            "pixel1(1).png", 
-            "pixel2.png", 
-            "pixel3.png", 
-            "pixel4.png", 
-            "pixel5.png", 
-            "pixel6.png", 
-            "pixel7.png", 
-            "pixel8.png",
-            "pixel9.png",
-            "pixel10.png",
-            "pixel11.png",
-            "pixel12.png"
+            "pixel1(1).png", "pixel2.png", "pixel3.png", "pixel4.png", 
+            "pixel5.png", "pixel6.png", "pixel7.png", "pixel8.png",
+            "pixel9.png", "pixel10.png", "pixel11.png", "pixel12.png"
         ];
         
         let availableFaces = [...HUMAN_FACES];
@@ -1262,7 +1325,6 @@
         for (let i = 0; i < totalStudents; i++) {
             
             let isCat = false;
-            // Шанс появи кота залишається 10%, гарантовано не більше 1 разу
             if (!catGenerated && Math.random() < 0.10) {
                 isCat = true;
                 catGenerated = true;
@@ -1280,7 +1342,7 @@
                     journalDiscipline: "КОТОЗНАВСТВО",
                     inJournal: true,
                     ticket: "МЯУ",
-                    photo: "meow.png", // Завантажена вами картинка кота
+                    photo: "meow.png",
                     answer: "Мяу... Мррр... Мяу!",
                     correctLaw: null,
                     isFraud: false,
@@ -1288,7 +1350,6 @@
                     isWrongAnswer: false,
                     bribe: 0,
                     bribeTaken: false,
-                    isSpecial: false,
                     isCat: true,
                     isProcessed: false,
                     decision: null
@@ -1300,21 +1361,19 @@
                 let name = `${lastName} ${initial1}.${initial2}.`;
                 let ticket = availableTickets.pop() || (1 + Math.floor(Math.random() * 30));
                 
-                let isFraud = Math.random() < 0.25; 
-                let knowledgeGap = Math.random() < 0.35; 
-                let bribeOffer = Math.random() < 0.35; 
-                let isSpecial = Math.random() < 0.1; 
+                let isFraud = Math.random() < baseFraudChance; 
+                let knowledgeGap = Math.random() < baseGapChance; 
+                let bribeOffer = Math.random() < baseBribeChance; 
 
                 let randomLaw = LAWS[Math.floor(Math.random() * LAWS.length)];
                 let answer = knowledgeGap ? randomLaw.wrongText : randomLaw.text;
 
-                // Генерація справжніх даних
                 let trueId = "ID-" + (1000 + Math.floor(Math.random() * 9000));
                 let trueYear = 2000 + Math.floor(Math.random() * 6);
                 let trueMonth = String(1 + Math.floor(Math.random() * 12)).padStart(2, '0');
                 let trueDay = String(1 + Math.floor(Math.random() * 28)).padStart(2, '0');
                 let trueDob = `${trueDay}.${trueMonth}.${trueYear}`;
-                let trueDiscipline = DISCIPLINES[0]; // ЦИВІЛЬНЕ ПРАВО
+                let trueDiscipline = DISCIPLINES[0]; 
 
                 let journalId = trueId;
                 let journalDob = trueDob;
@@ -1323,14 +1382,14 @@
                 let gbDob = trueDob;
                 let gbDiscipline = trueDiscipline;
                 let inJournal = true;
-                let fraudType = -1; // 0: missing, 1: ID, 2: DOB, 3: Discipline
+                let fraudType = -1;
 
                 if (isFraud) {
                     fraudType = Math.floor(Math.random() * 4);
                     if (fraudType === 0) {
-                        inJournal = false; // Немає в журналі
+                        inJournal = false; 
                     } else if (fraudType === 1) {
-                        gbId = "ID-" + (1000 + Math.floor(Math.random() * 9000)); // Фейковий ID
+                        gbId = "ID-" + (1000 + Math.floor(Math.random() * 9000)); 
                     } else if (fraudType === 2) {
                         let fakeYear = 2000 + Math.floor(Math.random() * 6);
                         let fakeMonth = String(1 + Math.floor(Math.random() * 12)).padStart(2, '0');
@@ -1338,12 +1397,10 @@
                         gbDob = `${fakeDay}.${fakeMonth}.${fakeYear}`;
                         if (gbDob === trueDob) gbDob = "01.01.1999";
                     } else if (fraudType === 3) {
-                        // Випадкова інша дисципліна
                         gbDiscipline = DISCIPLINES[1 + Math.floor(Math.random() * (DISCIPLINES.length - 1))];
                     }
                 }
                 
-                // Витягуємо унікальне обличчя, якщо вони закінчились - беремо випадкове з масиву (щоб уникнути помилок через нестачу картинок)
                 let faceImage = availableFaces.pop() || HUMAN_FACES[Math.floor(Math.random() * HUMAN_FACES.length)];
 
                 state.students.push({
@@ -1357,7 +1414,7 @@
                     journalDiscipline: journalDiscipline,
                     inJournal: inJournal,
                     ticket: ticket,
-                    photo: faceImage, // Використовуємо локальний файл PNG
+                    photo: faceImage,
                     answer: answer,
                     correctLaw: randomLaw,
                     isFraud: isFraud,
@@ -1365,7 +1422,6 @@
                     isWrongAnswer: knowledgeGap,
                     bribe: bribeOffer ? 300 + Math.floor(Math.random() * 700) : 0, 
                     bribeTaken: false,
-                    isSpecial: isSpecial,
                     isCat: false,
                     isProcessed: false,
                     decision: null
@@ -1380,7 +1436,7 @@
         function toggleCamera() {
             if(state.isGameOver) return;
             if(state.isPaused) {
-                state.cameraTimeout = setTimeout(toggleCamera, 200); // Очікування зняття з паузи
+                state.cameraTimeout = setTimeout(toggleCamera, 500); 
                 return;
             }
             
@@ -1398,7 +1454,15 @@
                 stat.className = "text-[#555] text-3xl font-bold crt-text tracking-widest";
             }
             
-            const delay = state.cameraActive ? (2000 + Math.random() * 4000) : (1500 + Math.random() * 2000);
+            let baseRecTime = 2000 + Math.random() * 4000;
+            let baseOffTime = 1500 + Math.random() * 2000;
+            
+            if (state.buffs.cctvHackLevel > 0) {
+                baseRecTime *= 0.5;
+                baseOffTime *= 1.8; 
+            }
+            
+            const delay = state.cameraActive ? baseRecTime : baseOffTime;
             state.cameraTimeout = setTimeout(toggleCamera, delay);
         }
         state.cameraTimeout = setTimeout(toggleCamera, 3000);
@@ -1450,15 +1514,25 @@
         renderClassroom();
         renderLawBook();
         renderJournal();
+        
+        clearTimeout(state.cameraTimeout);
         startCameraSystem();
         sfx.startSoundtrack(); 
         
-        typeDialogue("> СИСТЕМА ГОТОВА. ВИКЛИКАЙТЕ СТУДЕНТА З КОРИДОРУ.");
-        state.clockInterval = setInterval(tickClock, 1200); 
+        typeDialogue("> СИСТЕМА ГОТОВА. ДЕНЬ " + state.day + " ПОЧАВСЯ. ВИКЛИКАЙТЕ СТУДЕНТА.");
+        
+        clearTimeout(state.clockTimeout);
+        tickClock();
     }
 
     function tickClock() {
-        if(state.isGameOver || state.isPaused) return;
+        if(state.isGameOver) return;
+        
+        if(state.isPaused) {
+            state.clockTimeout = setTimeout(tickClock, 500);
+            return;
+        }
+
         state.timeMinutes += 1; 
         if (state.timeMinutes >= 60) {
             state.timeMinutes = 0;
@@ -1470,13 +1544,16 @@
         document.getElementById('stat-clock').innerText = `${h}:${m}`;
 
         if (state.timeHours >= 18) {
-            clearInterval(state.clockInterval);
             if (state.totalChecked < state.students.length) {
-                gameOver("СЕСІЮ ЗІРВАНО. ВИ НЕ ВСТИГЛИ ОПИТАТИ ВСЮ ГРУПУ.");
+                gameOver("РОБОЧИЙ ДЕНЬ ЗАКІНЧИВСЯ, АЛЕ ВИ НЕ ОПИТАЛИ ВСЮ ГРУПУ. ДЕКАНАТ НЕ ПРОЩАЄ ТАКОЇ ПОВІЛЬНОСТІ.");
             } else {
                 showSummary();
             }
+            return;
         }
+
+        let delay = 1200 + (state.buffs.coffeeLevel * 400); // Кожен рівень суттєво уповільнює таймер
+        state.clockTimeout = setTimeout(tickClock, delay);
     }
 
     function typeDialogue(text) {
@@ -1577,14 +1654,13 @@
             dialogue = `> ... \n> Мяу... Мррр...\n`;
         } else {
             dialogue = `> ДОБРИЙ ДЕНЬ. СТУДЕНТ ${s.name}, БІЛЕТ #${s.ticket}.\n`;
-            if (s.isSpecial) dialogue += "> [ СТУДЕНТ ВІД ДЕКАНА ]\n";
         }
         
         typeDialogue(dialogue + "> ...");
         
         setTimeout(() => {
             if(state.currentStudentIndex === index) {
-                typeDialogue(dialogue + `> ВІДПОВІДЬ НА БІЛЕТ:\n"${s.answer}"\n\n> ПЕРЕВІРТЕ ЗАЛІКОВКУ, ПОСТАВТЕ ПЕЧАТКУ ТА ВІДДАЙТЕ СТУДЕНТУ.`);
+                typeDialogue(dialogue + `> ВІДПОВІДЬ НА БІЛЕТ:\n"${s.answer}"\n\n> ПЕРЕВІРТЕ ЗАЛІКОВКУ ТА ПОСТАВТЕ ПЕЧАТКУ.`);
             }
         }, 3500);
 
@@ -1600,10 +1676,13 @@
 
         s.bribeTaken = true; 
         state.bribesTaken++;
+        state.globalStats.totalBribes++;
         
         if (state.cameraActive) {
             sfx.error();
-            const fine = 500;
+            let fine = 500;
+            if (state.buffs.lawyerLevel > 0) fine *= 0.5;
+            
             const repPenalty = 25;
             state.money -= fine;
             state.reputation -= repPenalty;
@@ -1628,7 +1707,13 @@
         
         const slip = document.getElementById('citation-slip');
         document.getElementById('citation-reason').innerText = `"${reason}"`;
-        document.getElementById('citation-money').innerText = `-${moneyFine} ₴`;
+        
+        if (state.buffs.lawyerLevel > 0 && moneyFine > 0) {
+            document.getElementById('citation-money').innerHTML = `<span class="line-through opacity-60 text-xl mr-2">-${moneyFine * 2}</span>-${moneyFine} ₴ [АДВОКАТ]`;
+        } else {
+            document.getElementById('citation-money').innerText = `-${moneyFine} ₴`;
+        }
+        
         document.getElementById('citation-rep').innerText = `-${repFine}%`;
         slip.classList.add('show');
     }
@@ -1638,7 +1723,26 @@
         slip.classList.remove('show');
     }
 
-    function finishStudent(decision) {
+    // --- REASON MODAL LOGIC ---
+    function showReasonModal() {
+        state.isPaused = true; 
+        document.getElementById('modal-reason').classList.remove('hidden');
+        sfx.error();
+    }
+
+    function submitReason(reasonCode) {
+        document.getElementById('modal-reason').classList.add('hidden');
+        state.isPaused = false;
+
+        const gb = document.getElementById('gradebook');
+        gb.style.transition = 'left 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+        gb.style.left = '-1000px';
+        
+        const s = state.students[state.currentStudentIndex];
+        setTimeout(() => finishStudent(s.decision, reasonCode), 500);
+    }
+
+    function finishStudent(decision, reasonCode = null) {
         const s = state.students[state.currentStudentIndex];
         let repChange = 0;
         let moneyChange = 0;
@@ -1646,6 +1750,19 @@
         let isViolation = false;
 
         const passed = (decision === 'pass');
+        const shouldPass = (!s.isFraud && !s.isWrongAnswer);
+        let reasonValid = false;
+
+        // Валідація обраної причини (лише для відмови у 5-7 дні)
+        if (!passed && state.day >= 5 && !s.isCat) {
+            if (reasonCode === 'not_in_journal' && s.fraudType === 0) reasonValid = true;
+            if (reasonCode === 'fake_id' && s.fraudType === 1) reasonValid = true;
+            if (reasonCode === 'wrong_dob' && s.fraudType === 2) reasonValid = true;
+            if (reasonCode === 'wrong_discipline' && s.fraudType === 3) reasonValid = true;
+            if (reasonCode === 'wrong_answer' && s.isWrongAnswer) reasonValid = true;
+        } else {
+            reasonValid = true; // Автоматично вірно, якщо немає вимоги вказувати причину
+        }
 
         if (s.isCat) {
             if (passed) {
@@ -1657,12 +1774,10 @@
                 return;
             }
         } else {
-            const shouldPass = (!s.isFraud && !s.isWrongAnswer);
-
             if (s.bribeTaken && passed) {
                 if (s.isFraud) {
-                    repChange = -25; 
-                    moneyChange = -800;
+                    repChange = -15; 
+                    moneyChange = state.buffs.lawyerLevel > 0 ? -400 : -800; 
                     state.wrongDecisions++;
                     isViolation = true;
                     if (s.fraudType === 0) feedback = "КРИТИЧНА ПОМИЛКА: СТУДЕНТА НЕМАЄ В ЖУРНАЛІ! ХАБАР НЕ ДОПОМІГ.";
@@ -1677,24 +1792,40 @@
                 }
             } else if (s.bribeTaken && !passed) {
                 if (!shouldPass) {
-                    repChange = 0; 
-                    state.correctDecisions++;
-                    feedback = "> ХАБАР ВЗЯТО, АЛЕ ПОРУШНИКУ ВІДМОВЛЕНО. СТУДЕНТ ПОБОЯВСЯ СКАРЖИТИСЯ.";
+                    if (state.day >= 5 && !reasonValid) {
+                        repChange = -10;
+                        moneyChange = state.buffs.lawyerLevel > 0 ? -100 : -200;
+                        state.wrongDecisions++;
+                        isViolation = true;
+                        feedback = "СКАРГА: ВЗЯЛИ ХАБАР, ВІДМОВИЛИ, АЛЕ ВКАЗАЛИ НЕВІРНУ ПРИЧИНУ!";
+                    } else {
+                        repChange = 0; 
+                        state.correctDecisions++;
+                        feedback = "> ХАБАР ВЗЯТО, АЛЕ ПОРУШНИКУ ВІДМОВЛЕНО ОБҐРУНТОВАНО.";
+                    }
                 } else {
-                    repChange = -20;
+                    repChange = -15; 
                     state.wrongDecisions++;
-                    moneyChange = -500;
+                    moneyChange = state.buffs.lawyerLevel > 0 ? -250 : -500;
                     isViolation = true;
                     feedback = "СКАРГА: ВИ ВЗЯЛИ ХАБАР І БЕЗПІДСТАВНО ВІДМОВИЛИ ЧЕСНОМУ СТУДЕНТУ!";
                 }
             } else {
                 if (passed === shouldPass) {
-                    repChange = 3; 
-                    state.correctDecisions++;
-                    feedback = "> РЕЗУЛЬТАТ ПРИЙНЯТО";
+                    if (!passed && state.day >= 5 && !reasonValid) {
+                        repChange = -10;
+                        moneyChange = state.buffs.lawyerLevel > 0 ? -100 : -200;
+                        state.wrongDecisions++;
+                        isViolation = true;
+                        feedback = "СКАРГА: ВИ ВІДХИЛИЛИ СТУДЕНТА, АЛЕ ВКАЗАЛИ НЕВІРНУ ПРИЧИНУ (ОСКАРЖЕНО В ДЕКАНАТІ).";
+                    } else {
+                        repChange = 3; 
+                        state.correctDecisions++;
+                        feedback = passed ? "> РЕЗУЛЬТАТ ПРИЙНЯТО" : "> ВІДМОВУ ОБҐРУНТОВАНО. РЕЗУЛЬТАТ ПРИЙНЯТО.";
+                    }
                 } else {
-                    repChange = -20; 
-                    moneyChange = -400; 
+                    repChange = -15; 
+                    moneyChange = state.buffs.lawyerLevel > 0 ? -200 : -400;
                     state.wrongDecisions++;
                     isViolation = true;
                     if (s.isFraud && passed) {
@@ -1706,7 +1837,7 @@
                     } else if (!s.isFraud && s.isWrongAnswer && passed) {
                         feedback = "ОЦІНКА НЕ ВІДПОВІДАЄ ЗНАННЯМ ЦИВІЛЬНОГО КОДЕКСУ.";
                     } else {
-                        feedback = "БЕЗПІДСТАВНЕ 'НЕ ЗАРАХОВАНО'. СКАРГА ВІД СТУДЕНТА.";
+                        feedback = "БЕЗПІДСТАВНА ВІДМОВА! СТУДЕНТ МАВ ІДЕАЛЬНІ ДОКУМЕНТИ ТА ЗНАННЯ.";
                     }
                 }
             }
@@ -1719,6 +1850,10 @@
         s.isProcessed = true;
         state.currentStudentIndex = null;
         state.totalChecked++;
+        
+        state.globalStats.totalChecked++;
+        if(passed === (!s.isFraud && !s.isWrongAnswer)) state.globalStats.totalCorrect++;
+        else state.globalStats.totalWrong++;
 
         const gb = document.getElementById('gradebook');
         gb.classList.add('hidden');
@@ -1756,6 +1891,7 @@
     }
 
     function updateUI() {
+        document.getElementById('stat-day').innerText = `${state.day}/${state.maxDays}`;
         document.getElementById('stat-money').innerText = `${state.money} ₴`;
         document.getElementById('stat-rep-text').innerText = `${state.reputation}%`;
         document.getElementById('stat-rep-bar').style.width = `${state.reputation}%`;
@@ -1826,8 +1962,7 @@
 
     function showSummary() {
         if(state.isGameOver) return;
-        state.isGameOver = true;
-        clearInterval(state.clockInterval);
+        state.isPaused = true;
         clearTimeout(state.cameraTimeout);
         sfx.stopSoundtrack(); 
         
@@ -1840,8 +1975,8 @@
         else if (state.reputation > 50) rating = "***";
         else if (state.reputation > 30) rating = "**";
 
-        document.getElementById('summary-title').innerText = "СЕСІЮ ЗАВЕРШЕНО";
-        document.getElementById('summary-title').className = "text-5xl md:text-7xl mb-6 md:mb-10 text-[#d4af37] crt-text";
+        document.getElementById('summary-title').innerText = "ДЕНЬ " + state.day + " ЗАВЕРШЕНО";
+        document.getElementById('summary-title').className = "text-5xl md:text-7xl mb-6 md:mb-10 text-[#d4af37] crt-text uppercase";
         document.getElementById('summary-reason').classList.add('hidden');
         
         populateStats();
@@ -1849,12 +1984,134 @@
         document.getElementById('summary-rating-label').classList.remove('hidden');
         document.getElementById('summary-rating').innerText = rating;
         document.getElementById('summary-rating').className = "text-6xl md:text-8xl mb-8 md:mb-12 text-[#d4af37] tracking-widest drop-shadow-[0_0_20px_rgba(212,175,55,1)]";
+        
+        const nextBtn = document.getElementById('btn-next-step');
+        if (state.day >= state.maxDays) {
+            nextBtn.innerText = "[ ПЕРЕЙТИ ДО ПІДСУМКІВ СЕСІЇ ]";
+            nextBtn.onclick = showVictory;
+        } else {
+            nextBtn.innerText = "[ ПІДПІЛЬНИЙ МАГАЗИН ]";
+            nextBtn.onclick = generateShop;
+        }
+    }
+
+    function proceedFromSummary() {
+        if (state.day >= state.maxDays) showVictory();
+        else generateShop();
+    }
+
+    // --- SHOP SYSTEM (ВІДРЕСТАВРОВАНО) ---
+    function generateShop() {
+        document.getElementById('modal-summary').classList.add('hidden');
+        document.getElementById('modal-shop').classList.remove('hidden');
+        
+        document.getElementById('shop-money').innerText = state.money + " ₴";
+        
+        const shopContainer = document.getElementById('shop-items');
+        shopContainer.innerHTML = '';
+        
+        // Відфільтровуємо бафи, які вже куплені (крім кави та піару)
+        let availablePool = AVAILABLE_BUFFS.filter(buff => {
+            if (buff.id === 'pr') return state.reputation < 100; // Піар недоступний, якщо репутація повна
+            if (buff.id === 'coffee') return state.buffs.coffeeLevel < 3; // Кава має макс. 3 рівні
+            if (buff.id === 'cctv_hack') return state.buffs.cctvHackLevel === 0;
+            if (buff.id === 'lawyer') return state.buffs.lawyerLevel === 0;
+            if (buff.id === 'scare') return state.buffs.scareLevel === 0;
+            if (buff.id === 'tutor') return state.buffs.tutorLevel === 0;
+            return false;
+        });
+
+        if (availablePool.length === 0) {
+            shopContainer.innerHTML = `
+                <div class="col-span-1 md:col-span-3 text-center p-12 bg-[#111] border-4 border-[#333]">
+                    <h3 class="text-4xl text-[#aaa] crt-text">ВИ СКУПИЛИ ВСІ ДОСТУПНІ ПОКРАЩЕННЯ!</h3>
+                </div>
+            `;
+            return;
+        }
+
+        let shuffled = [...availablePool].sort(() => 0.5 - Math.random());
+        let choices = shuffled.slice(0, 3);
+        
+        choices.forEach(buff => {
+            const canAfford = state.money >= buff.cost;
+            const btnClass = canAfford 
+                ? 'bg-[#1b5e20] hover:bg-[#2e7d32] border-4 border-black pixel-shadow text-white cursor-pointer active:translate-y-2'
+                : 'bg-[#555] border-4 border-[#333] text-[#aaa] cursor-not-allowed opacity-70';
+            
+            let displayName = buff.name;
+            if (buff.id === 'coffee') displayName += ` (РІВ. ${state.buffs.coffeeLevel + 1})`;
+
+            shopContainer.innerHTML += `
+                <div class="shop-card bg-[#222] border-8 border-black p-6 flex flex-col items-center text-center">
+                    <div class="text-7xl mb-4">${buff.icon}</div>
+                    <h3 class="text-3xl font-bold text-[#d4af37] mb-2 crt-text h-16">${displayName}</h3>
+                    <p class="text-xl text-[#aaa] flex-1 mb-6">${buff.desc}</p>
+                    <button onclick="buyBuff('${buff.id}', ${buff.cost})" class="btn-pixel w-full py-3 text-3xl font-bold ${btnClass}" ${!canAfford ? 'disabled' : ''}>
+                        ${buff.cost} ₴
+                    </button>
+                </div>
+            `;
+        });
+    }
+
+    function buyBuff(id, cost) {
+        if (state.money < cost) return;
+        
+        sfx.powerup();
+        state.money -= cost;
+        document.getElementById('shop-money').innerText = state.money + " ₴";
+        
+        if (id === 'coffee') state.buffs.coffeeLevel++;
+        if (id === 'cctv_hack') state.buffs.cctvHackLevel++;
+        if (id === 'lawyer') state.buffs.lawyerLevel++;
+        if (id === 'scare') state.buffs.scareLevel++;
+        if (id === 'tutor') state.buffs.tutorLevel++;
+        if (id === 'pr') {
+            state.reputation += 20;
+            state.reputation = Math.min(100, Math.max(0, state.reputation));
+        }
+        
+        // Оновлюємо вітрину магазину після кожної покупки
+        generateShop();
+    }
+
+    function startNextDay() {
+        document.getElementById('modal-shop').classList.add('hidden');
+        
+        state.day++;
+        state.totalChecked = 0;
+        state.correctDecisions = 0;
+        state.wrongDecisions = 0;
+        state.bribesTaken = 0;
+        state.timeHours = 9;
+        state.timeMinutes = 0;
+        state.currentStudentIndex = null;
+        state.isPaused = false;
+        
+        startGame();
+    }
+
+    // --- VICTORY SYSTEM ---
+    function showVictory() {
+        document.getElementById('modal-summary').classList.add('hidden');
+        document.getElementById('modal-shop').classList.add('hidden');
+        document.getElementById('modal-victory').classList.remove('hidden');
+        
+        sfx.powerup();
+        
+        document.getElementById('vic-total').innerText = state.globalStats.totalChecked;
+        document.getElementById('vic-correct').innerText = state.globalStats.totalCorrect;
+        document.getElementById('vic-wrong').innerText = state.globalStats.totalWrong;
+        document.getElementById('vic-bribes').innerText = state.globalStats.totalBribes;
+        document.getElementById('vic-money').innerText = state.money + " ₴";
+        document.getElementById('vic-rep').innerText = state.reputation + "%";
     }
 
     function gameOver(reason) {
         if(state.isGameOver) return;
         state.isGameOver = true;
-        clearInterval(state.clockInterval);
+        clearTimeout(state.clockTimeout);
         clearTimeout(state.cameraTimeout);
         sfx.stopSoundtrack(); 
         
@@ -1875,10 +2132,14 @@
         document.getElementById('summary-rating-label').classList.add('hidden');
         document.getElementById('summary-rating').innerText = "[ СИСТЕМУ ЗАБЛОКОВАНО ]";
         document.getElementById('summary-rating').className = "text-4xl md:text-6xl mb-8 md:mb-12 mt-4 text-[#d32f2f] crt-text";
+
+        const nextBtn = document.getElementById('btn-next-step');
+        nextBtn.innerText = "[ ПОЧАТИ СПОЧАТКУ ]";
+        nextBtn.onclick = resetGame;
     }
 
     function resetGame() {
-        clearInterval(state.clockInterval);
+        clearTimeout(state.clockTimeout);
         clearTimeout(state.cameraTimeout);
         clearTimeout(typingTimer);
         sfx.stopSoundtrack(); 
@@ -1886,6 +2147,8 @@
         let savedSettings = state.settings;
 
         state = {
+            day: 1,
+            maxDays: 7,
             money: 0,
             reputation: 75,
             students: [],
@@ -1897,12 +2160,14 @@
             bribesTaken: 0,
             timeHours: 9,
             timeMinutes: 0,
-            clockInterval: null,
+            clockTimeout: null,
             cameraActive: false,
             cameraTimeout: null,
             isGameOver: false,
             isPaused: false,
             isShaking: false,
+            globalStats: { totalChecked: 0, totalCorrect: 0, totalWrong: 0, totalBribes: 0 },
+            buffs: { coffeeLevel: 0, cctvHackLevel: 0, lawyerLevel: 0, scareLevel: 0, tutorLevel: 0 },
             settings: savedSettings
         };
 
@@ -1913,6 +2178,8 @@
         stat.className = "text-[#555] text-3xl font-bold crt-text tracking-widest";
 
         document.getElementById('modal-summary').classList.add('hidden');
+        document.getElementById('modal-shop').classList.add('hidden');
+        document.getElementById('modal-victory').classList.add('hidden');
         document.getElementById('screen-game').classList.add('hidden');
         document.getElementById('gradebook').classList.add('hidden');
         closeCitation();
