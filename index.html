@@ -1676,15 +1676,16 @@
                     feedback = "> РЕЗУЛЬТАТ ПРИЙНЯТО";
                 }
             } else if (s.bribeTaken && !passed) {
-                repChange = -15; 
-                feedback = "! СКАРГА: СТУДЕНТ ДОНІС У ДЕКАНАТ ПРО ХАБАР!";
                 if (!shouldPass) {
-                    state.correctDecisions++; 
+                    repChange = 0; 
+                    state.correctDecisions++;
+                    feedback = "> ХАБАР ВЗЯТО, АЛЕ ПОРУШНИКУ ВІДМОВЛЕНО. СТУДЕНТ ПОБОЯВСЯ СКАРЖИТИСЯ.";
                 } else {
+                    repChange = -20;
                     state.wrongDecisions++;
-                    moneyChange = -300;
+                    moneyChange = -500;
                     isViolation = true;
-                    feedback += " І НЕОБҐРУНТОВАНЕ 'НЕ ЗАРАХОВАНО'.";
+                    feedback = "СКАРГА: ВИ ВЗЯЛИ ХАБАР І БЕЗПІДСТАВНО ВІДМОВИЛИ ЧЕСНОМУ СТУДЕНТУ!";
                 }
             } else {
                 if (passed === shouldPass) {
